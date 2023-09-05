@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Reservas - Software Hotelero</title>
+    <link rel="stylesheet" href="../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../asset/css/user/GestionReserva.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="sidebar">
+                    <h3>Datos de la Habitación</h3>
+                    <div class="card-body">
+                        <h5>Habitación de lujo</h5>
+                        <p class="card-text">Esta habitación de lujo cuenta con todas las comodidades que necesitas para
+                            una estancia agradable. Con una cama king-size, baño privado y una hermosa vista a la
+                            naturaleza, te sentirás como en casa.</p>
+                        <p class="card-text">Precio: $500.000 por noche</p>
+                        <img src="../../asset/img/Cama King-Size.jpg" class="img-fluid" alt="Habitación de lujo">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="content">
+                    <h1>Gestión de Reservas</h1>
+                    <hr>
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Detalles de la Reserva
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="nombre">Nombre(s):</label>
+                                        <input type="text" class="form-control" id="nombre">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="apellido">Apellido(s):</label>
+                                        <input type="text" class="form-control" id="apellido">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="tipoDocumento">Tipo de documento:</label>
+                                        <select class="form-control form-select" id="tipoDocumento">
+                                            <option value="0">-- Selecione tipo de Documento --</option>
+                                            <option value="1">Cédula de ciudadanía</option>
+                                            <option value="2">Cédula de extranjería</option>
+                                            <option value="2">Pasaporte</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="documento">Documento:</label>
+                                        <input type="text" class="form-control" id="documento">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="edad">Edad:</label>
+                                        <input type="text" class="form-control" id="edad">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="genero">Género:</label>
+                                        <select class="form-control" id="genero">
+                                            <option value="1">Masculino</option>
+                                            <option value="2">Femenino</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="correo">Correo electrónico:</label>
+                                        <input type="text" class="form-control" id="correo">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="telefono">Teléfono:</label>
+                                        <input type="text" class="form-control" id="telefono">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="habitacion">Habitación:</label>
+                                        <input type="text" class="form-control" value="Habitación de lujo"
+                                            id="habitacion" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="fecha">Fecha de reserva:</label>
+                                        <input type="date" class="form-control" id="fecha">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mt-4">
+                                    <button class="btn btn-primary float-right" onclick="hacerReserva()">Reservar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../asset/js/user/GestionRe  serva.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+body {
+    background-color: #fff;
+    color: #333333;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+.sidebar {
+    background-color: #ffc107;
+    padding: 20px;
+    color: #ffffff;
+}
+
+.sidebar h3 {
+    color: #ffffff;
+}
+
+.sidebar .nav-link {
+    color: #ffffff;
+}
+
+.sidebar .nav-link:hover {
+    color: #ffffff;
+}
+
+.content {
+    padding: 20px;
+}
+
+.card {
+    background-color: #f1f1f1;
+    color: #333333;
+}
+
+.card-body {
+    border-top: 1px solid #dddddd;
+}

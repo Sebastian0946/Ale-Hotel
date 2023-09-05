@@ -1,0 +1,24 @@
+.table-cell-width {
+    padding: 10px;
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.person-name {
+    font-weight: bold;
+}
+
+.person-info {
+    display: flex;
+    align-items: center;
+}
+
+.person-info span {
+    margin-left: 5px;
+}
+
+.person-status {
+    font-weight: bold;
+}

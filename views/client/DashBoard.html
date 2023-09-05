@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DashBoard Ale-Hotel</title>
+    <link href="../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../../asset/library/node_modules/jquery/dist/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="../../asset/css/client/Dashboard.css">
+</head>
+
+<body class="collapsed">
+
+    <div class="header">
+        <h1>DashBoard Ale-Hotel</h1>
+    </div>
+
+    <div class="contenedor">
+        <nav>
+            <div class="sidebar-top">
+                <div class="logo__wrapper">
+                    <svg id="changeColor" fill="#DC7633" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" width="200" zoomAndPan="magnify"
+                        viewBox="0 0 375 374.9999" height="200" version="1.0" class="logo">
+                        <defs>
+                            <path id="pathAttribute"
+                                d="M 11.972656 11.972656 L 359.222656 11.972656 L 359.222656 359.222656 L 11.972656 359.222656 Z M 11.972656 11.972656 "
+                                fill="#0013ff"></path>
+                        </defs>
+                        <g>
+                            <path id="pathAttribute"
+                                d="M 185.597656 359.222656 C 89.675781 359.222656 11.972656 280.984375 11.972656 185.597656 C 11.972656 90.210938 89.675781 11.972656 185.597656 11.972656 C 281.519531 11.972656 359.222656 89.675781 359.222656 185.597656 C 359.222656 281.519531 280.984375 359.222656 185.597656 359.222656 Z M 185.597656 22.691406 C 95.570312 22.691406 22.691406 95.570312 22.691406 185.597656 C 22.691406 275.625 95.570312 348.503906 185.597656 348.503906 C 275.625 348.503906 348.503906 275.625 348.503906 185.597656 C 348.503906 95.570312 275.089844 22.691406 185.597656 22.691406 Z M 185.597656 22.691406 "
+                                fill-opacity="1" fill-rule="nonzero" fill="#0013ff"></path>
+                        </g>
+                        <g id="inner-icon" transform="translate(85, 75)"> <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 512 512" id="IconChangeColor" height="199.8" width="199.8">
+                                <path
+                                    d="M480 0C497.7 0 512 14.33 512 32C512 49.67 497.7 64 480 64V448C497.7 448 512 462.3 512 480C512 497.7 497.7 512 480 512H304V448H208V512H32C14.33 512 0 497.7 0 480C0 462.3 14.33 448 32 448V64C14.33 64 0 49.67 0 32C0 14.33 14.33 0 32 0H480zM112 96C103.2 96 96 103.2 96 112V144C96 152.8 103.2 160 112 160H144C152.8 160 160 152.8 160 144V112C160 103.2 152.8 96 144 96H112zM224 144C224 152.8 231.2 160 240 160H272C280.8 160 288 152.8 288 144V112C288 103.2 280.8 96 272 96H240C231.2 96 224 103.2 224 112V144zM368 96C359.2 96 352 103.2 352 112V144C352 152.8 359.2 160 368 160H400C408.8 160 416 152.8 416 144V112C416 103.2 408.8 96 400 96H368zM96 240C96 248.8 103.2 256 112 256H144C152.8 256 160 248.8 160 240V208C160 199.2 152.8 192 144 192H112C103.2 192 96 199.2 96 208V240zM240 192C231.2 192 224 199.2 224 208V240C224 248.8 231.2 256 240 256H272C280.8 256 288 248.8 288 240V208C288 199.2 280.8 192 272 192H240zM352 240C352 248.8 359.2 256 368 256H400C408.8 256 416 248.8 416 240V208C416 199.2 408.8 192 400 192H368C359.2 192 352 199.2 352 208V240zM256 288C211.2 288 173.5 318.7 162.1 360.2C159.7 373.1 170.7 384 184 384H328C341.3 384 352.3 373.1 349 360.2C338.5 318.7 300.8 288 256 288z"
+                                    id="mainIconPathAttribute" fill="#ffffff"></path>
+                            </svg> </g>
+                    </svg>
+                    <h2 class="hide">Ale-Hotel</h2>
+                </div>
+                <div class="expand-btn">
+                    <svg class="hide-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        stroke-width="2" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M7 7l5 5l-5 5"></path>
+                        <path d="M13 7l5 5l-5 5"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="sidebar-links">
+                <ul id="sidemenu">
+                    <li>
+                        <a href="view/index.html" title="Dashboard">
+                            <i class="fa-solid fa-gauge" style="color: #e6e6e8; width: 42px;"></i>
+                            <span class="link hide" style="padding-right: 32px;">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-regular fa-folder" style="color: #e6e6e8; width: 42px;"></i>
+                            <span class="link hide" style="padding-right: 32px;">Sistema</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="javascript:void(0)">Registrar Huesped</a></li>
+                            <li><a class="dropdown-item" href="Sistema/EstadoFactura.html">Estado factura</a></li>
+                            <li><a class="dropdown-item" href="Sistema/ConsumoHabitaciones.html">Consumo habitacioes</a>
+                            </li>
+                            <li><a class="dropdown-item" href="javascript:void(0)">Registrar habitacion</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-shield" style="color: #e6e6e8; width: 42px;"></i>
+                            <span class="link hide" style="padding-right: 32px;">Seguridad</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="Seguridad/Persona.html">Persona</a></li>
+                            <li><a class="dropdown-item" href="Seguridad/Formulario.html">Formulario</a></li>
+                            <li><a class="dropdown-item" href="Seguridad/Modulo.html">Modulo</a></li>
+                            <li><a class="dropdown-item" href="Seguridad/Usuario.html">Usuario</a></li>
+                            <li><a class="dropdown-item" href="Seguridad/Rol.html">Rol</a></li>
+                            <li><a class="dropdown-item" href="Seguridad/RolFormulario.html">Formulario rol</a></li>
+                            <li><a class="dropdown-item" href="Seguridad/RolUsuario.html">Rol usuario</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-list-check" style="color: #e6e6e8; width: 42px;"></i>
+                            <span class="link hide" style="padding-right: 32px;">Inventario</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="Inventario/Categoria.html">Categoria</a></li>
+                            <li><a class="dropdown-item" href="Inventario/Producto.html">Producto</a></li>
+                            <li><a class="dropdown-item" href="Inventario/Inventario.html">Inventario</a></li>
+                            <li><a class="dropdown-item" href="javascript:void(0)">Inventario Habitacion</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="sidebar-links sidebar-bottom">
+                <div class="divider"></div>
+                <ul>
+                    <li>
+                        <a href="../../login.html" title="Settings">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="#91959C" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path
+                                    d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z">
+                                </path>
+                                <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
+                            </svg>
+                            <span class="link hide">Salir</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="divider"></div>
+                <div class="sidebar__profile">
+                    <div class="avatar__wrapper">
+                        <img class="avatar" src="../../asset/img/user3.jpg" alt="Joe Doe Picture">
+                        <div class="online__status"></div>
+                    </div>
+                    <section class="avatar__name hide">
+                        <div class="user-name">Joe Doe</div>
+                        <div class="email">joe.doe@atheros.ai</div>
+                    </section>
+                </div>
+            </div>
+        </nav>
+        <div id="iframe-container">
+            <iframe id="dashboard-iframe" src="javascript:void(0)" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+
+    <script src="../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../asset/library/icons/icons.js" crossorigin="anonymous"></script>
+    <script src="../../asset/js/client/Dashboard.js"></script>
+</body>
+
+</html>

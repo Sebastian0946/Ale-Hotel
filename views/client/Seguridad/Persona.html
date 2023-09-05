@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Registrar persona</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <!-- Librerias CSS -->
+    <link rel="stylesheet" href="../../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../asset/library/node_modules/datatables.net-dt/css/jquery.dataTables.min.css">
+
+    <!-- CSS native -->
+    <link rel="stylesheet" href="../../../asset/css/client/Table.css">
+
+
+    <!-- Librerias js -->
+    <script src="../../../asset/library/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../../../asset/library/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="../../../asset/library/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="../../../asset/library/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../../../asset/library/node_modules/jszip/dist/jszip.min.js"></script>
+    <script src="../../../asset/library/node_modules/pdfmake/build/pdfmake.min.js"></script>
+    <script src="../../../asset/library/node_modules/pdfmake/build/vfs_fonts.js"></script>
+    <script src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
+</head>
+
+<body>
+
+    <div id="loader">
+        <div class="lds-dual-ring"></div>
+        <div class="text">Cargando...</div>
+    </div>
+
+    <div class="container">
+
+        <div class="title">
+            <h1>Registro persona</h1>
+        </div>
+
+        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal"
+            data-bs-target="#myModal" onclick="Limpiar();">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+
+        <div class="marcador">
+            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" id="modal-persona">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Agregar registro de persona</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body mb-3 modal-sm">
+                            <input type="hidden" class="form-control" name="codigo" id="codigo" placeholder="Código">
+                            <form name="formData" id="formulario">
+                                <input type="text" name="id" id="id" hidden>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <table class="table-modal">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <label class="form-label">Tipo documento:</label>
+                                                    </td>
+                                                    <td>
+                                                        <select name="TipoDocumento" id="TipoDocumento" class="form-select">
+                                                            <option value="0">-- Seleccione tipo documento --</option>
+                                                            <option value="CC">CC</option>
+                                                            <option value="TI">TI</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label class="form-label">N° documento:</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="Documento"
+                                                            id="Documento" placeholder="Documento">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label class="form-label">Nombres:</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="Nombres"
+                                                            id="Nombres" placeholder="Digite nombres">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label class="form-label">Apellidos:</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="Apellidos"
+                                                            id="Apellidos" placeholder="Digite apellido">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label class="form-label">Edad</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control" name="Edad" id="Edad"
+                                                            placeholder="Edad">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-6">
+                                        <table class="table-modal">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <label class="form-label">Departamento:</label>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-select" name="DepartamentoSelect"
+                                                            id="DepartamentoSelect">
+                                                            <option disabled selected value="0">--Seleccionar--</option>
+
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label class="form-label">Municipio:</label>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-select" name="MunicipioSelect"
+                                                            id="MunicipioSelect">
+                                                            <option disabled selected value="0">--Seleccionar--</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label class="form-label">Telefono:</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="Telefono"
+                                                            id="Telefono" placeholder="Telefono">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label class="form-label">Genero</label>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-select" id="Genero" name="Genero">
+                                                            <option disabled selected value="0">--Seleccionar--</option>
+                                                            <option value="Masculino">Masculino</option>
+                                                            <option value="Femenino">Femenino</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label class="form-label">Correo</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="email" class="form-control" name="Email" id="Email"
+                                                            placeholder="example@gmail.com">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label class="form-label">Estado</label>
+                                                    </td>
+                                                    <td>
+                                                        <div class="switch">
+                                                            <input type="checkbox" id="estado" name="estado" value="1"
+                                                                class="toggle-switch-checkbox">
+                                                            <label for="estado" class="toggle-switch-label"></label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                        onclick="Limpiar();">Cerrar</button>
+                                    <button type="button" class="btn btn-success"
+                                        onclick="performAction();">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table id="table" class="display table table-bordered p-2 animate__animated animate__fadeIn">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre completo</th>
+                        <th>Tipo documento</th>
+                        <th>Documento</th>
+                        <th>Direccion</th>
+                        <th>Telefono</th>
+                        <th>Correo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="dataResult">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="../../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../asset/library/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="../../../asset/library/node_modules/select2/dist/js/select2.min.js"></script>
+    <script src="../../../asset/library/node_modules/animejs/lib/anime.min.js"></script>
+    <script src="../../../asset/js/client/Animacion.js"></script>
+    <script src="../../../asset/js/client/seguridad/Persona.js"></script>
+    <script src="../../../asset/library/icons/icons.js"></script>
+</body>
+
+</html>
+<script>
+    loadTable();
+</script>

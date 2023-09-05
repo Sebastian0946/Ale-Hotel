@@ -1,0 +1,129 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f1f1f1;
+    background-image: url('../img/habitacion.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 20px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+    background: linear-gradient(45deg, #833ab4, #e53935);
+    border-radius: 5px;
+    box-shadow: none;
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+}
+
+.title {
+    color: #000;
+    font-size: 36px;
+    margin-bottom: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+
+.sub-title {
+    color: #ff9900;
+    font-size: 24px;
+    margin-bottom: 15px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Estilos para las tablas */
+.table-container {
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #FF512F, #DD2476);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    color: #fff;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px;
+    vertical-align: top;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+th {
+    background-color: rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+    text-align: left;
+}
+
+td {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Estilos para los botones dentro de las tablas */
+.table button {
+    margin-right: 5px;
+    font-size: 14px;
+    border-radius: 3px;
+}
+
+.btn-primary {
+    background-color: #0099ff;
+    border-color: #0099ff;
+    color: #fff;
+}
+
+.btn-success {
+    background-color: #00cc66;
+    border-color: #00cc66;
+    color: #fff;
+}
+
+.btn-danger {
+    background-color: #ff3300;
+    border-color: #ff3300;
+    color: #fff;
+}
+
+/* Estilos adicionales veraniegos */
+.container {
+    background-color: #f9f9f9;
+}
+
+h2 {
+    color: #ff9900;
+}
+
+.btn-primary {
+    background-color: #ff9900;
+    border-color: #ff9900;
+}
+
+.btn-success {
+    background-color: #33cc33;
+    border-color: #33cc33;
+}
+
+.btn-danger {
+    background-color: #ff0000;
+    border-color: #ff0000;
+}

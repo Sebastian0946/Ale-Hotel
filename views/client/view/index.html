@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../asset/css/client/Style.css">
+
+
+</head>
+
+<body>
+    <div class="contenedor">
+        <aside style=" width: 0; height: 0;"></aside>
+        <main>
+            <div class="fecha">
+                <input type="date">
+            </div>
+            <div class="insights">
+                <div class="sales">
+                    <span class="fa-solid fa-square-poll-vertical"></span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Total ventas</h3>
+                            <h1>$520.215</h1>
+                        </div>
+                        <div class="progress">
+                            <div class="circle-chart-container">
+                                <canvas id="circleChartVentas" width="100" height="100"></canvas>
+                            </div>
+                            <div class="number">
+                                <p>81%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="text-muted">Last 24 Hours</small>
+                </div>
+                <!-- END SALES -->
+                <div class="expenses">
+                    <span class="fa-solid fa-chart-column"></span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Total gastos</h3>
+                            <h1>$10.000</h1>
+                        </div>
+                        <div class="progress">
+                            <div class="circle-chart-container">
+                                <canvas id="circleChartGastos" width="100" height="100"></canvas>
+                            </div>
+                            <div class="number">
+                                <p>90%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="text-muted">Last 24 Hours</small>
+                </div>
+                <!-- END EXPENS -->
+                <div class="income">
+                    <span class="fa-solid fa-chart-line"></span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Total ingreso</h3>
+                            <h1>$1.001.245</h1>
+                        </div>
+                        <div class="progress">
+                            <div class="circle-chart-container">
+                                <canvas id="circleChartIngresos" width="100" height="100"></canvas>
+                            </div>
+                            <div class="number">
+                                <p>99%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="text-muted">Last 24 Hours</small>
+                </div>
+                <!-- END INCOME -->
+            </div>
+            <div class="recent-orders">
+                <h2>Ordenes Recientes</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre producto</th>
+                            <th>Codigo producto</th>
+                            <th>Pagos</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <a href="#">Ver más</a>
+            </div>
+        </main>
+    </div>
+    <script src="../../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../asset/library/node_modules/chart.js/dist/chart.umd.js"></script>
+    <script src="../../../asset/library/node_modules/animejs/lib/anime.min.js"></script>
+    <script src="../../../asset/library/icons/icons.js"></script>
+    <script src="../../../asset/js/client/main.js"></script>
+</body>
+
+</html>

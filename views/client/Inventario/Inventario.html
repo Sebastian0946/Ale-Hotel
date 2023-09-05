@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+
+     <!-- Librerias CSS -->
+    <link rel="stylesheet" href="../../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../asset/library/node_modules/datatables.net-dt/css/jquery.dataTables.min.css">
+
+    <!-- CSS native -->
+    <link rel="stylesheet" href="../../../asset/css/client/Table.css">
+
+
+    <!-- Librerias js -->
+    <script src="../../../asset/library/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../../../asset/library/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="../../../asset/library/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="../../../asset/library/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../../../asset/library/node_modules/jszip/dist/jszip.min.js"></script>
+    <script src="../../../asset/library/node_modules/pdfmake/build/pdfmake.min.js"></script>
+    <script src="../../../asset/library/node_modules/pdfmake/build/vfs_fonts.js"></script>
+    <script src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="lds-dual-ring"></div>
+        <div class="text">Cargando...</div>
+    </div>
+
+    <div class="container">
+
+        <div class="title">
+            <h1>Registro inventario</h1>
+        </div>
+
+        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal" data-bs-target="#myModal" onclick="Limpiar();">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+
+        <div class="marcador">
+            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Agregar Inventario</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formulario">
+                                <input type="text" name="id" id="id" hidden>
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <label for="codigo" class="form-label">Código: </label>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" id="codigo" name="codigo">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label for="producto" class="form-label">Registrar producto: </label>
+                                            </td>
+                                            <td>
+                                                <select class="form-select" name="productoId" id="productoId">
+            
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label for="precioVenta" class="form-label">Precio venta: </label>
+                                            </td>
+                                            <td>
+                                                <input type="text" id="precioVenta" name="precioVenta" class="form-control">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label for="precioProveedor" class="form-label">Precio preveedor: </label>
+                                            </td>
+                                            <td>
+                                                <input type="text" id="precioProveedor" name="precioProveedor" class="form-control">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label for="cantidad" class="form-label">Cantidad: </label>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control" id="cantidad" name="cantidad">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label for="estado" class="form-label">Estado: </label>
+                                            </td>
+                                            <td>
+                                                <div class="switch">
+                                                    <input type="checkbox" id="estado" name="estado" value="1" class="toggle-switch-checkbox">
+                                                    <label for="estado" class="toggle-switch-label"></label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="Limpiar();">Cerrar</button>
+                                    <button type="button" class="btn btn-success" onclick="performAction();" data-bs-dismiss="modal">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table id="table" class="display table table-bordered p-2 m-lg-2" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Producto codigo</th>
+                        <th>Producto nombre</th>
+                        <th>Precio venta</th>
+                        <th>Precio proveedor</th>
+                        <th>Cantidad</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="dataResult">
+                    <!-- Aquí se agregarán las filas con los datos ingresados -->
+                </tbody>
+                
+            </table>
+        </div>
+    </div>
+
+    <script src="../../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../asset/library/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="../../../asset/library/node_modules/animejs/lib/anime.min.js"></script>
+    <script src="../../../asset/js/client/inventario/Inventario.js"></script>
+    <script src="../../../asset/js/client/GetList.js"></script>
+    <script src="../../../asset/library/icons/icons.js"></script>
+    <script src="../../../asset/js/client/Animacion.js"></script>
+</body>
+</html>
+<script>
+    loadTable();
+    loadInventario();
+</script>

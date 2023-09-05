@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Habitaciones</title>
+    <link rel="stylesheet" href="../../asset/css/user/GestionarHabitaciones.css">
+    <link rel="stylesheet" href="../../asset/library/node_modules/bootstrap/dist/css/bootstrap.rtl.min.css">
+</head>
+
+<body>
+    <main class="container mt-5">
+        <h1 class="title text-center">Gestión de Habitaciones</h1>
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <h2 class="sub-title">Habitaciones Disponibles</h2>
+                <table class="table-container">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Tipo</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>101</td>
+                            <td>Individual</td>
+                            <td>$120.00</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary">Ver Detalles</button>
+                                <button class="btn btn-sm btn-success">Reservar</button>
+                            </td>
+                        </tr>
+                        <!-- Agrega más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h2 class="sub-title">Habitaciones Ocupadas</h2>
+                <table class="table-container">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Tipo</th>
+                            <th>Huésped</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>102</td>
+                            <td>Doble</td>
+                            <td>Juan Pérez</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary">Ver Detalles</button>
+                                <button class="btn btn-sm btn-danger">Check-out</button>
+                            </td>
+                        </tr>
+                        <!-- Agrega más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h2 class="sub-title">Habitaciones en Mantenimiento</h2>
+                <table class="table-container">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>103</td>
+                            <td>Individual</td>
+                            <td>Reparación de aire acondicionado</td>
+                        </tr>
+                        <!-- Agrega más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h2 class="sub-title">Habitaciones Reservadas</h2>
+                <table class="table-container">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Tipo</th>
+                            <th>Huésped</th>
+                            <th>Fecha de Entrada</th>
+                            <th>Fecha de Salida</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>104</td>
+                            <td>Doble</td>
+                            <td>María Gómez</td>
+                            <td>2023-06-10</td>
+                            <td>2023-06-15</td>
+                        </tr>
+                        <!-- Agrega más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h2 class="sub-title">Gestión de Habitaciones VIP</h2>
+                <table class="table-container">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Tipo</th>
+                            <th>Comodidades</th>
+                            <th>Servicios Especiales</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>201</td>
+                            <td>Suite VIP</td>
+                            <td>Mini bar, Jacuzzi, Vistas panorámicas</td>
+                            <td>Servicio de mayordomo, Acceso al lounge VIP</td>
+                        </tr>
+                        <!-- Agrega más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="col-md-6">
+                <h2 class="sub-title">Gestión de Habitaciones Familiares</h2>
+                <table class="table-container">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Tipo</th>
+                            <th>Facilidades para Niños</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>301</td>
+                            <td>Suite Familiar</td>
+                            <td>Camas adicionales, Área de juegos</td>
+                        </tr>
+                        <!-- Agrega más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>            
+        </div>
+    </main>
+    <script src="../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

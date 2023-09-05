@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte de Hotel</title>
+  <link rel="stylesheet" href="../../asset/css/user/reporte.css">
+  <link rel="stylesheet" href="../../asset/library/node_modules/bootstrap/dist/css/bootstrap.rtl.min.css">
+</head>
+<body>
+  
+  <h1>Reporte de Hotel</h1>
+
+  <div class="container">
+      <div class="table-container">
+          <div class="title">
+            <h2>Reporte de Habitaciones</h2>
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Número de Habitación</th>
+                <th>Huésped</th>
+                <th>Fecha de entrada</th>
+                <th>Fecha de salida</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>101</td>
+                <td>Juan Pérez</td>
+                <td>2023-05-15</td>
+                <td>2023-05-17</td>
+              </tr>
+              <tr>
+                <td>102</td>
+                <td>María Gómez</td>
+                <td>2023-05-16</td>
+                <td>2023-05-20</td>
+              </tr>
+              <tr>
+                <td>103</td>
+                <td>Carlos López</td>
+                <td>2023-05-18</td>
+                <td>2023-05-21</td>
+              </tr>
+            </tbody>
+          </table>          
+      </div>
+      <hr class="separador">
+      <div class="table-container">
+          <div class="title">
+            <h2>Reporte de Habitaciones y Huéspedes</h2>
+          </div>
+          <table class="table table-striped">
+              <thead>
+                  <tr>
+                      <th>Habitación</th>
+                      <th>Huésped</th>
+                      <th>Valor Por Día</th>
+                      <th>Valor Total Estadia</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>101</td>
+                      <td>Juan Pérez</td>
+                      <td>$120.000</td>
+                      <td>$240.000</td>
+                  </tr>
+                  <tr>
+                      <td>102</td>
+                      <td>María Gómez</td>
+                      <td>$150.000</td>
+                      <td>$750.000</td>
+                  </tr>
+                  <tr>
+                      <td>103</td>
+                      <td>Carlos López</td>
+                      <td>$100.000</td>
+                      <td>$400.000</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+      <hr class="separador">
+      <div class="table-container">
+          <div class="title">
+            <h2>Reporte de Inventario de Habitaciones</h2>
+          </div>
+          <table class="table table-striped">
+              <thead>
+                  <tr>
+                      <th>Número de Habitación</th>
+                      <th>Disponibilidad</th>
+                      <th>Tipo de Habitación</th>
+                      <th>Estado</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>101</td>
+                      <td>Disponible</td>
+                      <td>Individual</td>
+                      <td>Check-inl</td>
+                  </tr>
+                  <tr>
+                      <td>102</td>
+                      <td>Ocupada</td>
+                      <td>Doble</td>
+                      <td>Check-inl</td>
+                  </tr>
+                  <tr>
+                      <td>103</td>
+                      <td>Disponible</td>
+                      <td>Individual</td>
+                      <td>Check-inl</td>
+                  </tr>
+                  <!-- ... Resto de las habitaciones del inventario ... -->
+                  <tr>
+                      <td>125</td>
+                      <td>Ocupada</td>
+                      <td>Suite</td>
+                      <td>Check-inl</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
+  <script src="../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,545 @@
+:root {
+    --color-dark: #363949;
+    --color-background: #f6f6f6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    appearance: 0;
+    border: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 14px;
+}
+
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    background: var(--color-background);
+    user-select: none;
+    overflow-x: hidden;
+    color: var(--color-dark);
+}
+
+.container {
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    margin-top: 25vh;
+    border-radius: 10px;
+}
+
+.title h1 {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #0d6efd;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    font-family: 'Georgia', serif;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.title h1:hover {
+    transform: scale(1.05);
+    color: #0d6efd;
+}
+
+.marcador {
+    margin-bottom: 20px;
+    padding-top: 25px;
+}
+
+.btn-floating {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    opacity: 0.8;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.btn-floating:hover {
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ===================== Table Modal =================== */
+
+.modal-dialog {
+    max-width: 75vh;
+    margin: 0 auto;
+    padding-top: 7%;
+}
+
+#modal-persona {
+    max-width: 130vh;
+    margin: 0 auto;
+}
+
+.modal-content {
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.table-modal {
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+    border-collapse: collapse;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-modal tbody tr {
+    background-color: #f8f9fa;
+}
+
+.table-modal tbody td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table-modal tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-modal label.form-label {
+    font-weight: bold;
+    display: block;
+}
+
+.table-modal .form-select {
+    width: 100%;
+    padding: 6px 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+
+.table-modal tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+}
+
+.modal-footer .btn {
+    margin-right: 5px;
+    border-radius: 25px;
+}
+
+.modal-footer .btn:last-child {
+    margin-right: 0;
+}
+
+.modal-footer .btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+.modal-footer .btn-success:hover {
+    background-color: #0056b3;
+    border-color: #0052cc;
+}
+
+/* ===================== Table resultado ====================== */
+
+.table {
+    width: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+    border-collapse: collapse;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table thead th {
+    background-color: #f2f2f2;
+    padding: 10px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.table tbody td {
+    padding: 10px;
+    text-align: left;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.table tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Estilos para los botones de DataTables */
+.dataTables_wrapper .dt-buttons .dt-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dataTables_wrapper .dt-buttons .dt-button:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
+
+/* Estilos para la paginación de DataTables */
+.dataTables_paginate {
+    text-align: center;
+}
+
+/* Estilos para los botones de navegación de la paginación */
+.dataTables_paginate .paginate_button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    margin: 2px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Estilos al pasar el mouse por encima del botón de paginación */
+.dataTables_paginate .paginate_button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para el botón de paginación activo */
+.dataTables_paginate .paginate_button.current {
+    background-color: #0056b3;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    margin: 2px;
+    padding: 5px 10px;
+    cursor: default;
+}
+
+/* Estilos para los botones de paginación en estado inactivo */
+.dataTables_paginate .paginate_button.disabled {
+    background-color: #ccc;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    margin: 2px;
+    padding: 5px 10px;
+    cursor: not-allowed;
+}
+
+/* Estilos para el botón de paginación al hacer clic */
+.dataTables_paginate .paginate_button.current:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Estilo para el cuadro de búsqueda */
+.dataTables_filter input {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+    padding: 5px 10px;
+}
+
+/* Estilo para el botón "Buscar" */
+.dataTables_filter label {
+    color: #000;
+    cursor: pointer;
+}
+
+/* Estilo para el botón "Buscar" al pasar el mouse por encima */
+.dataTables_filter label:hover {
+    color: #0056b3;
+}
+
+
+@media (max-width: 768px) {
+    .table thead {
+        display: none;
+    }
+
+    .table tbody td {
+        display: block;
+        border: none;
+    }
+
+    .table tbody td:before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .table tbody tr {
+        margin-bottom: 15px;
+    }
+}
+
+.estado-table {
+    display: inline-block;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 2px 4px;
+    margin-left: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+}
+
+.estado-table.activo {
+    background-color: green;
+}
+
+.estado-table.inactivo {
+    background-color: red;
+}
+
+/* .arrow-toggle {
+    position: relative;
+    padding: 10px;
+    margin-right: 10px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.arrow-toggle::after {
+    content: "";
+    display: inline-block;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-bottom: 0.2rem solid #000;
+    border-right: 0.2rem solid #000;
+    transform: rotate(-50deg);
+    transition: transform 0.3s ease-in-out;
+    transform-origin: center;
+}
+
+.arrow-toggle[aria-expanded="true"]::after {
+    transform: rotate(50deg);
+}
+
+.arrow-toggle:hover {
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5), 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.arrow-toggle:focus {
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5), 0 4px 8px rgba(0, 0, 0, 0.2);
+    outline: none;
+}
+
+.dropdown-menu {
+    min-width: 120px;
+    padding: 0.5rem 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1.5rem;
+    white-space: nowrap;
+}
+
+.dropdown-item i {
+    margin-right: 0.5rem;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+} */
+
+.row-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.row-action {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.row-action:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transform: scale(1.05);
+}
+
+.row-action i {
+    margin-right: 5px;
+}
+
+.switch-container {
+    display: flex;
+    align-items: center;
+}
+
+.switch {
+    position: relative;
+    width: 60px;
+    height: 34px;
+    margin-right: 10px;
+}
+
+.switch input {
+    display: none;
+}
+
+.switch label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 34px;
+    background-color: #ccc;
+    border-radius: 34px;
+    cursor: pointer;
+}
+
+.switch label:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.switch input:checked+label {
+    background-color: #2ecc71;
+}
+
+.switch input:checked+label:before {
+    transform: translateX(26px);
+}
+
+.popupText {
+    font-size: 16px;
+}
+
+#loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.lds-dual-ring {
+    width: 80px;
+    height: 80px;
+    border: 4px solid #fff;
+    border-top-color: #007bff;
+    border-radius: 50%;
+    animation: lds-dual-ring 1.5s linear infinite;
+}
+
+.text {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    color: #fff;
+    margin-top: 10px;
+    text-align: center;
+}
+
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.fadeIn {
+    animation: fadeIn 1s;
+}
+
+.slideInRight {
+    animation: slideInRight 0.5s;
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+    body {
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 993px) {
+    body {
+        font-size: 18px;
+    }
+}
