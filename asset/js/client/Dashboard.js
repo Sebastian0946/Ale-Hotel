@@ -27,18 +27,18 @@ allLinks.forEach((elem) => {
     })
 });
 
-$(document).ready(function () {
-    // Capturar los clics en los enlaces del panel de control
-    $('#sidemenu a').click(function (e) {
-        e.preventDefault();
+document.addEventListener('DOMContentLoaded', function () {
+    const dashboardIframe = document.getElementById('dashboard-iframe');
+    const defaultUrl = 'view/index.html';
 
-        // Obtener la URL del enlace clicado
-        var url = $(this).attr('href');
+    dashboardIframe.src = defaultUrl;
 
-        // Cargar la vista en el iframe
-        $('#dashboard-iframe').attr('src', url);
+    const menuLinks = document.querySelectorAll('#sidemenu a');
+    menuLinks.forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const url = this.getAttribute('href');
+            dashboardIframe.src = url;
+        });
     });
-
-    $('#dashboard-iframe').attr('src', 'view/index.html');
 });
-
