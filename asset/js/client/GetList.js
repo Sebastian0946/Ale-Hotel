@@ -122,6 +122,20 @@ function loadInventario() {
             $("#productoId").html(registros);
         }
     });
+    $.ajax({
+        url: 'https://hotel-api-hzf6.onrender.com/api/inventario/inventario',
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        success: function (items) {
+            var registros = `<option selected='' selected disabled hidden value='0'>-- Seleccione inventario --</option>`;
+            items.data.forEach(function (inventario, index, array) {
+                registros += `<option value='` + inventario.id + `'>` + inventario.Codigo + ": " + inventario.ProductoId.Nombre+ ": "+ inventario.Cantidad + `</option>`;
+            })
+            $("#inventarioId").html(registros);
+        }
+    });
 }
 
 function loadParametrizacion() {
@@ -137,6 +151,38 @@ function loadParametrizacion() {
                 registros += `<option value='` + usuario.id + `'>` + usuario.Usuario + `</option>`;
             })
             $("#usuarioId").html(registros);
+        }
+    });
+    $.ajax({
+        url: 'https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion',
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        success: function (items) {
+            var registros = `<option selected='' selected disabled hidden value='0'>-- Seleccione tipo de habitacion --</option>`;
+            items.data.forEach(function (tipo, index, array) {
+                registros += `<option value='` + tipo.id + `'>` + tipo.Descripcion + `</option>`;
+            })
+            $("#tipohabitacionId").html(registros);
+        }
+    });
+}
+
+
+function loadSistema() {
+    $.ajax({
+        url: 'https://hotel-api-hzf6.onrender.com/api/sistema/habitacion',
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        success: function (items) {
+            var registros = `<option selected='' selected disabled hidden value='0'>-- Seleccione habitacion --</option>`;
+            items.data.forEach(function (habitacion, index, array) {
+                registros += `<option value='` + habitacion.id + `'>` + habitacion.Codigo +": "+habitacion.Descripcion+ `</option>`;
+            })
+            $("#habitacionId").html(registros);
         }
     });
 }

@@ -2,38 +2,47 @@ var dataTableInitialized = false;
 
 function performAction() {
     var action = $("#myModal").data("action");
-
-    if (action === "guardarCambios") {
-        guardarCambios();
-        $("#myModal").data("action", "");
-        $('#myModal').modal('hide');
-    } else {
-        validarCamposFormulario();
-
-        if ($('#codigo').valid() && $('#nombre').valid() && $('#categoriaId').valid()) {
-            agregarProducto();
+    validarCamposFormulario();
+    if ($('#codigo').valid() && $('#nombre').valid() && $('#categoriaId').valid()) {
+        if (action === "guardarCambios") {
+            guardarCambios();
+            $("#myModal").data("action", "");
             $('#myModal').modal('hide');
         } else {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                title: 'Campos incompletos o inválidos',
-                text: 'Por favor, verifica todos los campos antes de continuar.',
-                icon: "error"
-            });
+            agregarProducto();
+            $('#myModal').modal('hide');
         }
+
+    } else {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+
+        Toast.fire({
+            title: 'Campos incompletos o inválidos',
+            text: 'Por favor, verifica todos los campos antes de continuar.',
+            icon: "error"
+        });
     }
+    $('#myModal').on('hidden.bs.modal', function () {
+        // Obtén una referencia al formulario
+        var form = $("#formulario");
+        // Resetea el formulario para quitar los mensajes de error
+        form.validate().resetForm();
+        // Desactiva las alertas aquí
+        // Puedes ocultar las alertas o realizar cualquier acción que desees
+        $('.is-invalid').removeClass('is-invalid');
+    });
 }
+
 
 function loadTable() {
     $.ajax({
@@ -422,7 +431,7 @@ function validarCamposFormulario() {
             },
             categoriaId: {
                 required: true,
-                maxlength: 15,
+                maxlength: 15
             }
         },
         messages: {
@@ -435,7 +444,7 @@ function validarCamposFormulario() {
                 letras: 'Por favor, ingresa solo letras en la ruta'
             },
             categoriaId: {
-                required: 'Por favor, ingresa una categoriaId',
+                required: 'Por favor, seleccione una categoriaId'
             }
         },
         errorClass: 'is-invalid',

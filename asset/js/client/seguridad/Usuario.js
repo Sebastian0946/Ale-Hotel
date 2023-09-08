@@ -482,10 +482,6 @@ function validarCamposFormulario() {
             $(element.form).find("label[for=" + element.id + "]")
                 .removeClass(errorClass);
         },
-        submitHandler: function (form) {
-            if ($('#codigo').valid() && $('#ruta').valid() && $('#etiqueta').valid()) {
-                agregarModulo();
-            }
-        }
+      
     });
 }

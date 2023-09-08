@@ -1,6 +1,4 @@
 var dataTableInitialized = false;
-var messageShown = false;
-
 
 function performAction() {
     var action = $("#myModal").data("action");
@@ -11,6 +9,7 @@ function performAction() {
     } else {
         agregarEstadoFactura();
     }
+    // Cerrar el modal
     $('#myModal').modal('hide');
 }
 
@@ -93,7 +92,7 @@ async function loadTable() {
             dataTableInitialized = true;
         }
 
-        if (message && !messageShown) {
+        if (message) {
             const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -110,9 +109,7 @@ async function loadTable() {
                 icon: 'success',
                 title: message,
             });
-
-            messageShown = true;
-        } 
+        }
 
     } catch (error) {
         console.error(`Error al cargar la tabla: ${error.message}`);

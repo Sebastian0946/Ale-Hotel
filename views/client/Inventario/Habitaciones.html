@@ -1,54 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categoria</title>
+    <title>Habitacion</title>
+   <!-- Librerias CSS -->
+   <link rel="stylesheet" href="../../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
+   <link rel="stylesheet" href="../../../asset/library/node_modules/datatables.net-dt/css/jquery.dataTables.min.css">
 
-    <!-- Librerias CSS -->
-    <link rel="stylesheet" href="../../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../../asset/library/node_modules/datatables.net-dt/css/jquery.dataTables.min.css">
-
-    <!-- CSS native -->
-    <link rel="stylesheet" href="../../../asset/css/client/Table.css">
+   <!-- CSS native -->
+   <link rel="stylesheet" href="../../../asset/css/client/Table.css">
 
 
-    <!-- Librerias js -->
-    <script src="../../../asset/library/node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="../../../asset/library/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="../../../asset/library/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="../../../asset/library/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="../../../asset/library/node_modules/jszip/dist/jszip.min.js"></script>
-    <script src="../../../asset/library/node_modules/pdfmake/build/pdfmake.min.js"></script>
-    <script src="../../../asset/library/node_modules/pdfmake/build/vfs_fonts.js"></script>
-    <script src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
-
+   <!-- Librerias js -->
+   <script src="../../../asset/library/node_modules/jquery/dist/jquery.min.js"></script>
+   <script src="../../../asset/library/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
+   <script src="../../../asset/library/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
+   <script src="../../../asset/library/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+   <script src="../../../asset/library/node_modules/jszip/dist/jszip.min.js"></script>
+   <script src="../../../asset/library/node_modules/pdfmake/build/pdfmake.min.js"></script>
+   <script src="../../../asset/library/node_modules/pdfmake/build/vfs_fonts.js"></script>
+   <script src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
 </head>
 <body>
-    
+
     <div id="loader">
         <div class="lds-dual-ring"></div>
         <div class="text">Cargando...</div>
     </div>
 
     <div class="container">
-
         <div class="title">
-            <h1>Registro categoria</h1>
+            <h1>Registro Habitaciones</h1>
         </div>
-        
-        <div class="button-container">
-            <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal" data-bs-target="#myModal" onclick="Limpiar();">
-                <i class="fa-solid fa-plus"></i>
-            </button>
-        </div>
+
+
+        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal" data-bs-target="#myModal" onclick="Limpiar();">
+            <i class="fa-solid fa-plus"></i>
+        </button>
 
         <div class="marcador">
             <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Categoria</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Agregar inventario de habitacion</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -58,18 +55,25 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <label for="codigo" class="form-label">Código: </label>
+                                                <label for="categoriaId" class="form-label">Registrar Habitacion </label>
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" id="codigo" name="codigo">
+                                                <select class="form-select" name="habitacionId" id="habitacionId">
+                                                </select>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <label for="descripcion" class="form-label">Descripcion: </label>
+                                                <label for="categoriaId" class="form-label">Registrar Inventario: </label>
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" id="descripcion" name="descripcion">
+                                                <select class="form-select" name="inventarioId" id="inventarioId">
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="ruta" class="form-label">Cantidad</label></td>
+                                            <td><input type="number" class="form-control" id="cantidad" name="cantidad">
                                             </td>
                                         </tr>
                                         <tr>
@@ -87,40 +91,42 @@
                                 </table>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="Limpiar();">Cerrar</button>
-                                    <button type="button" class="btn btn-success" onclick="performAction();" >Guardar</button>
+                                    <button type="button" class="btn btn-success" onclick="performAction();">Guardar</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <table id="table" class="display table table-bordered table-hover p-2 m-lg-2" style="width: 100%;">
+            <table id="table" class="display table table-bordered p-2 m-lg-2" style="width: 100%;">
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Codigo</th>
-                        <th>Descripcion</th>
+                        <th>Habitacion</th>
+                        <th>Inventario</th>
                         <th>Estado</th>
+                        
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="dataResult">
-
+                    <!-- Aquí se agregarán las filas con los datos ingresados -->
                 </tbody>
             </table>
         </div>
     </div>
 
-
-    <!-- Librerias js  -->
     <script src="../../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../../asset/library/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="../../../asset/library/node_modules/animejs/lib/anime.min.js"></script>
-    <script src="../../../asset/js/client/inventario/Categoria.js"></script>
+    <script src="../../../asset/js/client/inventario/Habitacion.js"></script>
+    <script src="../../../asset/js/client/GetList.js"></script>
     <script src="../../../asset/library/icons/icons.js"></script>
     <script src="../../../asset/js/client/Animacion.js"></script>
 </body>
 </html>
 <script>
     loadTable();
+    loadInventario();
+    loadSistema()
 </script>

@@ -6,6 +6,7 @@ function performAction() {
     if (action === "guardarCambios") {
         guardarCambios();
         $("#myModal").data("action", "");
+        
     } else {
         validarCamposFormulario();
 
@@ -429,6 +430,7 @@ function validarCamposFormulario() {
         submitHandler: function (form) {
             if ($('#codigo').valid() && $('#ruta').valid() && $('#etiqueta').valid()) {
                 agregarModulo();
+                $('#myModal').modal('hide');
             }
         }
     });

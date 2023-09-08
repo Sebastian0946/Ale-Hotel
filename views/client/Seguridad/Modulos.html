@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario y Tabla</title>
+    <!-- Agrega los enlaces a los archivos de Bootstrap CSS y JS -->
+    <link rel="stylesheet" href="../../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../asset/css/client/Seguridad/Table.css">
+
+    <link rel="stylesheet" href="../../../asset/library/node_modules/datatables.net-dt/css/jquery.dataTables.min.css">
+    <script src="../../../asset/library/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../../../asset/library/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Botón para abrir el modal -->
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#myModal"><i class="fa-solid fa-plus m-1" style="color: #ffffff;"></i>Agregar modulo</button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Agregar registro de modulo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Formulario -->
+                        <form>
+                            <div class="mb-3">
+                                <label for="codigo" class="form-label">Código</label>
+                                <input type="text" class="form-control" id="codigo" name="codigo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <input type="text" class="form-control" id="descripcion" name="descripcion">
+                            </div>
+                            <div class="mb-3">
+                                <label for="estado" class="form-label">Estado</label>
+                                <select class="form-select" id="estado" name="estado">
+                                    <option value="0">-- Selecione estado --</option>
+                                    <option value="activo">Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <table id="table" class="display table p-2 m-lg-2" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se agregarán las filas con los datos ingresados -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Agrega el enlace al archivo de Bootstrap JS al final del body -->
+    <script src="../../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../asset/js/client/Animacion.js"></script>
+    <script src="../../../asset/library/icons/icons.js"></script>
+</body>
+</html>

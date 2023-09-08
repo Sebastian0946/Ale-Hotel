@@ -2,14 +2,14 @@ var dataTableInitialized = false;
 
 function performAction() {
     var action = $("#myModal").data("action");
-    validarCamposFormulario();
+    validarCampos();
     if ($('#codigo').valid() && $('#descripcion').valid()) {
         if (action === "guardarCambios") {
             guardarCambios();
             $("#myModal").data("action", "");
             $('#myModal').modal('hide');
         } else {
-            agregarCategoria();
+            agregarHuesped();
             $('#myModal').modal('hide');
         }
 
@@ -46,7 +46,7 @@ function performAction() {
 
 async function loadTable() {
     try {
-        const response = await fetch('https://hotel-api-hzf6.onrender.com/api/inventario/categoria', {
+        const response = await fetch('https://hotel-api-hzf6.onrender.com/api/sistema/huesped', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -57,11 +57,11 @@ async function loadTable() {
             const items = await response.json();
             let registros = "";
 
-            items.data.forEach(function (categoria) {
+            items.data.forEach(function (huesped) {
                 registros += `
                     <tr class="table-light fadeIn">
-                        <td class="table-cell-width">${categoria.id}</td>
-                        <td class="table-cell-width">${categoria.Codigo}</td>
+                        <td class="table-cell-width">${huesped.id}</td>
+                        <td class="table-cell-width">${huesped.Codigo}</td>
                         <td class="table-cell-width">${categoria.Descripcion}</td>
                         <td class="table-cell-width estado-table ${categoria.Estado === 'Activo' ? 'activo' : 'inactivo'}">${categoria.Estado}</td>
                         <td class="table-cell-width">
@@ -167,7 +167,7 @@ async function loadTable() {
 
 async function findById(id) {
     try {
-        const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/inventario/categoria/${id}`, {
+        const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/sistema/huesped/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -229,7 +229,7 @@ async function findById(id) {
     }
 }
 
-function agregarCategoria() {
+function agregarHuesped() {
 
     var formData = {
         Codigo: $('#codigo').val(),
@@ -239,7 +239,7 @@ function agregarCategoria() {
 
     $.ajax({
         type: 'POST',
-        url: 'https://hotel-api-hzf6.onrender.com/api/inventario/categoria',
+        url: 'https://hotel-api-hzf6.onrender.com/api/sistema/huesped',
         data: JSON.stringify(formData),
         contentType: 'application/json',
         success: function (result) {
@@ -306,7 +306,7 @@ function guardarCambios() {
     };
 
     $.ajax({
-        url: 'https://hotel-api-hzf6.onrender.com/api/inventario/categoria/' + id,
+        url: 'https://hotel-api-hzf6.onrender.com/api/sistema/huesped/' + id,
         type: 'PUT',
         data: JSON.stringify(formData),
         contentType: 'application/json',
@@ -375,7 +375,7 @@ function deleteById(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: 'https://hotel-api-hzf6.onrender.com/api/inventario/categoria/' + id,
+                url: 'https://hotel-api-hzf6.onrender.com/api/sistema/huesped/' + id,
                 method: "delete",
                 headers: {
                     "Content-Type": "application/json"
@@ -429,7 +429,7 @@ function Limpiar() {
     $("#estado").prop('checked', false);
 }
 
-function validarCamposFormulario() {
+function validarCampos() {
 
     $.validator.addMethod("letras", function (value, element) {
         return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);

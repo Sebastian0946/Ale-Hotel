@@ -1,18 +1,17 @@
 var dataTableInitialized = false;
 
 function performAction() {
-
     var action = $("#myModal").data("action");
-    validarCamposInventario();
-
-    if ($('#codigo').valid() && $('#productoId').valid() && $('#precioVenta').valid() && $('#precioProveedor').valid() && $('#cantidad').valid()) {
+    validarCamposHabitacion();
+    if ($('#habitacionId').valid() && $('#inventarioId').valid() && $('#cantidad').valid()) {
         if (action === "guardarCambios") {
             guardarCambios();
             $("#myModal").data("action", "");
         } else {
-            agregarInventario();
+            agregarHabitacion();
             $('#myModal').modal('hide');
         }
+
     } else {
         const Toast = Swal.mixin({
             toast: true,
@@ -46,38 +45,36 @@ function performAction() {
 
 function loadTable() {
     $.ajax({
-        url: 'https://hotel-api-hzf6.onrender.com/api/inventario/inventario',
+        url: 'https://hotel-api-hzf6.onrender.com/api/inventario/inventarioHabitacion',
         method: "GET",
         headers: {
             "Content-Type": "application/json"
         },
         success: function (items) {
             var registros = "";
-            items.data.forEach(function (inventario, index, array) {
+            items.data.forEach(function (habitacion, index, array) {
                 registros += `
-                    <tr class="table-light fadeIn">
-                        <td class="table-cell-width">${inventario.Codigo}</td>
-                        <td class="table-cell-width">${inventario.ProductoId.Codigo}</td>
-                        <td class="table-cell-width">${inventario.ProductoId.Nombre}</td>
-                        <td class="table-cell-width">${inventario.PrecioVenta}</td>
-                        <td class="table-cell-width">${inventario.PrecioProveedor}</td>
-                        <td class="table-cell-width">${inventario.Cantidad}</td>
-                        <td class="table-cell-width estado-table ${inventario.Estado === 'Activo' ? 'activo' : 'inactivo'}">${inventario.Estado}</td>
-                        <td class="table-cell-width">
-                            <div class="row-actions">
-                                <div class="row-action" onclick="showDetails(${inventario.id})">
-                                    <i class="fa-solid fa-info-circle btn btn-primary"></i> 
-                                </div>
-                                <div class="row-action" onclick="findById(${inventario.id})">
-                                    <i class="fa-solid fa-user-pen btn btn-warning"></i> 
-                                </div>
-                                <div class="row-action" onclick="deleteById(${inventario.id})">
-                                    <i class="fa-solid fa-trash btn btn-danger"></i>
-                                </div>
+                <tr class="table-light fadeIn">
+                    <td class="table-cell-width">${habitacion.id}</td>
+                    <td class="table-cell-width">${habitacion.AdministracionHabitacionId.Codigo}</td>
+                    <td class="table-cell-width">${habitacion.InventarioId.Codigo}</td>
+                    <td class="table-cell-width">${habitacion.Cantidad}</td>
+                    <td class="table-cell-width estado-table ${producto.Estado === 'Activo' ? 'activo' : 'inactivo'}">${producto.Estado}</td>
+                    <td class="table-cell-width">
+                        <div class="row-actions">
+                            <div class="row-action" onclick="showDetails(${producto.id})">
+                                <i class="fa-solid fa-info-circle btn btn-primary"></i> 
                             </div>
-                        </td>
-                    </tr>
-                `;
+                            <div class="row-action" onclick="findById(${producto.id})">
+                                <i class="fa-solid fa-user-pen btn btn-warning"></i> 
+                            </div>
+                            <div class="row-action" onclick="deleteById(${producto.id})">
+                                <i class="fa-solid fa-trash btn btn-danger"></i>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `;
             })
             $("#dataResult").html(registros);
 
@@ -104,7 +101,7 @@ function loadTable() {
 
                                 $.fn.dataTable.fileSave(
                                     new Blob([JSON.stringify(data)]),
-                                    'Inventario.json'
+                                    'Producto.json'
                                 );
                             }
                         }
@@ -116,9 +113,10 @@ function loadTable() {
 
                 dataTableInitialized = true;
             }
+
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            let errorMessage = "Error al obtener la lista de inventario4";
+            let errorMessage = "Error al obtener la lista de habitacion";
             const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
             const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
 
@@ -149,19 +147,15 @@ function loadTable() {
 function findById(id) {
     $(document).ready(function () {
         $.ajax({
-            url: 'https://hotel-api-hzf6.onrender.com/api/inventario/inventario/' + id,
+            url: 'https://hotel-api-hzf6.onrender.com/api/inventario/inventarioHabitacion/' + id,
             type: 'GET',
             dataType: 'json',
-            success: function (inventario) {
-                $('#id').val(inventario.data.id);
-                $('#codigo').val(inventario.data.Codigo);
-                $('#precioProveedor').val(inventario.data.PrecioProveedor);
-                $('#precioVenta').val(inventario.data.PrecioVenta);
-                $('#cantidad').val(inventario.data.Cantidad);
-                $('#productoId').val(inventario.data.ProductoId.id);
-
-
-                $("#estado").prop("checked", inventario.data.Estado === 'Activo');
+            success: function (habitacion) {
+                $('#id').val(habitacion.data.id);
+                $('#habitacionId').val(habitacion.data.AdministracionHabitacionId.id);
+                $('#inventarioId').val(habitacion.data.InventarioId.id);
+                $('#cantidad').val(habitacion.data.Cantidad);
+                $("#estado").prop("checked", habitacion.data.Estado === 'Activo');
                 const Toast = Swal.mixin({
                     toast: true,
                     position: 'top-end',
@@ -176,7 +170,7 @@ function findById(id) {
 
                 Toast.fire({
                     icon: 'success',
-                    title: inventario.message
+                    title: habitacion.message,
                 });
                 $("#myModal").data("action", "guardarCambios");
                 $('#myModal').modal('show');
@@ -210,25 +204,25 @@ function findById(id) {
     });
 }
 
-function agregarInventario() {
+function agregarHabitacion() {
 
     var formData = {
-        Codigo: $('#codigo').val(),
-        ProductoId: {
-            id: $('#productoId').val()
+        AdministracionHabitacionId: {
+            id: $('#habitacionId').val()
         },
-        PrecioVenta: $('#precioVenta').val(),
-        PrecioProveedor: $('#precioProveedor').val(),
+        InventarioId: {
+            id: $('#inventarioId').val()
+        },
         Cantidad: $('#cantidad').val(),
         Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
     };
 
     $.ajax({
         type: 'POST',
-        url: 'https://hotel-api-hzf6.onrender.com/api/inventario/inventario',
+        url: 'https://hotel-api-hzf6.onrender.com/api/inventario/inventarioHabitacion',
         data: JSON.stringify(formData),
         contentType: 'application/json',
-        success: function (item) {
+        success: function (result) {
             const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -243,14 +237,15 @@ function agregarInventario() {
 
             Toast.fire({
                 icon: 'success',
-                title: item.message
+                title: result.message,
             })
             Limpiar();
             loadTable();
+            
         },
         error: function (jqXHR, textStatus, errorThrown) {
 
-            let errorMessage = "Ha ocurrido un error al registrar el producto";
+            let errorMessage = "Ha ocurrido un error al registrar el habitacion";
 
             if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
                 errorMessage += ": " + jqXHR.responseJSON.message;
@@ -276,84 +271,87 @@ function agregarInventario() {
                 text: errorDescription,
                 icon: "error"
             });
+            
         }
     });
 }
 
 function guardarCambios() {
 
-    var id = $('#id').val();
+    $(document).ready(function () {
 
-    var formData = {
-        Codigo: $('#codigo').val(),
-        ProductoId: {
-            id: $('#productoId').val()
-        },
-        PrecioVenta: $('#precioVenta').val(),
-        PrecioProveedor: $('#precioProveedor').val(),
-        Cantidad: $('#cantidad').val(),
-        Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
-    };
+        var id = $('#id').val();
 
-    $.ajax({
-        type: 'PUT',
-        url: 'https://hotel-api-hzf6.onrender.com/api/inventario/inventario/' + id,
-        data: JSON.stringify(formData),
-        contentType: 'application/json',
-        success: function (result) {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 4000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+        var formData = {
+            AdministracionHabitacionId: {
+                id: $('#habitacionId').val()
+            },
+            InventarioId: {
+                id: $('#inventarioId').val()
+            },
+            Cantidad: $('#cantidad').val(),
+            Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
+        };
+
+        $.ajax({
+            url: 'https://hotel-api-hzf6.onrender.com/api/inventario/inventarioHabitacion/' + id,
+            type: 'PUT',
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function (result) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'warning',
+                    title: result.message,
+                })
+                loadTable();
+                Limpiar();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+                let errorMessage = "Ha ocurrido un error al actualizar la habitacion";
+
+                if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                    errorMessage += ": " + jqXHR.responseJSON.message;
                 }
-            })
 
-            Toast.fire({
-                icon: 'warning',
-                title: result.message
-            })
+                const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
+                const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
 
-            loadTable();
-            Limpiar();
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
 
-            let errorMessage = "Ha ocurrido un error al registrar el producto";
-
-            if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
-                errorMessage += ": " + jqXHR.responseJSON.message;
+                Toast.fire({
+                    title: errorMessage,
+                    text: errorDescription,
+                    icon: "error"
+                });
             }
-
-            const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
-            const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
-
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                title: errorMessage,
-                text: errorDescription,
-                icon: "error"
-            });
-        }
+        });
     });
 }
 
-
+//Accion para eliminar un registro seleccionado 
 function deleteById(id) {
     Swal.fire({
         icon: 'warning',
@@ -367,7 +365,7 @@ function deleteById(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: 'https://hotel-api-hzf6.onrender.com/api/inventario/inventario/' + id,
+                url: 'https://hotel-api-hzf6.onrender.com/api/inventario/inventarioHabitacion/' + id,
                 method: "delete",
                 headers: {
                     "Content-Type": "application/json"
@@ -412,53 +410,46 @@ function deleteById(id) {
     });
 }
 
-
 function Limpiar() {
-    $('#id').val('');
-    $('#codigo').val('');
-    $('#productoId').val('0');
-    $('#precioVenta').val('');
-    $('#precioProveedor').val('');
+    $('#habitacionId').val('0');
+    $('#inventarioId').val('0');
     $('#cantidad').val('');
     $("#estado").prop('checked', false);
 }
-
-function validarCamposInventario() {
+function validarCamposHabitacion() {
+    $.validator.addMethod("entero", function (value, element) {
+        return /^\d+$/.test(value); // Verifica si el valor consiste solo en dígitos
+    }, "Por favor, ingresa un número entero válido.");
 
     $('#formulario').validate({
         rules: {
-            codigo: {
+            cantidad: {
                 required: true,
-                minlength: 3
+                entero: true
             },
-            productoId: {
+            habitacionId: {
                 required: true
             },
-            precioVenta: {
+            inventarioId: {
                 required: true
             },
-            precioProveedor: {
-                required: true
-            }
+
         },
         messages: {
-            codigo: {
-                required: 'Por favor, ingresa un código',
-                minlength: 'El código debe tener al menos {0} caracteres'
+            cantidad: {
+                required: 'por favor, ingrese cantidad',
+                entero: 'solo se pueden ingresar numeros enteros'
             },
-            nombre: {
-                required: 'Por favor, ingresa un nombre',
-                letras: 'Por favor, ingresa solo letras en la ruta'
+
+            habitacionId: {
+                required: 'Por favor, seleccione una habitacion '
+
             },
-            productoId: {
-                required: 'Por favor,  un producto'
+            inventarioId: {
+                required: 'Por favor, seleccione un inventario',
+
             },
-            precioVenta: {
-                required: 'Por favor, ingresa un precio de venta'
-            },
-            precioProveedor: {
-                required: 'Por favor, ingrese el precio para proveedor'
-            }
+
         },
         errorClass: 'is-invalid',
         errorElement: 'div',
@@ -472,5 +463,6 @@ function validarCamposInventario() {
             $(element.form).find("label[for=" + element.id + "]")
                 .removeClass(errorClass);
         },
+
     });
 }

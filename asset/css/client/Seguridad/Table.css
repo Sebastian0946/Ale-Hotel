@@ -1,0 +1,113 @@
+.container {
+    max-width: 150vh;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    margin-top: 50px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.table th,
+.table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.table thead {
+    background-color: #f9f9f9;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tbody tr:hover {
+    background-color: #e3f2fd;
+}
+
+.switch-container {
+    display: flex;
+    align-items: center;
+}
+
+.switch {
+    position: relative;
+    width: 60px;
+    height: 34px;
+    margin-right: 10px;
+}
+
+.switch input {
+    display: none;
+}
+
+.switch label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 34px;
+    background-color: #ccc;
+    border-radius: 34px;
+    cursor: pointer;
+}
+
+.switch label:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.switch input:checked+label {
+    background-color: #2ecc71;
+}
+
+.switch input:checked+label:before {
+    transform: translateX(26px);
+}
+
+
+.popupText {
+    font-size: 16px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.fadeIn {
+    animation: fadeIn 1s;
+}
+
+.slideInRight {
+    animation: slideInRight 0.5s;
+}
