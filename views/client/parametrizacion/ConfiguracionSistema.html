@@ -14,7 +14,6 @@
     <!-- CSS native -->
     <link rel="stylesheet" href="../../../asset/css/client/Table.css">
 
-
     <!-- Librerias js -->
     <script src="../../../asset/library/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../../../asset/library/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
@@ -52,7 +51,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form name="formData" id="formData">
+                            <form id="formulario">
                                 <input type="text" id="id" name="id" hidden>
                                 <table class="table-modal">
                                     <tbody>
@@ -69,9 +68,7 @@
                                                 <label class="form-label">Id Usuario: </label>
                                             </td>
                                             <td>
-                                                <select name="usuarioId" id="usuarioId" class="form-select">
-
-                                                </select>
+                                                <select name="usuarioId" id="usuarioId" class="form-select"> </select>
                                             </td>
                                         </tr>
                                         <tr>
@@ -104,8 +101,8 @@
                                     </tbody>
                                 </table>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-success" onclick="performAction();">Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="Limpiar();" title="Cerrar">Cerrar</button>
+                                    <button type="button" class="btn btn-success" onclick="performAction();" title="Guardar">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -113,8 +110,7 @@
                 </div>
             </div>
             <!-- Tabla -->
-            <table id="table" class="display table table-bordered p-2 m-lg-2 animate__animated animate__fadeIn"
-                style="width: 100%;">
+            <table id="table" class="display table table-bordered p-2 m-lg-2 animate__animated animate__fadeIn" style="width: 100%;">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -141,9 +137,4 @@
     <script src="../../../asset/library/icons/icons.js"></script>
     <script src="../../../asset/js/client/Animacion.js"></script>
 </body>
-
 </html>
-<script>
-    loadTable();
-    loadParametrizacion();
-</script>

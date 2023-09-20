@@ -1,43 +1,19 @@
 var dataTableInitialized = false;
 
-function performAction() {
-    var action = $("#myModal").data("action");
+function showLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+}
 
-    if (action === "guardarCambios") {
-        guardarCambios();
-        $("#myModal").data("action", "");
-        $('#myModal').modal('hide');
-    } else {
-        validarCamposFormulario();
-
-        if ($('#codigo').valid() && $('#ruta').valid() && $('#etiqueta').valid() && $('#icono').valid() && $('#moduloId').valid()) {
-
-            agregarFormulario();
-            $('#myModal').modal('hide');
-        } else {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                title: 'Campos incompletos o inválidos',
-                text: 'Por favor, verifica todos los campos antes de continuar.',
-                icon: "error"
-            });
-        }
-    }
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'none';
 }
 
 async function loadTable() {
     try {
+        showLoader();
+
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/formulario', {
             method: 'GET',
             headers: {
@@ -47,101 +23,53 @@ async function loadTable() {
 
         if (response.ok) {
             const items = await response.json();
-            let registros = "";
+            const table = $('#table').DataTable();
 
-            items.data.forEach(function (formulario) {
+            table.clear();
 
-                const moduloInfo = `${formulario.ModuloId.Ruta} - ${formulario.ModuloId.Etiqueta}`;
+            items.data.forEach((formulario) => {
+                const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${formulario.id})"><i class="fa-solid fa-user-pen"></i></button>`;
+                const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${formulario.id})"><i class="fa-solid fa-trash"></i></button>`;
 
-                registros += `
-                    <tr class="table-light fadeIn">
-                        <td class="table-cell-width">${formulario.id}</td>
-                        <td class="table-cell-width">${formulario.Codigo}</td>
-                        <td class="table-cell-width" style="width: 20%;">${moduloInfo}</td>
-                        <td class="table-cell-width">${formulario.Ruta}</td>
-                        <td class="table-cell-width" style="text-align: center;"><i class="${formulario.Icono}"></i></td>
-                        <td class="table-cell-width">${formulario.Etiqueta}</td>
-                        <td class="table-cell-width ${formulario.Estado === 'Activo' ? 'text-success' : 'text-danger'}">${formulario.Estado}</td>
-                        <td class="table-cell-width">
-                            <div class="row-actions">
-                                <div class="row-action" onclick="showDetails(${formulario.id})">
-                                    <i class="fa-solid fa-info-circle btn btn-primary"></i> 
-                                </div>
-                                <div class="row-action" onclick="findById(${formulario.id})">
-                                    <i class="fa-solid fa-user-pen btn btn-warning"></i> 
-                                </div>
-                                <div class="row-action" onclick="deleteById(${formulario.id})">
-                                    <i class="fa-solid fa-trash btn btn-danger"></i>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                const estadoClass = formulario.Estado === 'Activo' ? 'text-success' : 'text-danger';
+
+                const actions = `
+                    <div class="actions-container">
+                        ${editButton} ${deleteButton}
+                    </div>
                 `;
+
+                table.row.add([formulario.id, formulario.Codigo, formulario.ModuloId.Ruta, formulario.Ruta, formulario.Icono, formulario.Etiqueta ,`<span class="${estadoClass}">${formulario.Estado}</span>`, actions]);
             });
 
-            $("#dataResult").html(registros);
+            table.draw();
 
-            if (!dataTableInitialized) {
-                $('#table').DataTable({
-                    language: {
-                        url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
-                    },
-                    paging: true,
-                    pageLength: 5,
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'copyHtml5',
-                        'excelHtml5',
-                        'csvHtml5',
-                        {
-                            extend: 'pdfHtml5',
-                            download: 'open'
-                        },
-                        {
-                            text: 'JSON',
-                            action: function (e, dt, button, config) {
-                                var data = dt.buttons.exportData();
+            hideLoader();
 
-                                $.fn.dataTable.fileSave(
-                                    new Blob([JSON.stringify(data)]),
-                                    'Formulario.json'
-                                );
-                            }
-                        }
-                    ],
-                    responsive: true,
-                    colReorder: true,
-                    select: true
+            if (items.message && !mensajeMostrado) {
+                mensajeMostrado = true;
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
                 });
 
-                dataTableInitialized = true;
+                Toast.fire({
+                    icon: 'success',
+                    title: items.message
+                });
             }
-
-        } else {
-            const errorResponse = await response.json();
-            let errorMessage = "Error al obtener la lista de formulario";
-            const errorDescription = errorResponse.message || "Detalles del error desconocido";
-
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                title: errorMessage,
-                text: errorDescription,
-                icon: "error"
-            });
-        }
+        } 
+        hideLoader();
     } catch (error) {
         console.error("Error al realizar la petición Fetch:", error);
+        hideLoader();
     }
 }
 
@@ -217,81 +145,8 @@ async function findById(id) {
 }
 
 
-async function agregarFormulario() {
+function performAction() {
 
-    var formData = {
-        ModuloId: {
-            id: $('#moduloId').val()
-        },
-        Codigo: $('#codigo').val(),
-        Ruta: $('#ruta').val(),
-        Etiqueta: $('#etiqueta').val(),
-        Icono: $('#icono').val(),
-        Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
-    };
-
-    try {
-        const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/formulario', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (response.ok) {
-
-            const item = await response.json();
-
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            })
-
-            Toast.fire({
-                icon: 'success',
-                title: item.message,
-            });
-
-            Limpiar();
-            loadTable();
-        } else {
-
-            const errorResponse = await response.json();
-            let errorMessage = "Ha ocurrido un error al registrar el formulario";
-            const errorDescription = errorResponse.message || "Detalles del error desconocido";
-
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                title: errorMessage,
-                text: errorDescription,
-                icon: "error"
-            });
-        }
-    } catch (error) {
-        console.error("Error al realizar la petición Fetch:", error);
-    }
-}
-
-async function guardarCambios() {
     var id = $('#id').val();
 
     var formData = {
@@ -305,63 +160,101 @@ async function guardarCambios() {
         Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
     };
 
-    try {
-        const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/seguridad/formulario/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
+    var url = id && id !== '0' ? 'https://hotel-api-hzf6.onrender.com/api/seguridad/formulario/' + id : 'https://hotel-api-hzf6.onrender.com/api/seguridad/formulario';
+    var type = id && id !== '0' ? 'PUT' : 'POST';
+
+    validarCamposFormulario();
+
+    if ($('#codigo').valid() && $('#ruta').valid() && $('#etiqueta').valid() && $('#icono').valid() && $('#moduloId').valid()) {
+        $.ajax({
+            url: url,
+            type: type,
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function (result) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+
+                Toast.fire({
+                    icon: id && id !== '0' ? 'warning' : 'success',
+                    title: result.message
+                });
+
+                loadTable();
+
+                Limpiar();
+                $("#myModal").data("action", "");
+                $('#myModal').modal('hide');
             },
-            body: JSON.stringify(formData)
+            error: function (jqXHR, textStatus, errorThrown) {
+                let errorMessage = "Ha ocurrido un error al ";
+
+                if (id && id !== '0') {
+                    errorMessage += "actualizar la categoria";
+                } else {
+                    errorMessage += "registrar el rol";
+                }
+
+                if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                    errorMessage += ": " + jqXHR.responseJSON.message;
+                }
+
+                const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
+                const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    title: errorMessage,
+                    text: errorDescription,
+                    icon: "error"
+                });
+            }
+        });
+    } else {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
         });
 
-        if (response.ok) {
-            const item = await response.json();
-
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 4000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            })
-
-            Toast.fire({
-                icon: 'warning',
-                title: item.message,
-            });
-
-            loadTable();
-            Limpiar();
-        } else {
-            const errorResponse = await response.json();
-            let errorMessage = "Ha ocurrido un error al actualizar el formulario";
-            const errorDescription = errorResponse.message || "Detalles del error desconocido";
-
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                title: errorMessage,
-                text: errorDescription,
-                icon: "error"
-            });
-        }
-    } catch (error) {
-        console.error("Error al realizar la petición Fetch:", error);
+        Toast.fire({
+            title: 'Campos incompletos o inválidos',
+            text: 'Por favor, verifica todos los campos antes de continuar.',
+            icon: "error"
+        });
     }
+
+    $('#myModal').on('hidden.bs.modal', function () {
+        var form = $("#formulario");
+        form.validate().resetForm();
+        $('.is-invalid').removeClass('is-invalid');
+    });
 }
 
 function deleteById(id) {

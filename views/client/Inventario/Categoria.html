@@ -8,21 +8,24 @@
     <!-- Librerias CSS -->
     <link rel="stylesheet" href="../../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../../asset/library/node_modules/datatables.net-dt/css/jquery.dataTables.min.css">
-
+    <link rel="stylesheet" href="../../../asset/library/node_modules/toastify-js/src/toastify.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css">
     <!-- CSS native -->
     <link rel="stylesheet" href="../../../asset/css/client/Table.css">
-
-
-    <!-- Librerias js -->
+    <!-- Librerias js datos y table -->
     <script src="../../../asset/library/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../../../asset/library/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="../../../asset/library/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="../../../asset/library/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../../../asset/library/node_modules/datatables.net-select/js/dataTables.select.min.js"></script>
+    <!-- Libreria js botones table -->
     <script src="../../../asset/library/node_modules/jszip/dist/jszip.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/pdfmake.min.js"></script>
+    <script src="../../../asset/library/node_modules/jspdf/dist/jspdf.umd.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/vfs_fonts.js"></script>
     <script src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
-
+    <!-- Libreria popper js para botones -->
+    <script src="../../../asset/library/node_modules/@popperjs/core/dist/umd/popper.js"></script>
 </head>
 <body>
     
@@ -86,26 +89,25 @@
                                     </tbody>
                                 </table>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="Limpiar();">Cerrar</button>
-                                    <button type="button" class="btn btn-success" onclick="performAction();" >Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="Limpiar();" title="Cerrar">Cerrar</button>
+                                    <button type="button" class="btn btn-success" onclick="performAction();" title="Guardar">Guardar</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <table id="table" class="display table table-bordered table-hover p-2 m-lg-2" style="width: 100%;">
+            <table id="table" class="display table table-bordered table-hover p-2 m-lg-2 pt-3">
                 <thead>
-                    <tr>
+                    <tr class="text-center">
                         <th>Id</th>
                         <th>Codigo</th>
                         <th>Descripcion</th>
-                        <th>Estado</th>
+                        <th class="estado-column">Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="dataResult">
-
                 </tbody>
             </table>
         </div>
@@ -115,12 +117,10 @@
     <!-- Librerias js  -->
     <script src="../../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../../asset/library/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="../../../asset/library/node_modules/toastify-js/src/toastify.js"></script>
     <script src="../../../asset/library/node_modules/animejs/lib/anime.min.js"></script>
     <script src="../../../asset/js/client/inventario/Categoria.js"></script>
     <script src="../../../asset/library/icons/icons.js"></script>
     <script src="../../../asset/js/client/Animacion.js"></script>
 </body>
 </html>
-<script>
-    loadTable();
-</script>

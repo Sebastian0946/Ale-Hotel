@@ -7,7 +7,7 @@
     <title>Estado Factura</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
 
-     <!-- Librerias CSS -->
+    <!-- Librerias CSS -->
     <link rel="stylesheet" href="../../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../../asset/library/node_modules/datatables.net-dt/css/jquery.dataTables.min.css">
 
@@ -23,7 +23,8 @@
     <script src="../../../asset/library/node_modules/jszip/dist/jszip.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/pdfmake.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/vfs_fonts.js"></script>
-    <script src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
+    <script
+        src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
 </head>
 
 <body>
@@ -38,7 +39,8 @@
         <div class="title">
             <h1>Registro Huesped</h1>
         </div>
-        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal" data-bs-target="#myModal" onclick="Limpiar();" onmouseenter="expandButton();" onmouseleave="resetButton();">
+        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal"
+            data-bs-target="#myModal" onclick="Limpiar();" onmouseenter="expandButton();" onmouseleave="resetButton();">
             <i class="fa-solid fa-plus"></i>
         </button>
 
@@ -51,25 +53,31 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form  id="formulario">
+                            <form id="formulario">
                                 <input type="text" id="id" name="id" hidden>
                                 <table class="table-modal">
                                     <tbody>
                                         <tr>
-                                            <td> <div class="col-sm-6">
-                                                <label for="" class="form-label mt-2"><b>Descuento Registrado</b></label>
-                                                <select class="form-select" id="descuentoId" name="descuentoId">
-                                                    <!-- data result database -->                        
-                                                </select>
-                                            </div></td>
+                                            <td>
+                                                <div class="col-sm-6">
+                                                    <label for="" class="form-label mt-2"><b>Descuento
+                                                            Registrado</b></label>
+                                                    <select class="form-select" id="descuentoId" name="descuentoId">
+                                                        <!-- data result database -->
+                                                    </select>
+                                                </div>
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td> <div class="col-sm-6">
-                                                <label for="" class="form-label mt-2"><b>Seguridad Usuario</b></label>
-                                                <select class="form-select" id="seguridadId" name="seguridadId">
-                                                    <!-- data result database -->                        
-                                                </select>
-                                            </div></td>
+                                            <td>
+                                                <div class="col-sm-6">
+                                                    <label for="" class="form-label mt-2"><b>Seguridad
+                                                            Usuario</b></label>
+                                                    <select class="form-select" id="seguridadId" name="seguridadId">
+                                                        <!-- data result database -->
+                                                    </select>
+                                                </div>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -77,7 +85,8 @@
                                             </td>
                                             <td>
                                                 <div class="switch">
-                                                    <input type="checkbox" id="estado" name="estado" value="1" class="toggle-switch-checkbox">
+                                                    <input type="checkbox" id="estado" name="estado" value="1"
+                                                        class="toggle-switch-checkbox">
                                                     <label for="estado" class="toggle-switch-label"></label>
                                                 </div>
                                             </td>
@@ -85,8 +94,8 @@
                                     </tbody>
                                 </table>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-success" onclick="performAction();">Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="Limpiar();" title="Cerrar">Cerrar</button>
+                                    <button type="button" class="btn btn-success" onclick="performAction();" title="Guardar">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -94,7 +103,8 @@
                 </div>
             </div>
             <!-- Tabla -->
-            <table id="table" class="display table table-bordered p-2 m-lg-2 animate__animated animate__fadeIn" style="width: 100%;">
+            <table id="table" class="display table table-bordered p-2 m-lg-2 animate__animated animate__fadeIn"
+                style="width: 100%;">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -118,6 +128,7 @@
     <script src="../../../asset/library/icons/icons.js"></script>
     <script src="../../../asset/js/client/Animacion.js"></script>
 </body>
+
 </html>
 <script>
     loadTable();

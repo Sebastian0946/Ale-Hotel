@@ -84,3 +84,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
         loader.style.display = "none";
     }, 2000); // Ajusta el tiempo de espera antes de ocultar la pantalla de carga aquí (en milisegundos)
 });
+
+const buttons = document.querySelectorAll('.flip');
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        button.classList.remove('flip');
+    });
+});

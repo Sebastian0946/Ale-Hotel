@@ -92,24 +92,35 @@ async function loadTable() {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
                 },
                 paging: true,
-                pageLength: 5,
+                pageLength: 10, 
+                lengthMenu: [10, 20, 100],
                 dom: 'Bfrtip',
                 buttons: [
-                    'copyHtml5',
-                    'excelHtml5',
-                    'csvHtml5',
                     {
+                        text: '<i class="fas fa-copy"></i> Copiar', 
+                        extend: 'copyHtml5'
+                    },
+                    {
+                        text: '<i class="fas fa-file-excel"></i> Excel', 
+                        extend: 'excelHtml5'
+                    },
+                    {
+                        text: '<i class="fas fa-file-csv"></i> CSV', 
+                        extend: 'csvHtml5'
+                    },
+                    {
+                        text: '<i class="fas fa-file-pdf"></i> PDF', 
                         extend: 'pdfHtml5',
                         download: 'open'
                     },
                     {
-                        text: 'JSON',
+                        text: '<i class="fas fa-file-code"></i> JSON', 
                         action: function (e, dt, button, config) {
                             var data = dt.buttons.exportData();
 
                             $.fn.dataTable.fileSave(
                                 new Blob([JSON.stringify(data)]),
-                                'Usuario.json'
+                                'Producto.json'
                             );
                         }
                     }

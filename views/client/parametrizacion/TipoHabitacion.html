@@ -52,7 +52,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form name="formData" id="formData">
+                            <form name="formData" id="formulario">
                                 <input type="text" id="id" name="id" hidden>
                                 <table class="table-modal">
                                     <tbody>
@@ -61,7 +61,7 @@
                                                 <label class="form-label">Código: </label>
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" name="codigo" id="codigo">
+                                                <input type="text" class="form-control" name="codigo" id="codigo" placeholder="Codigo">
                                             </td>
                                         </tr>
                                         <tr>
@@ -69,8 +69,7 @@
                                                 <label class="form-label">Descripción: </label>
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" name="descripcion"
-                                                    id="descripcion" placeholder="Descripción">
+                                                <input type="text" class="form-control" name="descripcion" id="descripcion" placeholder="Descripción">
                                             </td>
                                         </tr>
                                         <tr>
@@ -78,8 +77,7 @@
                                                 <label class="form-label">Cantidad: </label>
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" name="cantidad"
-                                                    id="cantidad" placeholder="cantidad">
+                                                <input type="number" class="form-control" name="cantidad" id="cantidad" placeholder="cantidad">
                                             </td>
                                         </tr>
                                         <tr>
@@ -97,8 +95,8 @@
                                     </tbody>
                                 </table>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-success" onclick="performAction();">Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="Limpiar();" title="Cerrar">Cerrar</button>
+                                    <button type="button" class="btn btn-success" onclick="performAction();" title="Guardar">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -132,6 +130,3 @@
     <script src="../../../asset/js/client/Animacion.js"></script>
 </body>
 </html>
-<script>
-    loadTable();
-</script>

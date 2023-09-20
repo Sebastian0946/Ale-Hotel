@@ -56,21 +56,53 @@ async function loadTable() {
 
         dataResult.innerHTML = registros;
 
-        $('#table').DataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
-            },
-            paging: true,
-            pageLength: 5,
-            dom: 'Bfrtip',
-            buttons: [
-                'copyHtml5',
-                'excelHtml5',
-                'csvHtml5',
-                'pdfHtml5'
-            ],
-            responsive: true,
-        });
+        if (!dataTableInitialized) {
+            $('#table').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
+                },
+                paging: true,
+                pageLength: 10, 
+                lengthMenu: [10, 20, 100],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        text: '<i class="fas fa-copy"></i> Copiar', 
+                        extend: 'copyHtml5'
+                    },
+                    {
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        extend: 'excelHtml5'
+                    },
+                    {
+                        text: '<i class="fas fa-file-csv"></i> CSV',
+                        extend: 'csvHtml5'
+                    },
+                    {
+                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                        extend: 'pdfHtml5',
+                        download: 'open'
+                    },
+                    {
+                        text: '<i class="fas fa-file-code"></i> JSON',
+                        action: function (e, dt, button, config) {
+                            var data = dt.buttons.exportData();
+
+                            $.fn.dataTable.fileSave(
+                                new Blob([JSON.stringify(data)]),
+                                'Producto.json'
+                            );
+                        }
+                    }
+                ],
+                responsive: true,
+                colReorder: true,
+                select: true
+            });
+
+            dataTableInitialized = true;
+        }
+
     } catch (error) {
         const errorMessage = `Error al obtener la lista de consumo habitaciones: ${error.message}`;
         const Toast = Swal.mixin({

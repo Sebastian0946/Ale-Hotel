@@ -1,94 +1,75 @@
 var dataTableInitialized = false;
 
-function performAction() {
-    const action = $("#myModal").data("action");
+function showLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+}
 
-    if (action === "guardarCambios") {
-        guardarCambios();
-        $("#myModal").data("action", "");
-    } else {
-        agregarTipoHabitacion();
-    }
-    $('#myModal').modal('hide');
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'none';
 }
 
 async function loadTable() {
     try {
+        showLoader();
+
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion', {
-            method: "GET",
+            method: 'GET',
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             }
         });
 
         if (response.ok) {
-            const { data: items } = await response.json();
-            const registros = items.map(TipoHabitacion => `
-                <tr class="table-light fadeIn">
-                    <td class="table-cell-width">${TipoHabitacion.id}</td>
-                    <td class="table-cell-width">${TipoHabitacion.Codigo}</td>
-                    <td class="table-cell-width">${TipoHabitacion.Descripcion}</td>
-                    <td class="table-cell-width">${TipoHabitacion.Cantidad}</td>
-                    <td class="table-cell-width estado-table ${TipoHabitacion.Estado === 'Activo' ? 'activo' : 'inactivo'}">${TipoHabitacion.Estado}</td>
-                    <td class="table-cell-width">
-                        <div class="row-actions">
-                            <div class="row-action" onclick="showDetails(${TipoHabitacion.id})">
-                                <i class="fa-solid fa-info-circle btn btn-primary"></i> 
-                            </div>
-                            <div class="row-action" onclick="findById(${TipoHabitacion.id})">
-                                <i class="fa-solid fa-user-pen btn btn-warning"></i> 
-                            </div>
-                            <div class="row-action" onclick="deleteById(${TipoHabitacion.id})">
-                                <i class="fa-solid fa-trash btn btn-danger"></i>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            `).join("");
+            const items = await response.json();
+            const table = $('#table').DataTable();
 
-            $("#dataResult").html(registros);
+            table.clear();
 
-            if (!dataTableInitialized) {
-                $('#table').DataTable({
-                    language: {
-                        url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
-                    },
-                    paging: true,
-                    pageLength: 5,
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'copyHtml5',
-                        'excelHtml5',
-                        'csvHtml5',
-                        {
-                            extend: 'pdfHtml5',
-                            download: 'open'
-                        },
-                        {
-                            text: 'JSON',
-                            action: function (e, dt, button, config) {
-                                var data = dt.buttons.exportData();
+            items.data.forEach((TipoHabitacion) => {
+                const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${TipoHabitacion.id})"><i class="fa-solid fa-user-pen"></i></button>`;
+                const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${TipoHabitacion.id})"><i class="fa-solid fa-trash"></i></button>`;
 
-                                $.fn.dataTable.fileSave(
-                                    new Blob([JSON.stringify(data)]),
-                                    'TipoHabitación.json'
-                                );
-                            }
-                        }
-                    ],
-                    responsive: true,
-                    colReorder: true,
-                    select: true
+                const estadoClass = TipoHabitacion.Estado === 'Activo' ? 'text-success' : 'text-danger';
+
+                const actions = `
+                    <div class="actions-container">
+                        ${editButton} ${deleteButton}
+                    </div>
+                `;
+
+                table.row.add([TipoHabitacion.id, TipoHabitacion.Codigo, TipoHabitacion.Descripcion, TipoHabitacion.Cantidad, `<span class="${estadoClass}">${TipoHabitacion.Estado}</span>`, actions]);
+            });
+
+            table.draw();
+
+            hideLoader();
+
+            if (items.message && !mensajeMostrado) {
+                mensajeMostrado = true;
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
                 });
 
-                dataTableInitialized = true;
+                Toast.fire({
+                    icon: 'success',
+                    title: items.message
+                });
             }
-
-        } else {
-            console.log("Error en la respuesta del servidor:", response.status, response.statusText);
         }
+        hideLoader();
     } catch (error) {
-        console.error("Error al cargar la tabla:", error);
+        console.error("Error al realizar la petición Fetch:", error);
+        hideLoader();
     }
 }
 
@@ -163,74 +144,8 @@ async function findById(id) {
     }
 }
 
-async function agregarTipoHabitacion() {
+function performAction() {
 
-    const formData = {
-        Codigo: $('#codigo').val(),
-        Descripcion: $('#descripcion').val(),
-        Cantidad: $('#cantidad').val(),
-        Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
-    };
-
-    try {
-        const response = await fetch('https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (response.ok) {
-            const jsonResponse = await response.json();
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-
-            Toast.fire({
-                icon: 'success',
-                title: jsonResponse.message || 'Registro exitoso',
-            });
-            Limpiar();
-            loadTable();
-        } else {
-            const errorResponse = await response.json();
-            let errorMessage = "Ha ocurrido un error al registrar el Estado Factura";
-            const errorDescription = errorResponse.message || "Detalles del error desconocido";
-
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                title: errorMessage,
-                text: errorDescription,
-                icon: "error"
-            });
-        }
-    } catch (error) {
-        console.error("Error al realizar la petición Fetch:", error);
-    }
-}
-
-
-async function guardarCambios() {
     const id = $('#id').val();
 
     const formData = {
@@ -240,61 +155,102 @@ async function guardarCambios() {
         Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
     };
 
-    try {
-        const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
+    var url = id && id !== '0' ? 'https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion/' + id : 'https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion';
+
+    var type = id && id !== '0' ? 'PUT' : 'POST';
+
+    validarCamposFormulario();
+
+    if ($('#codigo').valid() && $('#descripcion').valid() && $('#cantidad').valid()) {
+        $.ajax({
+            url: url,
+            type: type,
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function (result) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+
+                Toast.fire({
+                    icon: id && id !== '0' ? 'warning' : 'success',
+                    title: result.message
+                });
+
+                loadTable();
+
+                Limpiar();
+                $("#myModal").data("action", "");
+                $('#myModal').modal('hide');
             },
-            body: JSON.stringify(formData)
+            error: function (jqXHR, textStatus, errorThrown) {
+                let errorMessage = "Ha ocurrido un error al ";
+
+                if (id && id !== '0') {
+                    errorMessage += "actualizar la categoria";
+                } else {
+                    errorMessage += "registrar el rol";
+                }
+
+                if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                    errorMessage += ": " + jqXHR.responseJSON.message;
+                }
+
+                const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
+                const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    title: errorMessage,
+                    text: errorDescription,
+                    icon: "error"
+                });
+            }
+        });
+    } else {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
         });
 
-        if (response.ok) {
-            const jsonResponse = await response.json();
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 4000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-
-            Toast.fire({
-                icon: 'warning',
-                title: jsonResponse.message || 'Modificación exitosa',
-            });
-            loadTable();
-            Limpiar();
-        } else {
-            const errorResponse = await response.json();
-            let errorMessage = "Ha ocurrido un error al actualizar el estado factura";
-            const errorDescription = errorResponse.message || "Detalles del error desconocido";
-
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                title: errorMessage,
-                text: errorDescription,
-                icon: "error"
-            });
-        }
-    } catch (error) {
-        console.error("Error al realizar la petición Fetch:", error);
+        Toast.fire({
+            title: 'Campos incompletos o inválidos',
+            text: 'Por favor, verifica todos los campos antes de continuar.',
+            icon: "error"
+        });
     }
+
+    $('#myModal').on('hidden.bs.modal', function () {
+        var form = $("#formulario");
+        form.validate().resetForm();
+        $('.is-invalid').removeClass('is-invalid');
+    });
 }
 
 async function deleteById(id) {
@@ -370,5 +326,147 @@ function Limpiar() {
     $('#id').val('');
     $('#codigo').val('');
     $('#descripcion').val('');
+    $('#cantidad').val('');
     $("#estado").prop('checked', false);
 }
+
+function validarCamposFormulario() {
+
+    $.validator.addMethod("letras", function (value, element) {
+        return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+    }, "Por favor, ingresa solo letras.");
+
+    $('#formulario').validate({
+        rules: {
+            codigo: {
+                required: true,
+                minlength: 3
+            },
+            descripcion: {
+                required: true,
+                minlength: 3,
+                letras: true
+            },
+            cantidad: {
+                required: true
+            }
+        },
+        messages: {
+            codigo: {
+                required: 'Por favor, ingresa un código',
+                minlength: 'El código debe tener al menos {0} caracteres'
+            },
+            descripcion: {
+                required: 'Por favor, ingresa una descripción',
+                minlength: 'La Descripcion debe tener al menos {0} caracteres'
+            },
+            cantidad: {
+                required: 'Por favor, ingrese una cantidad'
+            }
+        },
+        errorClass: 'is-invalid',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass(errorClass).removeClass(validClass);
+            $(element.form).find("label[for=" + element.id + "]")
+                .addClass(errorClass);
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass(errorClass).addClass(validClass);
+            $(element.form).find("label[for=" + element.id + "]")
+                .removeClass(errorClass);
+        },
+    });
+}
+
+$(document).ready(function () {
+    $('#table').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
+        },
+        paging: true,
+        pageLength: 5,
+        lengthMenu: [10, 20, 100],
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: '<i class="fas fa-copy"></i> Copiar',
+                extend: 'copyHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                extend: 'excelHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-csv"></i> CSV',
+                extend: 'csvHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-pdf"></i> PDF',
+                extend: 'pdfHtml5',
+                title: 'Configuración Sistema',
+                download: 'open',
+                customize: function (doc) {
+                    var table = doc.content[1].table;
+
+                    table.widths = ['10%', '15%', '30%', '10%', '1%'];
+                    table.padding = [0, 10, 0, 0];
+                    table.fontSize = 12;
+                    table.alignment = 'center';
+
+                    doc.content[1].table.headerRows = 1;
+                    doc.content[1].table.widths = ['20%', '20%', '20%', '20%', '35%'];
+                    doc.content[1].table.body[0].forEach(function (headerCell) {
+                        headerCell.fillColor = '#f2f2f2';
+                        headerCell.color = 'black';
+                        headerCell.fontSize = 14;
+                        headerCell.bold = true;
+                        headerCell.alignment = 'center';
+                        headerCell.margin = [0, 8, 0, 8];
+                    });
+
+                    for (var i = 1; i < doc.content[1].table.body.length; i++) {
+                        var row = doc.content[1].table.body[i];
+                        row.forEach(function (cell, j) {
+                            cell.fontSize = 12;
+                            cell.alignment = (j === 3) ? 'center' : 'left';
+                            cell.margin = [0, 5, 0, 5];
+                            if (j === 3) {
+                                if (cell.text === 'Activo') {
+                                    cell.color = 'green'; // Texto verde para "Activo"
+                                } else if (cell.text === 'Inactivo') {
+                                    cell.color = 'red'; // Texto rojo para "Inactivo"
+                                }
+                            }
+                        });
+                    }
+
+                    doc.styles.tableHeader = {
+                        fontSize: 12,
+                        bold: true,
+                        fillColor: '#f2f2f2',
+                        alignment: 'center'
+                    };
+                    doc.content[1].text = 'categoria.pdf';
+                }
+            },
+            {
+                text: '<i class="fas fa-file-code"></i> JSON',
+                action: function (e, dt, button, config) {
+                    var data = dt.buttons.exportData();
+
+                    $.fn.dataTable.fileSave(
+                        new Blob([JSON.stringify(data)]),
+                        'Tipo habitación.json'
+                    );
+                }
+            }
+        ],
+        responsive: true,
+        colReorder: true,
+        select: true
+    });
+
+    loadTable();
+    loadParametrizacion();
+});

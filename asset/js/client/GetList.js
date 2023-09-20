@@ -1,5 +1,4 @@
 function loadSeguridad() {
-
     $.ajax({
         url: 'https://hotel-api-hzf6.onrender.com/api/seguridad/persona',
         method: "GET",
