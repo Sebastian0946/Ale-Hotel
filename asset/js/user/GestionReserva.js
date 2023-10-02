@@ -1,17 +1,22 @@
-function hacerReserva() {
+document.addEventListener("DOMContentLoaded", function () {
+    const formularioRegistro = document.getElementById("formularioRegistro");
+    const formularioTipoHabitacion = document.getElementById("formularioTipoHabitacion");
+    const btnSiguiente1 = document.getElementById("btnSiguiente1");
+    const btnAtras = document.getElementById("btnAtras");
+    const btnSiguiente2 = document.getElementById("btnSiguiente2");
 
-    var nombre = document.getElementById("nombre").value;
-    var apellido = document.getElementById("apellido").value;
-    var tipoDocumento = document.getElementById("tipoDocumento").value;
-    var documento = document.getElementById("documento").value;
-    var edad = document.getElementById("edad").value;
-    var Genero = document.getElementById("genero").value;
-    var correo = document.getElementById("correo").value;
-    var telefono = document.getElementById("telefono").value;
-    var habitacion = document.getElementById("habitacion").value;
-    var fecha = document.getElementById("fecha").value;
+    btnSiguiente1.addEventListener("click", function () {
+        formularioRegistro.style.display = "none";
+        formularioTipoHabitacion.style.display = "block";
+    });
 
-    // Lógica para hacer la reserva
+    btnAtras.addEventListener("click", function () {
+        formularioRegistro.style.display = "block";
+        formularioTipoHabitacion.style.display = "none";
+    });
 
-    alert("Reserva realizada exitosamente");
-}
+    btnSiguiente2.addEventListener("click", function () {
+        // Aquí puedes procesar los datos del formulario de Tipo de Habitación.
+        alert("Formulario de Tipo de Habitación enviado correctamente.");
+    });
+});

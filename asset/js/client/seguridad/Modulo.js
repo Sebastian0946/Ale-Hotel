@@ -1,134 +1,97 @@
-var dataTableInitialized = false;
+let mensajeMostrado = false;
 
-function performAction() {
-    var action = $("#myModal").data("action");
-
-    if (action === "guardarCambios") {
-        guardarCambios();
-        $("#myModal").data("action", "");
-        
-    } else {
-        validarCamposFormulario();
-
-        if ($('#codigo').valid() && $('#ruta').valid() && $('#etiqueta').valid()) {
-            agregarModulo();
-            $('#myModal').modal('hide');
-        } else {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                title: 'Campos incompletos o inválidos',
-                text: 'Por favor, verifica todos los campos antes de continuar.',
-                icon: "error"
-            });
+function mostrarMensaje(icon, message) {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
-    }
+    });
+
+    Toast.fire({
+        icon: icon,
+        title: message
+    });
+}
+
+function showLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+}
+
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'none';
 }
 
 async function loadTable() {
     try {
+        showLoader();
+
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/modulo', {
-            method: "GET",
+            method: 'GET',
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             }
         });
 
-        if (!response.ok) {
-            throw new Error(`Error al obtener la lista de módulos: ${response.status}`);
-        }
+        if (response.ok) {
+            const items = await response.json();
+            const table = $('#table').DataTable();
 
-        const items = await response.json();
-        var registros = "";
+            table.clear();
 
-        items.data.forEach(function (modulo, index, array) {
-            registros += `
-                <tr class="table-light fadeIn">
-                    <td class="table-cell-width">${modulo.id}</td>
-                    <td class="table-cell-width">${modulo.Codigo}</td>
-                    <td class="table-cell-width">${modulo.Ruta}</td>
-                    <td class="table-cell-width">${modulo.Etiqueta}</td>
-                    <td class="table-cell-width ${modulo.Estado === 'Activo' ? 'text-success' : 'text-danger'}">${modulo.Estado}</td>
-                    <td class="table-cell-width">
-                        <div class="row-actions">
-                            <div class="row-action" onclick="showDetails(${modulo.id})">
-                                <i class="fa-solid fa-info-circle btn btn-primary"></i> 
-                            </div>
-                            <div class="row-action" onclick="findById(${modulo.id})">
-                                <i class="fa-solid fa-user-pen btn btn-warning"></i> 
-                            </div>
-                            <div class="row-action" onclick="deleteById(${modulo.id})">
-                                <i class="fa-solid fa-trash btn btn-danger"></i>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
+            items.data.forEach((modulo) => {
+                const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${modulo.id})"><i class="fa-solid fa-user-pen"></i></button>`;
+                const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${modulo.id})"><i class="fa-solid fa-trash"></i></button>`;
 
-        $("#dataResult").html(registros);
+                const estadoClass = modulo.Estado === 'Activo' ? 'text-success' : 'text-danger';
 
-        if (!dataTableInitialized) {
-            $('#table').DataTable({
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
-                },
-                paging: true,
-                pageLength: 10, 
-                lengthMenu: [10, 20, 100],
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        text: '<i class="fas fa-copy"></i> Copiar',
-                        extend: 'copyHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-excel"></i> Excel', 
-                        extend: 'excelHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-csv"></i> CSV', 
-                        extend: 'csvHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-pdf"></i> PDF',
-                        extend: 'pdfHtml5',
-                        download: 'open'
-                    },
-                    {
-                        text: '<i class="fas fa-file-code"></i> JSON',
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
+                const actions = `
+                    <div class="actions-container">
+                        ${editButton} ${deleteButton}
+                    </div>
+                `;
 
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Producto.json'
-                            );
-                        }
-                    }
-                ],
-                responsive: true,
-                colReorder: true,
-                select: true
+                table.row.add([modulo.id, modulo.Codigo, modulo.Ruta, modulo.Etiqueta, `<span class="${estadoClass} text-center">${modulo.Estado}</span>`, actions]);
             });
 
-            dataTableInitialized = true;
-        }
+            table.draw();
 
+            hideLoader();
+
+            if (items.message && !mensajeMostrado) {
+                mensajeMostrado = true;
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    icon: 'success',
+                    title: items.message
+                });
+            }
+        }
+        hideLoader();
     } catch (error) {
-        console.error(`Error al realizar la solicitud fetch: ${error}`);
+        console.error("Error al realizar la petición Fetch:", error);
+        hideLoader();
     }
 }
+
 
 async function findById(id) {
     try {
@@ -194,49 +157,107 @@ async function findById(id) {
     }
 }
 
-async function agregarModulo() {
-    var formData = {
+function performAction() {
+    const id = $('#id').val();
+    const formData = {
         Codigo: $('#codigo').val(),
         Ruta: $('#ruta').val(),
         Etiqueta: $('#etiqueta').val(),
         Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
     };
 
-    try {
-        const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/modulo', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
+    var url = id && id !== '0' ? 'https://hotel-api-hzf6.onrender.com/api/seguridad/modulo/' + id : 'https://hotel-api-hzf6.onrender.com/api/seguridad/modulo';
+    var type = id && id !== '0' ? 'PUT' : 'POST';
+
+    validarCamposFormulario();
+
+    // Función para enviar la solicitud PUT o POST
+    function sendRequest() {
+        $.ajax({
+            url: url,
+            type: type,
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function (result) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+
+                Toast.fire({
+                    icon: id && id !== '0' ? 'warning' : 'success',
+                    title: result.message
+                });
+
+                loadTable();
+
+                Limpiar();
+                $("#myModal").data("action", "");
+                $('#myModal').modal('hide');
             },
-            body: JSON.stringify(formData)
-        });
+            error: function (jqXHR, textStatus, errorThrown) {
+                let errorMessage = "Ha ocurrido un error al ";
 
-        if (!response.ok) {
-            throw new Error(`Error al registrar el módulo: ${response.status}`);
-        }
+                if (id && id !== '0') {
+                    errorMessage += "actualizar la categoria";
+                } else {
+                    errorMessage += "registrar el rol";
+                }
 
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                    errorMessage += ": " + jqXHR.responseJSON.message;
+                }
+
+                const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
+                const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    title: errorMessage,
+                    text: errorDescription,
+                    icon: "error"
+                });
             }
         });
+    }
 
-        Toast.fire({
-            icon: 'success',
-            title: 'Registro exitoso',
-        });
-
-        Limpiar();
-        loadTable();
-    } catch (error) {
-        let errorMessage = "Ha ocurrido un error al registrar el módulo: " + (error.message || "Detalles del error desconocido");
-
+    if ($('#codigo').valid() && $('#ruta').valid() && $('#etiqueta').valid()) {
+        // Solo muestra la confirmación para solicitudes PUT
+        if (type === 'PUT') {
+            Swal.fire({
+                title: '¿Está seguro de guardar los cambios?',
+                text: 'Esta acción no se puede deshacer.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, guardar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sendRequest();
+                }
+            });
+        } else {
+            sendRequest(); 
+        }
+    } else {
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -250,74 +271,17 @@ async function agregarModulo() {
         });
 
         Toast.fire({
-            title: errorMessage,
+            title: 'Campos incompletos o inválidos',
+            text: 'Por favor, verifica todos los campos antes de continuar.',
             icon: "error"
         });
     }
-}
 
-async function guardarCambios() {
-    var id = $('#id').val();
-
-    var formData = {
-        Codigo: $('#codigo').val(),
-        Ruta: $('#ruta').val(),
-        Etiqueta: $('#etiqueta').val(),
-        Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
-    };
-
-    try {
-        const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/seguridad/modulo/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error al actualizar el módulo: ${response.status}`);
-        }
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 4000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        })
-
-        Toast.fire({
-            icon: 'warning',
-            title: 'Modificación exitosa',
-        });
-
-        loadTable();
-        Limpiar();
-    } catch (error) {
-        let errorMessage = "Ha ocurrido un error al actualizar el módulo: " + (error.message || "Detalles del error desconocido");
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-            }
-        });
-
-        Toast.fire({
-            title: errorMessage,
-            icon: "error"
-        });
-    }
+    $('#myModal').on('hidden.bs.modal', function () {
+        var form = $("#formulario");
+        form.validate().resetForm();
+        $('. is-invalid').removeClass(' is-invalid');
+    });
 }
 
 async function deleteById(id) {
@@ -345,6 +309,8 @@ async function deleteById(id) {
                 throw new Error(`Error al eliminar el registro: ${response.status}`);
             }
 
+            const responseData = await response.json();
+
             const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -356,10 +322,12 @@ async function deleteById(id) {
                     toast.addEventListener('mouseleave', Swal.resumeTimer);
                 }
             });
+
             Toast.fire({
                 icon: 'success',
-                title: 'Registro eliminado con éxito'
+                title: responseData.message || 'Registro eliminado con éxito'
             });
+
             loadTable();
         } catch (error) {
             const Toast = Swal.mixin({
@@ -373,6 +341,7 @@ async function deleteById(id) {
                     toast.addEventListener('mouseleave', Swal.resumeTimer);
                 }
             });
+
             Toast.fire({
                 icon: 'error',
                 title: `Error al eliminar el registro: ${error.message || "Detalles del error desconocido"}`
@@ -446,3 +415,93 @@ function validarCamposFormulario() {
         }
     });
 }
+
+$(document).ready(function () {
+    $('#table').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
+        },
+        paging: true,
+        pageLength: 5,
+        lengthMenu: [10, 20, 100],
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: '<i class="fas fa-copy"></i> Copiar',
+                extend: 'copyHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                extend: 'excelHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-csv"></i> CSV',
+                extend: 'csvHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-pdf"></i> PDF',
+                extend: 'pdfHtml5',
+                title: 'Formulario',
+                download: 'open',
+                customize: function (doc) {
+                    var table = doc.content[1].table;
+
+                    table.widths = ['10%', '15%', '30%', '10%', '1%'];
+                    table.padding = [0, 10, 0, 0];
+                    table.fontSize = 12;
+                    table.alignment = 'center';
+
+                    doc.content[1].table.headerRows = 1;
+                    doc.content[1].table.widths = ['20%', '20%', '20%', '20%', '35%'];
+                    doc.content[1].table.body[0].forEach(function (headerCell) {
+                        headerCell.fillColor = '#f2f2f2';
+                        headerCell.color = 'black';
+                        headerCell.fontSize = 14;
+                        headerCell.bold = true;
+                        headerCell.alignment = 'center';
+                        headerCell.margin = [0, 8, 0, 8];
+                    });
+
+                    for (var i = 1; i < doc.content[1].table.body.length; i++) {
+                        var row = doc.content[1].table.body[i];
+                        row.forEach(function (cell, j) {
+                            cell.fontSize = 12;
+                            cell.alignment = (j === 3) ? 'center' : 'left';
+                            cell.margin = [0, 5, 0, 5];
+                            if (j === 3) {
+                                if (cell.text === 'Activo') {
+                                    cell.color = 'green'; // Texto verde para "Activo"
+                                } else if (cell.text === 'Inactivo') {
+                                    cell.color = 'red'; // Texto rojo para "Inactivo"
+                                }
+                            }
+                        });
+                    }
+
+                    doc.styles.tableHeader = {
+                        fontSize: 12,
+                        bold: true,
+                        fillColor: '#f2f2f2',
+                        alignment: 'center'
+                    };
+                    doc.content[1].text = 'Formulario.pdf';
+                }
+            },
+            {
+                text: '<i class="fas fa-file-code"></i> JSON',
+                action: function (e, dt, button, config) {
+                    var data = dt.buttons.exportData();
+
+                    $.fn.dataTable.fileSave(
+                        new Blob([JSON.stringify(data)]),
+                        'Producto.json'
+                    );
+                }
+            }
+        ],
+        responsive: true,
+        colReorder: true,
+        select: true
+    });
+    loadTable();
+});

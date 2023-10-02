@@ -23,7 +23,8 @@
     <script src="../../../asset/library/node_modules/jszip/dist/jszip.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/pdfmake.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/vfs_fonts.js"></script>
-    <script src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
+    <script
+        src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
 </head>
 
 <body>
@@ -65,7 +66,8 @@
                                                         <label class="form-label">Tipo documento:</label>
                                                     </td>
                                                     <td>
-                                                        <select name="TipoDocumento" id="TipoDocumento" class="form-select">
+                                                        <select name="TipoDocumento" id="TipoDocumento"
+                                                            class="form-select">
                                                             <option value="0">-- Seleccione tipo documento --</option>
                                                             <option value="CC">CC</option>
                                                             <option value="TI">TI</option>
@@ -185,7 +187,8 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="Limpiar();" title="Cerrar">Cerrar</button>
-                                    <button type="button" class="btn btn-success" onclick="performAction();" title="Guardar">Guardar</button>
+                                    <button type="button" class="btn btn-success" onclick="performAction();"
+                                        title="Guardar">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -207,7 +210,8 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="dataResult">
+                <tbody>
+                    <!-- Se crea dinamicamente -->
                 </tbody>
             </table>
         </div>
@@ -221,8 +225,4 @@
     <script src="../../../asset/js/client/seguridad/Persona.js"></script>
     <script src="../../../asset/library/icons/icons.js"></script>
 </body>
-
 </html>
-<script>
-    loadTable();
-</script>

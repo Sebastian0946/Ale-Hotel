@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Producto</title>
-    
+
     <!-- Librerias CSS -->
     <link rel="stylesheet" href="../../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../../asset/library/node_modules/datatables.net-dt/css/jquery.dataTables.min.css">
@@ -22,8 +22,10 @@
     <script src="../../../asset/library/node_modules/jszip/dist/jszip.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/pdfmake.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/vfs_fonts.js"></script>
-    <script src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
+    <script
+        src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
 </head>
+
 <body>
 
     <div id="loader">
@@ -37,7 +39,8 @@
             <h1>Registro producto</h1>
         </div>
 
-        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal" data-bs-target="#myModal" onclick="Limpiar();">
+        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal"
+            data-bs-target="#myModal" onclick="Limpiar();">
             <i class="fa-solid fa-plus"></i>
         </button>
 
@@ -72,11 +75,21 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <label for="categoriaId" class="form-label">Registrar categoria: </label>
+                                                <label for="imagen" class="form-label">Imagen: </label>
+                                            </td>
+                                            <td>
+                                                <input type="file" class="form-control" id="imagenInput" name="imagen" accept="image/jpeg, image/png" onchange="previewImage()">
+                                                <img src="" id="imagenPreview" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px; display: none; margin-top: 15px; text-align: center;">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label for="categoriaId" class="form-label">Registrar categoria:
+                                                </label>
                                             </td>
                                             <td>
                                                 <select class="form-select" name="categoriaId" id="categoriaId">
-                                                    
+
                                                 </select>
                                             </td>
                                         </tr>
@@ -86,7 +99,8 @@
                                             </td>
                                             <td>
                                                 <div class="switch">
-                                                    <input type="checkbox" id="estado" name="estado" value="1" class="toggle-switch-checkbox">
+                                                    <input type="checkbox" id="estado" name="estado" value="1"
+                                                        class="toggle-switch-checkbox">
                                                     <label for="estado" class="toggle-switch-label"></label>
                                                 </div>
                                             </td>
@@ -94,8 +108,10 @@
                                     </tbody>
                                 </table>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="Limpiar();" title="Cerrar">Cerrar</button>
-                                    <button type="button" class="btn btn-success" onclick="performAction();" title="Guardar">Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                        onclick="Limpiar();" title="Cerrar">Cerrar</button>
+                                    <button type="button" class="btn btn-success" onclick="performAction();"
+                                        title="Guardar">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -106,6 +122,7 @@
                 <thead>
                     <tr>
                         <th>Id</th>
+                        <th>Imagen</th>
                         <th>Codigo</th>
                         <th>Nombre</th>
                         <th>Categoria</th>
@@ -128,6 +145,7 @@
     <script src="../../../asset/library/icons/icons.js"></script>
     <script src="../../../asset/js/client/Animacion.js"></script>
 </body>
+
 </html>
 <script>
     loadTable();

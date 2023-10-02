@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,800;1,500;1,600&family=Poppins:wght@200;300;500;700&display=swap');
+
 :root {
     --color-dark: #363949;
     --color-background: #f6f6f6;
@@ -21,12 +23,13 @@ html {
 body {
     width: 100%;
     min-height: 100vh;
-    font-family: 'Poppins', sans-serif;
     font-size: 14px;
     background: var(--color-background);
     user-select: none;
     overflow-x: hidden;
     color: var(--color-dark);
+    font-family: 'Montserrat', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .container {
@@ -193,12 +196,10 @@ body {
     color: #fff;
 }
 
-/* Estilos para la paginación de DataTables */
 .dataTables_paginate {
     text-align: center;
 }
 
-/* Estilos para los botones de navegación de la paginación */
 .dataTables_paginate .paginate_button {
     background-color: #007bff;
     color: #fff;
@@ -210,12 +211,10 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* Estilos al pasar el mouse por encima del botón de paginación */
 .dataTables_paginate .paginate_button:hover {
     background-color: #0056b3;
 }
 
-/* Estilos para el botón de paginación activo */
 .dataTables_paginate .paginate_button.current {
     background-color: #0056b3;
     color: #fff;
@@ -226,7 +225,6 @@ body {
     cursor: default;
 }
 
-/* Estilos para los botones de paginación en estado inactivo */
 .dataTables_paginate .paginate_button.disabled {
     background-color: #ccc;
     color: #fff;
@@ -237,7 +235,6 @@ body {
     cursor: not-allowed;
 }
 
-/* Estilos para el botón de paginación al hacer clic */
 .dataTables_paginate .paginate_button.current:focus {
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
@@ -291,6 +288,7 @@ body {
 
 .actions-container {
     text-align: center;
+    display: flex;
 }
 
 .switch-container {
@@ -371,6 +369,26 @@ body {
     color: #fff;
     margin-top: 10px;
     text-align: center;
+}
+
+.swal2-popup {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    animation: grow 0.2s ease-in-out;
+}
+
+
+@keyframes grow {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 @keyframes lds-dual-ring {

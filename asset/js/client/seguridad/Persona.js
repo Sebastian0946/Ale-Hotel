@@ -1,162 +1,97 @@
 var dataTableInitialized = false;
 
-function performAction() {
-    var action = $("#myModal").data("action");
-
-    if (action === "guardarCambios") {
-        guardarCambios();
-        $("#myModal").data("action", "");
-    } else {
-        validarCamposFormulario();
-
-        if ($('#TipoDocumento').valid() && $('#Documento').valid() && $('#Nombres').valid() && $('#Apellidos').valid() && $('#Edad').valid() && $('#DepartamentoSelect').valid() && $('#MunicipioSelect').valid() && $('#Telefono').valid() && $('#Genero').valid() && $('#Email').valid()) {
-            agregarPersona();
-            $('#myModal').modal('hide');
-        } else {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                title: 'Campos incompletos o inválidos',
-                text: 'Por favor, verifica todos los campos antes de continuar.',
-                icon: "error"
-            });
+function mostrarMensaje(icon, message) {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
-    }
+    });
+
+    Toast.fire({
+        icon: icon,
+        title: message
+    });
+}
+
+function showLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+}
+
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'none';
 }
 
 async function loadTable() {
     try {
+        showLoader();
+
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/persona', {
-            method: "GET",
+            method: 'GET',
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             }
         });
 
-        if (!response.ok) {
-            throw new Error(`Error al obtener la lista de personas: ${response.status}`);
-        }
+        if (response.ok) {
+            const items = await response.json();
+            const table = $('#table').DataTable();
 
-        cargarDepartamento();
+            table.clear();
 
-        const items = await response.json();
+            items.data.forEach((persona) => {
+                const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${persona.id})"><i class="fa-solid fa-user-pen"></i></button>`;
+                const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${persona.id})"><i class="fa-solid fa-trash"></i></button>`;
 
-        var registros = "";
-        items.data.forEach(function (persona, index, array) {
-            registros += `
-                <tr class="table-light fadeIn">
-                    <td class="table-cell-width">${persona.id}</td>
-                    <td class="table-cell-width">
-                        <div class="person-name">
-                            <span>${persona.Nombres} ${persona.Apellidos}</span>
-                        </div>
-                    </td>
-                    <td class="table-cell-width">${persona.TipoDocumento}</td>
-                    <td class="table-cell-width">${persona.Documento}</td>
-                    <td class="table-cell-width">${persona.Direccion}</td>
-                    <td class="table-cell-width">${persona.Telefono}</td>
-                    <td class="table-cell-width">${persona.Email}</td>
-                    <td class="table-cell-width ${persona.Estado === 'Activo' ? 'text-success' : 'text-danger'}">${persona.Estado}</td>
-                    <td class="table-cell-width">
-                        <div class="row-actions">
-                            <div class="row-action" onclick="showDetails(${persona.id})">
-                                <i class="fa-solid fa-info-circle btn btn-primary"></i> 
-                            </div>
-                            <div class="row-action" onclick="findById(${persona.id})">
-                                <i class="fa-solid fa-user-pen btn btn-warning"></i> 
-                            </div>
-                            <div class="row-action" onclick="deleteById(${persona.id})">
-                                <i class="fa-solid fa-trash btn btn-danger"></i>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
+                const estadoClass = persona.Estado === 'Activo' ? 'text-success' : 'text-danger';
 
-        $("#dataResult").html(registros);
+                const actions = `
+                    <div class="actions-container">
+                        ${editButton} ${deleteButton}
+                    </div>
+                `;
 
-        if (!dataTableInitialized) {
-            $('#table').DataTable({
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
-                },
-                paging: true,
-                pageLength: 10, 
-                lengthMenu: [10, 20, 100],
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        text: '<i class="fas fa-copy"></i> Copiar', 
-                        extend: 'copyHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-excel"></i> Excel', 
-                        extend: 'excelHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-csv"></i> CSV', 
-                        extend: 'csvHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-pdf"></i> PDF', 
-                        extend: 'pdfHtml5',
-                        download: 'open'
-                    },
-                    {
-                        text: '<i class="fas fa-file-code"></i> JSON', 
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
+                table.row.add([persona.id, persona.Nombres+" "+persona.Apellidos, persona.TipoDocumento, persona.Documento, persona.Direccion, persona.Telefono, persona.Email, `<span class="${estadoClass} text-center">${persona.Estado}</span>`, actions]);
+            });
 
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Producto.json'
-                            );
-                        }
+            table.draw();
+
+            hideLoader();
+
+            if (items.message && !mensajeMostrado) {
+                mensajeMostrado = true;
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
                     }
-                ],
-                responsive: true,
-                colReorder: true,
-                select: true
-            });
+                });
 
-            dataTableInitialized = true;
+                Toast.fire({
+                    icon: 'success',
+                    title: items.message
+                });
+            }
         }
-
-        if (!toastShown) {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                icon: 'success',
-                title: items.message
-            });
-
-            toastShown = true;
-        }
+        hideLoader();
     } catch (error) {
-        console.error(`Error al realizar la solicitud fetch: ${error}`);
+        console.error("Error al realizar la petición Fetch:", error);
+        hideLoader();
     }
 }
+
 
 async function findById(id) {
     try {
@@ -172,20 +107,22 @@ async function findById(id) {
         }
 
         const persona = await response.json();
-
-        var direccionParts = persona.data.Direccion.split('-');
+        const direccion = persona.data.Direccion;
+        const [departamento, municipio] = direccion.split('-');
 
         $('#id').val(persona.data.id);
         $('#TipoDocumento').val(persona.data.TipoDocumento);
         $('#Documento').val(persona.data.Documento);
+        $('#DepartamentoSelect').val(departamento);
+        $('#MunicipioSelect').val(municipio);
         $('#Nombres').val(persona.data.Nombres);
         $('#Apellidos').val(persona.data.Apellidos);
         $('#Edad').val(persona.data.Edad);
         $('#Genero').val(persona.data.Genero);
         $('#Email').val(persona.data.Email);
         $('#Telefono').val(persona.data.Telefono);
-        cargarDepartamentosMunicipios();
         $("#estado").prop("checked", persona.data.Estado === 'Activo');
+        cargarMunicipios(departamento);
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -229,7 +166,10 @@ async function findById(id) {
     }
 }
 
-async function agregarPersona() {
+function performAction() {
+
+    var id = $('#id').val();
+
     var formData = {
         TipoDocumento: $('#TipoDocumento').val(),
         Documento: $('#Documento').val(),
@@ -243,43 +183,97 @@ async function agregarPersona() {
         Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
     };
 
-    try {
-        const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/persona', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
+
+    var url = id && id !== '0' ? 'https://hotel-api-hzf6.onrender.com/api/seguridad/persona/' + id : 'https://hotel-api-hzf6.onrender.com/api/seguridad/persona';
+    var type = id && id !== '0' ? 'PUT' : 'POST';
+
+    validarCamposFormulario();
+
+    function sendRequest() {
+        $.ajax({
+            url: url,
+            type: type,
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function (result) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+
+                Toast.fire({
+                    icon: id && id !== '0' ? 'warning' : 'success',
+                    title: result.message
+                });
+
+                loadTable();
+
+                Limpiar();
+                $("#myModal").data("action", "");
+                $('#myModal').modal('hide');
             },
-            body: JSON.stringify(formData)
-        });
+            error: function (jqXHR, textStatus, errorThrown) {
+                let errorMessage = "Ha ocurrido un error al ";
 
-        if (!response.ok) {
-            throw new Error(`Error al registrar la persona: ${response.status}`);
-        }
+                if (id && id !== '0') {
+                    errorMessage += "actualizar la categoria";
+                } else {
+                    errorMessage += "registrar el rol";
+                }
 
-        const result = await response.json();
+                if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                    errorMessage += ": " + jqXHR.responseJSON.message;
+                }
 
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
+                const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    title: errorMessage,
+                    text: errorDescription,
+                    icon: "error"
+                });
             }
         });
+    }
 
-        Toast.fire({
-            icon: 'success',
-            title: result.message
-        });
-        Limpiar();
-        loadTable();
-    } catch (error) {
-        let errorMessage = "Ha ocurrido un error al registrar la persona";
-        const errorDescription = error.message || "Detalles del error desconocido";
-
+    if ($('#TipoDocumento').valid() && $('#Documento').valid() && $('#Nombres').valid() && $('#Apellidos').valid() && $('#Edad').valid() && $('#DepartamentoSelect').valid() && $('#MunicipioSelect').valid() && $('#Telefono').valid() && $('#Genero').valid() && $('#Email').valid()) {
+        if (type === 'PUT') {
+            Swal.fire({
+                title: '¿Está seguro de guardar los cambios?',
+                text: 'Esta acción no se puede deshacer.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, guardar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sendRequest();
+                }
+            });
+        } else {
+            sendRequest();
+        }
+    } else {
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -293,86 +287,17 @@ async function agregarPersona() {
         });
 
         Toast.fire({
-            title: errorMessage,
-            text: errorDescription,
+            title: 'Campos incompletos o inválidos',
+            text: 'Por favor, verifica todos los campos antes de continuar.',
             icon: "error"
         });
-        console.error(`Error al realizar la solicitud fetch: ${error}`);
     }
-}
 
-async function guardarCambios() {
-    var id = $('#id').val();
-
-    var formData = {
-        TipoDocumento: $('#TipoDocumento').val(),
-        Documento: $('#Documento').val(),
-        Nombres: $('#Nombres').val(),
-        Apellidos: $('#Apellidos').val(),
-        Edad: $('#Edad').val(),
-        Genero: $('#Genero').val(),
-        Email: $('#Email').val(),
-        Telefono: $('#Telefono').val(),
-        Direccion: $('#Direccion').val(),
-        Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
-    };
-
-    try {
-        const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/persona/' + id, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error al actualizar la persona: ${response.status}`);
-        }
-
-        const result = await response.json();
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 4000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        })
-
-        Toast.fire({
-            icon: 'warning',
-            title: result.message
-        })
-        loadTable();
-        Limpiar();
-    } catch (error) {
-        let errorMessage = "Ha ocurrido un error al actualizar la persona";
-        const errorDescription = error.message || "Detalles del error desconocido";
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-            }
-        });
-
-        Toast.fire({
-            title: errorMessage,
-            text: errorDescription,
-            icon: "error"
-        });
-        console.error(`Error al realizar la solicitud fetch: ${error}`);
-    }
+    $('#myModal').on('hidden.bs.modal', function () {
+        var form = $("#formulario");
+        form.validate().resetForm();
+        $('. is-invalid').removeClass(' is-invalid');
+    });
 }
 
 async function deleteById(id) {
@@ -447,6 +372,8 @@ async function deleteById(id) {
 function Limpiar() {
     $('#id').val('');
     $('#TipoDocumento').val('0');
+    $('#DepartamentoSelect').val('0');
+    $('#MunicipioSelect').empty();
     $('#Documento').val('');
     $('#Nombres').val('');
     $('#Apellidos').val('');
@@ -457,6 +384,15 @@ function Limpiar() {
     $('#Direccion').val('');
     $("#estado").prop('checked', false);
 }
+
+$(document).ready(function () {
+    $('#DepartamentoSelect').change(function () {
+        var selectedDepartamento = $(this).val();
+        cargarMunicipios(selectedDepartamento);
+    });
+
+    cargarDepartamento();
+});
 
 function cargarDepartamento() {
     try {
@@ -481,6 +417,7 @@ function cargarDepartamento() {
         console.error("Error al cargar los departamentos:", error);
     }
 }
+
 function cargarMunicipios(departamento) {
     $.ajax({
         url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
@@ -632,3 +569,93 @@ function validarCamposFormulario() {
         }
     });
 }
+
+$(document).ready(function () {
+    $('#table').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
+        },
+        paging: true,
+        pageLength: 5,
+        lengthMenu: [10, 20, 100],
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: '<i class="fas fa-copy"></i> Copiar',
+                extend: 'copyHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                extend: 'excelHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-csv"></i> CSV',
+                extend: 'csvHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-pdf"></i> PDF',
+                extend: 'pdfHtml5',
+                title: 'Formulario',
+                download: 'open',
+                customize: function (doc) {
+                    var table = doc.content[1].table;
+
+                    table.widths = ['10%', '15%', '30%', '10%', '1%'];
+                    table.padding = [0, 10, 0, 0];
+                    table.fontSize = 12;
+                    table.alignment = 'center';
+
+                    doc.content[1].table.headerRows = 1;
+                    doc.content[1].table.widths = ['20%', '20%', '20%', '20%', '35%'];
+                    doc.content[1].table.body[0].forEach(function (headerCell) {
+                        headerCell.fillColor = '#f2f2f2';
+                        headerCell.color = 'black';
+                        headerCell.fontSize = 14;
+                        headerCell.bold = true;
+                        headerCell.alignment = 'center';
+                        headerCell.margin = [0, 8, 0, 8];
+                    });
+
+                    for (var i = 1; i < doc.content[1].table.body.length; i++) {
+                        var row = doc.content[1].table.body[i];
+                        row.forEach(function (cell, j) {
+                            cell.fontSize = 12;
+                            cell.alignment = (j === 3) ? 'center' : 'left';
+                            cell.margin = [0, 5, 0, 5];
+                            if (j === 3) {
+                                if (cell.text === 'Activo') {
+                                    cell.color = 'green'; 
+                                } else if (cell.text === 'Inactivo') {
+                                    cell.color = 'red'; 
+                                }
+                            }
+                        });
+                    }
+
+                    doc.styles.tableHeader = {
+                        fontSize: 12,
+                        bold: true,
+                        fillColor: '#f2f2f2',
+                        alignment: 'center'
+                    };
+                    doc.content[1].text = 'Personas.pdf';
+                }
+            },
+            {
+                text: '<i class="fas fa-file-code"></i> JSON',
+                action: function (e, dt, button, config) {
+                    var data = dt.buttons.exportData();
+
+                    $.fn.dataTable.fileSave(
+                        new Blob([JSON.stringify(data)]),
+                        'Personas.json'
+                    );
+                }
+            }
+        ],
+        responsive: true,
+        colReorder: true,
+        select: true
+    });
+    loadTable();
+});

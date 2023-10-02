@@ -1,503 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <ttle>Document</title>
+    <title>Ale-Hotel</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="asset/library/node_modules/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="asset/css/user/styles.css">
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="asset/library/node_modules/swiper/swiper-bundle.min.css" />
-        <link rel="stylesheet" href="asset/css/user/style.css">
-
+    <script src="asset/library/node_modules/jquery/dist/jquery.min.js"></script>
 </head>
 
 <body>
 
-    <header class="header">
-
-        <a href="#" class="logo"><i class="fa-solid fa-hotel"></i>Ale-Hotel</a>
-
-        <nav class="navbar">
-            <a href="#home">home</a>
-            <a href="#about">about</a>
-            <a href="#room">room</a>
-            <a href="#gallery">gallery</a>
-            <a href="#review">review</a>
-            <a href="#faqs">faq</a>
-            <a href="#reservation" class="btn">book now</a>
+    <div class="container-nav">
+        <nav>
+            <div class="nav_logo"><img src="asset/img/logo hotel.png" alt="logo Ale-Hotel"></div>
+            <ul class="nav_links">
+                <li class="link"><a href="#">Home</a></li>
+                <li class="link"><a href="#">Book</a></li>
+                <li class="link"><a href="#">Blog</a></li>
+                <li class="link"><a href="#">Concactanos</a></li>
+                <li class="link"><a href="#"><button class="btn btn-reservation">Reservar</button></a></li>
+                <li class="link"><button class="btn btn-login"><a href="views/login.html">Iniciar Sesión</a></button>
+                </li>
+            </ul>
         </nav>
+    </div>
 
-        <div id="menu-btn"><i class="fa-solid fa-bars"></i></div>
+    <header class="section__container section__header">
+        <div class="header-image-container">
+            <div class="header-content">
+                <h1>Disfruta de las vacaciones de tus sueños</h1>
+                <p>Reserva tu habitación y disfruta</p>
+            </div>
+            <div class="booking-container">
+                <form action="">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="number">
+                            <label>Personas</label>
+                        </div>
+                        <p>¿Dónde quieres quedarte?</p>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text">
+                            <label>Check In</label>
+                        </div>
+                        <p>Añade fecha</p>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text">
+                            <label>Check Out</label>
+                        </div>
+                        <p>Añade fecha</p>
+                    </div>
+                </form>
+                <button class="btn"><i class="ri-search-line"></i></button>
+            </div>
+        </div>
     </header>
-    
 
-    <!-- Home -->
-
-    <section class="home" id="home">
-        <div class="swiper home-slider">
-
-            <div class="swiper-wrapper">
-
-                <div class="swiper-slide slide" style="background: url(asset/img/habitacion\ 1.jpg) no-repeat;">
-                    <div class="content">
-                        <h3>Habitación</h3>
-                        <a href="#" class="btn">Oferta!!</a>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide" style="background: url(asset/img/habitacion\ 2.jpg) no-repeat;">
-                    <div class="content">
-                        <h3>Habitación</h3>
-                        <a href="#" class="btn">Oferta!!</a>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide" style="background: url(asset/img/habitacion\ 3.jpg) no-repeat;">
-                    <div class="content">
-                        <h3>Habitación</h3>
-                        <a href="#" class="btn">Oferta!!</a>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide" style="background: url(asset/img/habitacion\ 4.jpg) no-repeat;">
-                    <div class="content">
-                        <h3>Habitación</h3>
-                        <a href="#" class="btn">Oferta!!</a>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide" style="background: url(asset/img/habitacion\ 5.jpg) no-repeat;">
-                    <div class="content">
-                        <h3>Habitación</h3>
-                        <a href="#" class="btn">Oferta!!</a>
-                    </div>
-                </div>
-
+    <section class="section__container popular-container">
+        <h2 class="section__header">Habitaciones populares</h2>
+        <div class="swiper-container">
+            <div class="swiper-wrapper" id="swiper-wrapper">
+                <!-- se crea dinamico -->
             </div>
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
         </div>
     </section>
 
-    <!-- Reserva -->
-
-    <section class="preparation">
-        <form action="">
-            <div class="box">
-                <p>check in<span>*</span></p>
-                <input type="date" class="input">
-            </div>
-            <div class="box">
-                <p>check out<span>*</span></p>
-                <input type="date" class="input">
-            </div>
-            <div class="box">
-                <p>adultos<span>*</span></p>
-                <select name="adultos" class="input">
-                    <option value="1">1 adultos</option>
-                    <option value="2">2 adultos</option>
-                    <option value="3">3 adultos</option>
-                    <option value="4">4 adultos</option>
-                    <option value="5">5 adultos</option>
-                    <option value="6">6 adultos</option>
-                </select>
-            </div>
-            <div class="box">
-                <p>niños<span>*</span></p>
-                <select name="ninos" class="input">
-                    <option value="1">1 niños</option>
-                    <option value="2">2 niños</option>
-                    <option value="3">3 niños</option>
-                    <option value="4">4 niños</option>
-                    <option value="5">5 niños</option>
-                    <option value="6">6 niños</option>
-                </select>
-            </div>
-            <div class="box">
-                <p>habitaciones<span>*</span></p>
-                <select name="ninos" class="input">
-                    <option value="1">1 habitaciones</option>
-                    <option value="2">2 habitaciones</option>
-                    <option value="3">3 habitaciones</option>
-                    <option value="4">4 habitaciones</option>
-                    <option value="5">5 habitaciones</option>
-                    <option value="6">6 habitaciones</option>
-                </select>
-            </div>
-
-            <input type="submit" value="Reservar habitacion" class="btn">
-        </form>
-    </section>
-
-    <section class="about" id="about">
-        <div class="row">
-            <div class="image">
-                <img src="asset/img/about.jpg" alt="">
-            </div>
-            <div class="content">
-                <h3>About us</h3>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Consequuntur totam similique accusamus
-                    tenetur itaque cupiditate labore! At similique illo vel esse a ratione repellat odio!</p>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Consequuntur totam similique accusamus
-                    tenetur itaque cupiditate labore! At similique illo vel esse a ratione repellat odio!</p>
+    <section class="client">
+        <div class="section__container client-container">
+            <h2 class="section__header">Lo que dicen nuestras clientes</h2>
+            <div class="client-grid">
+                <div class="client-card">
+                    <img src="asset/img/user1.jpg" alt="cliente" />
+                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel aliquid eum sequi iste dignissimos
+                        excepturi?</p>
+                </div>
+                <div class="client-card">
+                    <img src="asset/img/user2.jpg" alt="cliente" />
+                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel aliquid eum sequi iste dignissimos
+                        excepturi?</p>
+                </div>
+                <div class="client-card">
+                    <img src="asset/img/user3.jpg" alt="cliente" />
+                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel aliquid eum sequi iste dignissimos
+                        excepturi?</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Habitaciones -->
-
-    <section class="room" id="room">
-
-        <h1 class="heading">Our room</h1>
-
-        <div class="swiper room-slider">
-
-            <div class="swiper-wrapper">
-
-                <div class="swiper-slide slide">
-                    <div class="image">
-                        <span class="price">$80.000/noche</span>
-                        <img src="asset/img/Vip.jpg" alt="">
-                        <a class="fa-solid fa-cart-shopping"></a>
-                    </div>
-                    <div class="content">
-                        <h3>Habitacion VIP</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe aperiam esse officiis
-                            voluptates, vel nihil.</p>
-                        <div class="start">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-regular fa-star-half-stroke"></i>
-                        </div>
-                        <a href="#" class="btn">Reservar</a>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide">
-                    <div class="image">
-                        <span class="price">$100.000/noche</span>
-                        <img src="asset/img/doble.jpg" alt="">
-                        <a class="fa-solid fa-cart-shopping"></a>
-                    </div>
-                    <div class="content">
-                        <h3>Habitacion 2 personas</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe aperiam esse officiis
-                            voluptates, vel nihil.</p>
-                        <div class="start">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-regular fa-star-half-stroke"></i>
-                        </div>
-                        <a href="#" class="btn">Reservar</a>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide">
-                    <div class="image">
-                        <span class="price">$70.000/noche</span>
-                        <img src="asset/img/matrimonial.jpg" alt="">
-                        <a class="fa-solid fa-cart-shopping"></a>
-                    </div>
-                    <div class="content">
-                        <h3>Habitacion matrimonial</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe aperiam esse officiis
-                            voluptates, vel nihil.</p>
-                        <div class="start">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                        </div>
-                        <a href="#" class="btn">Reservar</a>
-                    </div>
-                </div>
-                <div class="swiper-slide slide">
-                    <div class="image">
-                        <span class="price">$50.000/noche</span>
-                        <img src="asset/img/sencilla.jpg" alt="">
-                        <a class="fa-solid fa-cart-shopping"></a>
-                    </div>
-                    <div class="content">
-                        <h3>Habitacion sencilla</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe aperiam esse officiis
-                            voluptates, vel nihil.</p>
-                        <div class="start">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-regular fa-star-half-stroke"></i>
-                            <i class="fa-regular fa-star"></i>
-                        </div>
-                        <a href="#" class="btn">Reservar</a>
-                    </div>
-                </div>
-                <div class="swiper-slide slide">
-                    <div class="image">
-                        <span class="price">$50.000/noche</span>
-                        <img src="asset/img/sencilla.jpg" alt="">
-                        <a class="fa-solid fa-cart-shopping"></a>
-                    </div>
-                    <div class="content">
-                        <h3>Habitacion sencilla</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe aperiam esse officiis
-                            voluptates, vel nihil.</p>
-                        <div class="start">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
-                        </div>
-                        <a href="#" class="btn">Reservar</a>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-pagination"></div>
+    <section class="section__container">
+        <div class="reward-container">
+            <p>+100 Codigos de descuentos</p>
+            <h4>Únase a las recompensas y descubra increíbles descuentos en su reserva</h4>
+            <button class="reward-btn">Ver descuentos!!</button>
         </div>
     </section>
 
-    <!-- Servicios -->
-
-    <section class="services">
-
-        <div class="box-container">
-            <div class="box">
-                <img src="asset/img/Servicio1.svg" alt="servicio1">
-                <h3>Piscina</h3>
-            </div>
-
-            <div class="box">
-                <img src="asset/img/Servicios2.svg" alt="servicio2">
-                <h3>Bar</h3>
-            </div>
-
-            <div class="box">
-                <img src="asset/img/Servicios3.png" alt="servicio3">
-                <h3>Discoteca</h3>
-            </div>
-
-            <div class="box">
-                <img src="asset/img/Servicios4.png" alt="servicio4">
-                <h3>Billar</h3>
-            </div>
-
-            <div class="box">
-                <img src="asset/img/Servicio5.svg" alt="servicio5">
-                <h3>Restaurante</h3>
-            </div>
-
-            <div class="box">
-                <img src="asset/img/Servicio6.png" alt="servicio5">
-                <h3>Habitaciones</h3>
-            </div>
-        </div>
-
-    </section>
-
-    <!-- Galeria -->
-
-    <section class="gallery" id="gallery">
-
-        <h1 class="heading">Galeria</h1>
-
-        <div class="swiper gallery-slider">
-
-            <div class="swiper-wrapper">
-
-                <div class="swiper-slide slide">
-                    <img src="asset/img/galeria1.jpg" alt="">
-                    <div class="icon">
-                        <i class="fa-solid fa-magnifying-glass-plus"></i>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide">
-                    <img src="asset/img/galeria2.jpg" alt="">
-                    <div class="icon">
-                        <i class="fa-solid fa-magnifying-glass-plus"></i>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide">
-                    <img src="asset/img/galeria3.jpg" alt="">
-                    <div class="icon">
-                        <i class="fa-solid fa-magnifying-glass-plus"></i>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide">
-                    <img src="asset/img/galeria4.jpg" alt="">
-                    <div class="icon">
-                        <i class="fa-solid fa-magnifying-glass-plus"></i>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide">
-                    <img src="asset/img/galeria5.jpg" alt="">
-                    <div class="icon">
-                        <i class="fa-solid fa-magnifying-glass-plus"></i>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide">
-                    <img src="asset/img/galeria6.jpg" alt="">
-                    <div class="icon">
-                        <i class="fa-solid fa-magnifying-glass-plus"></i>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- review -->
-
-    <section class="review" id="review">
-
-        <div class="swiper review-slider">
-
-            <div class="swiper-wrapper">
-
-                <div class="swiper-slide slide">
-                    <h2 class="heading">Opinión clientes</h2>
-                    <i class="fa-solid fa-quote-right"></i>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos unde iste expedita veritatis,
-                        dolorum voluptate distinctio. Numquam doloremque magnam mollitia expedita sequi iure nostrum ad!
-                    </p>
-                    <div class="user">
-                        <img src="asset/img/user4.jpg" alt="">
-                        <div class="user-info">
-                            <h3>Martha Cecilia</h3>
-                            <div class="start">
-                                <<i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-regular fa-star-half-stroke"></i>
-                                    <i class="fa-regular fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide">
-                    <h2 class="heading">Opinión clientes</h2>
-                    <i class="fa-solid fa-quote-right"></i>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos unde iste expedita veritatis,
-                        dolorum voluptate distinctio. Numquam doloremque magnam mollitia expedita sequi iure nostrum ad!
-                    </p>
-                    <div class="user">
-                        <img src="asset/img/user3.jpg" alt="">
-                        <div class="user-info">
-                            <h3>Jhon Smith</h3>
-                            <div class="start">
-                                <<i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-regular fa-star-half-stroke"></i>
-                                    <i class="fa-regular fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide">
-                    <h2 class="heading">Opinión clientes</h2>
-                    <i class="fa-solid fa-quote-right"></i>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos unde iste expedita veritatis,
-                        dolorum voluptate distinctio. Numquam doloremque magnam mollitia expedita sequi iure nostrum ad!
-                    </p>
-                    <div class="user">
-                        <img src="asset/img/user1.jpg" alt="">
-                        <div class="user-info">
-                            <h3>Carlos Sarasty</h3>
-                            <div class="start">
-                                <<i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-regular fa-star-half-stroke"></i>
-                                    <i class="fa-regular fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide">
-                    <h2 class="heading">Opinión clientes</h2>
-                    <i class="fa-solid fa-quote-right"></i>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos unde iste expedita veritatis,
-                        dolorum voluptate distinctio. Numquam doloremque magnam mollitia expedita sequi iure nostrum ad!
-                    </p>
-                    <div class="user">
-                        <img src="asset/img/user6.jpg" alt="">
-                        <div class="user-info">
-                            <h3>Jesus Ramirez</h3>
-                            <div class="start">
-                                <<i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-regular fa-star-half-stroke"></i>
-                                    <i class="fa-regular fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide">
-                    <h2 class="heading">Opinión clientes</h2>
-                    <i class="fa-solid fa-quote-right"></i>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos unde iste expedita veritatis,
-                        dolorum voluptate distinctio. Numquam doloremque magnam mollitia expedita sequi iure nostrum ad!
-                    </p>
-                    <div class="user">
-                        <img src="asset/img/user2.jpg" alt="">
-                        <div class="user-info">
-                            <h3>Mariana Días</h3>
-                            <div class="start">
-                                <<i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-regular fa-star-half-stroke"></i>
-                                    <i class="fa-regular fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="swiper-slide slide">
-                    <h2 class="heading">Opinión clientes</h2>
-                    <i class="fa-solid fa-quote-right"></i>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos unde iste expedita veritatis,
-                        dolorum voluptate distinctio. Numquam doloremque magnam mollitia expedita sequi iure nostrum ad!
-                    </p>
-                    <div class="user">
-                        <img src="asset/img/user5.jpg" alt="">
-                        <div class="user-info">
-                            <h3>Roberto Ramirez</h3>
-                            <div class="start">
-                                <<i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-regular fa-star-half-stroke"></i>
-                                    <i class="fa-regular fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="swiper-pagination"></div>
-        </div>
-    </section>
-
-    <!-- faq -->
-
-    <section class="faqs" id="faqs">
+    <section class="section__container faqs" id="faqs">
 
         <h1 class="heading">¿Preguntas frecuentes?</h1>
 
@@ -533,136 +143,54 @@
                     <h3>¿Cuáles son los métodos de pagos?</h3>
                     <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores iure nam sit magni velit.</p>
                 </div>
-
             </div>
         </div>
     </section>
 
-    <section class="reservacion" id="reservacion">
+    <section class="section__container section__map">
 
-        <h1 class="heading">Reserva</h1>
+        <h1 class="heading">Donde nos ubicamos</h1>
 
-        <form action="">
-
-            <div class="container">
-
-                <div class="box">
-                    <p>Nombres <span>*</span></p>
-                    <input type="text" class="input" placeholder="Nombre">
-                </div>
-
-                <div class="box">
-                    <p>Email <span>*</span></p>
-                    <input type="text" class="input" placeholder="Email">
-                </div>
-
-                <div class="box">
-                    <p>Check in <span>*</span></p>
-                    <input type="date" class="input">
-                </div>
-
-                <div class="box">
-                    <p>check out <span>*</span></p>
-                    <input type="date" class="input">
-                </div>
-
-                <div class="box">
-                    <p>Adulto <span>*</span></p>
-                    <select name="adults" class="input">
-                        <option value="1">1 adultos</option>
-                        <option value="2">2 adultos</option>
-                        <option value="3">3 adultos</option>
-                        <option value="4">4 adultos</option>
-                        <option value="5">5 adultos</option>
-                        <option value="6">6 adultos</option>
-                    </select>
-                </div>
-
-                <div class="box">
-                    <p>Niños <span>*</span></p>
-                    <select name="ninos" class="input">
-                        <option value="1">1 niños</option>
-                        <option value="2">2 niños</option>
-                        <option value="3">3 niños</option>
-                        <option value="4">4 niños</option>
-                        <option value="5">5 niños</option>
-                        <option value="6">6 niños</option>
-                    </select>
-                </div>
-
-                <div class="box">
-                    <p>Habitacion <span>*</span></p>
-                    <select name="rooms" class="input">
-                        <option value="1">1 Habitacion</option>
-                        <option value="2">2 Habitacion</option>
-                        <option value="3">3 Habitacion</option>
-                        <option value="4">4 Habitacion</option>
-                        <option value="5">5 Habitacion</option>
-                        <option value="6">6 Habitacion</option>
-                    </select>
-                </div>
-
-                <div class="box">
-                    <p>Tipo habitaciones <span>*</span></p>
-                    <select name="type" class="input">
-                        <option value="1">habitacion VIP</option>
-                        <option value="2">habitacion sencilla</option>
-                        <option value="3">habitacion doble</option>
-                        <option value="4">habitacion matrimonial</option>
-                    </select>
-                </div>
-            </div>
-
-            <input type="submit" value="Registrar reserva" class="btn">
-
-            </div>
-        </form>
+        <div class="map-container">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7970.88119434!2d-75.31564800642096!3d2.684262200000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3b4173f5860707%3A0xf72e7153b9690b1f!2sPalmares%20de%20Alejandria!5e0!3m2!1ses!2sco!4v1695838669960!5m2!1ses!2sco"
+                width="1500" height="500" style="border:0; text-align: center;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
     </section>
 
-    <section class="footer">
-
-        <div class="box-container">
-
-            <div class="box">
-
-                <h3>Informacion de contacto</h3>
-                <a href="#"><i class="fa-solid fa-phone"> +57 313-4587-236</i></a>
-                <a href="#"><i class="fa-solid fa-envelope"></i> AleHotel@gmail.com</a>
-                <a href="#"><i class="fa-solid fa-envelope"></i> Huila, CampoAlegre</a>
+    <footer class="footer">
+        <div class="section__container footer__container">
+            <div class="footer-col">
+                <h3><img src="asset/img/logo sin fondo.png" alt=""></h3>
+                <p>Ale-Hotel empresa de desarrollo web hotelero</p>
+                <p>Interfaces animialistas, suaves en contenido y agragable para el usuario</p>
             </div>
-
-            <div class="box">
-                <h3>lista rápida</h3>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i> home</a>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i> quienes somos</a>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i> habitaciones</a>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i> galeria</a>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i> reservacion</a>
+            <div class="footer-col">
+                <h4>Compañia</h4>
+                <p><i class="fa-solid fa-arrow-right"></i> Sobre nosotros</p>
+                <p><i class="fa-solid fa-arrow-right"></i> Nuestro equipo</p>
+                <p><i class="fa-solid fa-arrow-right"></i> Blog</p>
+                <p><i class="fa-solid fa-arrow-right"></i> Reserva</p>
+                <p><i class="fa-solid fa-arrow-right"></i> Contactanos</p>
             </div>
-
-            <div class="box">
-                <h3>Links extras</h3>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i> refund policy</a>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i> refund policy</a>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i> refund policy</a>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i> refund policy</a>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i> refund policy</a>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <p><i class="fa-solid fa-arrow-right"></i> FAQs</p>
+                <p><i class="fa-solid fa-arrow-right"></i> Terminos & condiciones</p>
+                <p><i class="fa-solid fa-arrow-right"></i> Politica privada</p>
             </div>
-
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <p><i class="fa-solid fa-arrow-right"></i> Redes sociales</p>
+                <p><i class="fa-solid fa-arrow-right"></i> Help center</p>
+            </div>
         </div>
-
-        <div class="share">
-            <a href="#" class="fa-brands fa-facebook"></a>
-            <a href="#" class="fa-brands fa-instagram"></a>
-        </div>
-        
-        <div class="credit">&copy; Ale-Hotel @ 2023 by <span>Gestion Hotelera</span></div>
-
-    </section>
-
+        <div class="footer-bar">Copyright © 2023 Ale-Hotel. Reservados todos los derechos.</div>
+    </footer>
 
     <script src="asset/library/icons/icons.js" crossorigin="anonymous"></script>
-    <script src="asset/library/node_modules/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="asset/js/user/main.js"></script>
 </body>
 

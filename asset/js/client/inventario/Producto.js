@@ -39,7 +39,9 @@ async function loadTable() {
                     </div>
                 `;
 
-                table.row.add([producto.id, producto.Codigo, producto.Nombre, producto.CategoriaId.Descripcion, `<span class="${estadoClass}">${producto.Estado}</span>`, actions]);
+                const imagenTag = producto.Imagen ? `<img src="../../../asset/img/${producto.Imagen}" alt="Imagen del producto" style="max-width: 100px; max-height: 100px;">` : '';
+
+                table.row.add([producto.id, imagenTag, producto.Codigo, producto.Nombre, producto.CategoriaId.Descripcion, `<span class="${estadoClass}">${producto.Estado}</span>`, actions]);
             });
 
             table.draw();
@@ -133,10 +135,30 @@ function findById(id) {
     });
 }
 
+function previewImage() {
+    const imagenInput = document.getElementById('imagenInput');
+    const imagenPreview = document.getElementById('imagenPreview');
+
+    if (imagenInput.files && imagenInput.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            imagenPreview.src = e.target.result;
+            imagenPreview.style.display = 'block';
+        };
+
+        reader.readAsDataURL(imagenInput.files[0]);
+    } else {
+        imagenPreview.src = '';
+        imagenPreview.style.display = 'none';
+    }
+}
+
+
 function performAction() {
 
     var id = $('#id').val();
-    
+
     var formData = {
         Codigo: $('#codigo').val(),
         Nombre: $('#nombre').val(),
@@ -145,6 +167,12 @@ function performAction() {
         },
         Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
     };
+
+    var imagenInput = $('#imagenInput')[0].files[0];
+
+    if (imagenInput) {
+        formData.Imagen = imagenInput.name;
+    }
 
     var url = id && id !== '0' ? 'https://hotel-api-hzf6.onrender.com/api/inventario/producto/' + id : 'https://hotel-api-hzf6.onrender.com/api/inventario/producto';
     var type = id && id !== '0' ? 'PUT' : 'POST';
@@ -156,6 +184,7 @@ function performAction() {
             url: url,
             type: type,
             data: JSON.stringify(formData),
+            processData: false,
             contentType: 'application/json',
             success: function (result) {
                 const Toast = Swal.mixin({
@@ -306,7 +335,10 @@ function Limpiar() {
     $('#nombre').val('');
     $('#categoriaId').val('0');
     $("#estado").prop('checked', false);
+    $('#imagenInput').val('');
+    $('#imagenPreview').attr('src', '').hide();
 }
+
 
 function validarCamposFormulario() {
 
@@ -337,7 +369,7 @@ function validarCamposFormulario() {
             },
             nombre: {
                 required: 'Por favor, ingresa un nombre',
-                letras: 'Por favor, ingresa solo letras en la ruta'
+                letras: 'Por favor, ingresa solo letras en el Nombre'
             },
             categoriaId: {
                 required: 'Por favor, seleccione una categoriaId'

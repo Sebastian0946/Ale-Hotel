@@ -99,8 +99,12 @@ async function findById(id) {
                 didOpen: (toast) => {
                     toast.addEventListener('mouseenter', Swal.stopTimer);
                     toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+                customClass: {
+                    container: 'my-toast-container'
                 }
             });
+            
 
             Toast.fire({
                 icon: 'success',
@@ -410,9 +414,9 @@ $(document).ready(function () {
                             cell.margin = [0, 5, 0, 5];
                             if (j === 3) {
                                 if (cell.text === 'Activo') {
-                                    cell.color = 'green'; // Texto verde para "Activo"
+                                    cell.color = 'green'; 
                                 } else if (cell.text === 'Inactivo') {
-                                    cell.color = 'red'; // Texto rojo para "Inactivo"
+                                    cell.color = 'red'; 
                                 }
                             }
                         });

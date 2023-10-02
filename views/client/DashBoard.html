@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -13,9 +13,12 @@
 
 <body class="collapsed">
 
-    <div class="header">
-        <h1>DashBoard Ale-Hotel</h1>
-    </div>
+    <header>
+        <div class="header">
+            <h1 class="header-title">Dashboard Ale-Hotel</h1>
+        </div>
+    </header>
+    
 
     <div class="contenedor">
         <nav>
@@ -121,7 +124,7 @@
                 <div class="divider"></div>
                 <ul>
                     <li>
-                        <a href="../login.html" title="Settings">
+                        <a onclick="outSin();" title="Settings">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 stroke-width="2" stroke="#91959C" fill="none" stroke-linecap="round"
                                 stroke-linejoin="round">
@@ -153,8 +156,15 @@
         </div>
     </div>
 
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2023 Ale-Hotel. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    
 
     <script src="../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../asset/library/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="../../asset/library/icons/icons.js" crossorigin="anonymous"></script>
     <script src="../../asset/js/client/Dashboard.js"></script>
 </body>

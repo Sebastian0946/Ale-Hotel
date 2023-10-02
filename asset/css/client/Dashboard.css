@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Mulish&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,800;1,500;1,600&family=Poppins:wght@200;300;500;700&display=swap');
 
 :root {
     --primary-color: #090E14;
@@ -16,11 +17,22 @@
     font-family: Mulish;
 }
 
-.header {
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Estilos para el header */
+header {
     background-color: #090e14;
-    color: white;
-    padding: 5px 0;
+    color: #fff;
+    padding: 20px 0;
     text-align: center;
+}
+
+.header-title {
+    font-size: 24px;
+    margin: 0;
 }
 
 .contenedor {
@@ -329,4 +341,40 @@ body.collapsed .sidebar-links {
     height: 100vh;
     border: none;
     overflow: hidden;
+}
+
+footer {
+    background-color: #090e14;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.footer-content p {
+    margin: 0;
+}
+
+.swal2-popup {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    animation: grow 0.2s ease-in-out;
+    color: #fff;
+}
+
+.swal2-popup .swal2-timer-progress-bar {
+    background-color: #fff;
+}
+
+
+@keyframes grow {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }

@@ -1,3 +1,40 @@
+const usuario = sessionStorage.getItem("usuario");
+const contrasena = sessionStorage.getItem("contrasena");
+
+if (usuario && contrasena) {
+    // Las credenciales existen, muestra una alerta de bienvenida
+    Swal.fire({
+        icon: 'success',
+        title: '¡Bienvenido!',
+        text: `Bienvenido, ${usuario}!`,
+    });
+} else {
+    // Las credenciales no existen en el almacenamiento de sesión, muestra una alerta de error
+    Swal.fire({
+        icon: 'warning',
+        title: 'Advertencia',
+        text: 'Por favor, inicie sesión.',
+    }).then(() => {
+        // Redirige al usuario a la página de inicio de sesión (puedes ajustar la URL)
+        window.location.href = '../login.html'; // Cambia 'login.html' por la URL de tu página de inicio de sesión
+    });
+}
+
+function outSin() {
+    // Muestra una alerta de despedida que se cierra automáticamente después de 3 segundos (3000 ms)
+    Swal.fire({
+        icon: 'info',
+        title: '¡Hasta la próxima!',
+        text: 'Sesión cerrada exitosamente.',
+        timer: 1500, 
+        timerProgressBar: true, 
+        showConfirmButton: false 
+    }).then(() => {
+        sessionStorage.clear();
+        window.location.href = '../login.html'; // Cambia 'login.html' por la URL de tu página de inicio de sesión
+    });
+}
+
 
 const expand_btn = document.querySelector(".expand-btn");
 
@@ -42,3 +79,4 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
