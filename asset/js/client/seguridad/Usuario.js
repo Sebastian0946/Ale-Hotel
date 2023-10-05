@@ -1,56 +1,19 @@
 var dataTableInitialized = false;
 
-function performAction() {
-    var action = $("#myModal").data("action");
-
-    if (action === "guardarCambios") {
-        guardarCambios();
-        $("#myModal").data("action", "");
-        $('#myModal').modal('hide');
-    } else {
-        validarCamposFormulario();
-
-        if ($('#usuario').valid() && $('#contraseña').valid() && $('#personaId').valid()) {
-            agregarUsuario();
-            $('#myModal').modal('hide');
-        } else {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                title: 'Campos incompletos o inválidos',
-                text: 'Por favor, verifica todos los campos antes de continuar.',
-                icon: "error"
-            });
-
-        }
-    }
+function showLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
 }
 
-
-$(document).ready(function () {
-    var passwordRequirements = $('.password-requirements');
-
-    passwordRequirements.hide();
-
-    $('#contraseña').on('focus', function () {
-        passwordRequirements.show();
-    }).on('blur', function () {
-        passwordRequirements.hide();
-    });
-});
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'none';
+}
 
 async function loadTable() {
     try {
+        showLoader();
+
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/usuario', {
             method: 'GET',
             headers: {
@@ -58,94 +21,64 @@ async function loadTable() {
             }
         });
 
-        if (!response.ok) {
-            throw new Error(`Error al cargar la tabla de usuarios: ${response.status}`);
-        }
+        if (response.ok) {
+            const items = await response.json();
+            const table = $('#table').DataTable();
 
-        const data = await response.json();
+            table.clear();
 
-        var registros = "";
-        data.data.forEach(function (usuario, index, array) {
-            var password = usuario.Contraseña;
-            var asterisks = '';
-            for (var i = 0; i < password.length; i++) {
-                asterisks += '*';
-            }
-            var passwordMasked = asterisks;
-            registros += `
-                <tr class="table-light fadeIn">
-                    <td class="table-cell-width">${usuario.id}</td>
-                    <td class="table-cell-width">${usuario.PersonaId.Nombres} ${usuario.PersonaId.Apellidos}</td>
-                    <td class="table-cell-width">${usuario.Usuario}</td>
-                    <td class="table-cell-width">${passwordMasked}</td>
-                    <td class="table-cell-width ${usuario.Estado === 'Activo' ? 'text-success' : 'text-danger'}">${usuario.Estado}</td>
-                    <td class="table-cell-width">
-                        <div class="row-actions">
-                            <div class="row-action" onclick="showDetails(${usuario.id})">
-                                <i class="fa-solid fa-info-circle btn btn-primary"></i>
-                            </div>
-                            <div class="row-action" onclick="findById(${usuario.id})">
-                                <i class="fa-solid fa-user-pen btn btn-warning"></i>
-                            </div>
-                            <div class="row-action" onclick="deleteById(${usuario.id})">
-                                <i class="fa-solid fa-trash btn btn-danger"></i>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
+            items.data.forEach((usuario) => {
+                const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${usuario.id})"><i class="fa-solid fa-user-pen"></i></button>`;
+                const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${usuario.id})"><i class="fa-solid fa-trash"></i></button>`;
 
-        $("#dataResult").html(registros);
+                const estadoClass = usuario.Estado === 'Activo' ? 'text-success' : 'text-danger';
 
-        if (!dataTableInitialized) {
-            $('#table').DataTable({
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
-                },
-                paging: true,
-                pageLength: 10, 
-                lengthMenu: [10, 20, 100], 
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        text: '<i class="fas fa-copy"></i> Copiar',
-                        extend: 'copyHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-excel"></i> Excel', 
-                        extend: 'excelHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-csv"></i> CSV',
-                        extend: 'csvHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-pdf"></i> PDF', 
-                        download: 'open'
-                    },
-                    {
-                        text: '<i class="fas fa-file-code"></i> JSON', 
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
+                const passwordField = '***';
 
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Producto.json'
-                            );
-                        }
-                    }
-                ],
-                responsive: true,
-                colReorder: true,
-                select: true
+                const actions = `
+                    <div class="actions-container">
+                        ${editButton} ${deleteButton}
+                    </div>
+                `;
+
+                table.row.add([
+                    usuario.id,
+                    usuario.PersonaId.Nombres + " " + usuario.PersonaId.Apellidos,
+                    `<div class="col-3">${usuario.Usuario}</div>`,
+                    passwordField,
+                    `<span class="${estadoClass} text-center">${usuario.Estado}</span>`,
+                    actions
+                ]);
             });
 
-            dataTableInitialized = true;
-        }
+            table.draw();
 
+            hideLoader();
+
+            if (items.message && !mensajeMostrado) {
+                mensajeMostrado = true;
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    icon: 'success',
+                    title: items.message
+                });
+            }
+        }
+        hideLoader();
     } catch (error) {
-        console.error(error);
+        console.error("Error al realizar la petición Fetch:", error);
+        hideLoader();
     }
 }
 
@@ -215,60 +148,109 @@ async function findById(id) {
     }
 }
 
-async function agregarUsuario() {
-    try {
-        var formData = {
-            PersonaId: {
-                id: $('#personaId').val()
+function performAction() {
+
+    var id = $('#id').val();
+
+    var formData = {
+        PersonaId: {
+            id: $('#personaId').val()
+        },
+        Usuario: $('#usuario').val(),
+        Contraseña: $('#contraseña').val(),
+        Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
+    };
+
+    var url = id && id !== '0' ? 'https://hotel-api-hzf6.onrender.com/api/seguridad/usuario/' + id : 'https://hotel-api-hzf6.onrender.com/api/seguridad/usuario';
+    var type = id && id !== '0' ? 'PUT' : 'POST';
+
+    validarCamposFormulario();
+
+    function sendRequest() {
+        $.ajax({
+            url: url,
+            type: type,
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function (result) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+
+                Toast.fire({
+                    icon: id && id !== '0' ? 'warning' : 'success',
+                    title: result.message
+                });
+
+                loadTable();
+
+                Limpiar();
+                $("#myModal").data("action", "");
+                $('#myModal').modal('hide');
             },
-            Usuario: $('#usuario').val(),
-            Contraseña: $('#contraseña').val(),
-            Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
-        };
+            error: function (jqXHR, textStatus, errorThrown) {
+                let errorMessage = "Ha ocurrido un error al ";
 
-        const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/usuario', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
+                if (id && id !== '0') {
+                    errorMessage += "actualizar la categoria";
+                } else {
+                    errorMessage += "registrar el rol";
+                }
 
-        if (!response.ok) {
-            throw new Error(`Error al registrar el usuario: ${response.status}`);
-        }
+                if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                    errorMessage += ": " + jqXHR.responseJSON.message;
+                }
 
-        const result = await response.json();
+                const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
+                const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
 
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    title: errorMessage,
+                    text: errorDescription,
+                    icon: "error"
+                });
             }
         });
+    }
 
-        Toast.fire({
-            icon: 'success',
-            title: 'Registro exitoso',
-        });
-
-        Limpiar();
-        loadTable();
-    } catch (error) {
-        let errorMessage = "Ha ocurrido un error al registrar el usuario";
-
-        if (error.responseJSON && error.responseJSON.message) {
-            errorMessage += ": " + error.responseJSON.message;
+    if ($('#usuario').valid() && $('#contraseña').valid() && $('#personaId').valid()) {
+        if (type === 'PUT') {
+            Swal.fire({
+                title: '¿Está seguro de guardar los cambios?',
+                text: 'Esta acción no se puede deshacer.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, guardar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sendRequest();
+                }
+            });
+        } else {
+            sendRequest();
         }
-
-        const errorDetails = error.message;
-        const errorDescription = errorDetails ? errorDetails : "Detalles del error desconocido";
-
+    } else {
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -282,86 +264,19 @@ async function agregarUsuario() {
         });
 
         Toast.fire({
-            title: errorMessage,
-            text: errorDescription,
+            title: 'Campos incompletos o inválidos',
+            text: 'Por favor, verifica todos los campos antes de continuar.',
             icon: "error"
         });
     }
+
+    $('#myModal').on('hidden.bs.modal', function () {
+        var form = $("#formulario");
+        form.validate().resetForm();
+        $('. is-invalid').removeClass(' is-invalid');
+    });
 }
 
-async function guardarCambios() {
-    try {
-        var id = $('#id').val();
-
-        var formData = {
-            PersonaId: {
-                id: $('#personaId').val()
-            },
-            Usuario: $('#usuario').val(),
-            Contraseña: $('#contraseña').val(),
-            Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
-        };
-
-        const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/seguridad/usuario/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error al actualizar el usuario: ${response.status}`);
-        }
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 4000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        });
-
-        Toast.fire({
-            icon: 'warning',
-            title: 'Modificación exitosa',
-        });
-
-        loadTable();
-        Limpiar();
-    } catch (error) {
-        let errorMessage = "Ha ocurrido un error al actualizar el usuario";
-
-        if (error.responseJSON && error.responseJSON.message) {
-            errorMessage += ": " + error.responseJSON.message;
-        }
-
-        const errorDetails = error.message;
-        const errorDescription = errorDetails ? errorDetails : "Detalles del error desconocido";
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-            }
-        });
-
-        Toast.fire({
-            title: errorMessage,
-            text: errorDescription,
-            icon: "error"
-        });
-    }
-}
 
 async function deleteById(id) {
     try {
@@ -435,10 +350,6 @@ function Limpiar() {
 
 function validarCamposFormulario() {
 
-    // $.validator.addMethod("letras", function (value, element) {
-    //     return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
-    // }, "Por favor, ingresa solo letras.");
-
     $.validator.addMethod("strongPassword", function (value, element) {
         return this.optional(element) || (value.length >= 4 && /[A-Z]/.test(value) && /[!@#$%^&*]/.test(value));
     }, "La contraseña debe tener al menos 3 caracteres, una mayúscula y un carácter especial.");
@@ -492,6 +403,98 @@ function validarCamposFormulario() {
             $(element.form).find("label[for=" + element.id + "]")
                 .removeClass(errorClass);
         },
-      
+
     });
 }
+
+$(document).ready(function () {
+    $('#table').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
+        },
+        paging: true,
+        pageLength: 5,
+        lengthMenu: [10, 20, 100],
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: '<i class="fas fa-copy"></i> Copiar',
+                extend: 'copyHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                extend: 'excelHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-csv"></i> CSV',
+                extend: 'csvHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-pdf"></i> PDF',
+                extend: 'pdfHtml5',
+                title: 'Usuario',
+                download: 'open',
+                customize: function (doc) {
+                    var table = doc.content[1].table;
+
+                    table.widths = ['10%', '15%', '30%', '10%', '1%'];
+                    table.padding = [0, 10, 0, 0];
+                    table.fontSize = 12;
+                    table.alignment = 'center';
+
+                    doc.content[1].table.headerRows = 1;
+                    doc.content[1].table.widths = ['20%', '20%', '20%', '20%', '35%'];
+                    doc.content[1].table.body[0].forEach(function (headerCell) {
+                        headerCell.fillColor = '#f2f2f2';
+                        headerCell.color = 'black';
+                        headerCell.fontSize = 14;
+                        headerCell.bold = true;
+                        headerCell.alignment = 'center';
+                        headerCell.margin = [0, 8, 0, 8];
+                    });
+
+                    for (var i = 1; i < doc.content[1].table.body.length; i++) {
+                        var row = doc.content[1].table.body[i];
+                        row.forEach(function (cell, j) {
+                            cell.fontSize = 12;
+                            cell.alignment = (j === 3) ? 'center' : 'left';
+                            cell.margin = [0, 5, 0, 5];
+                            if (j === 3) {
+                                if (cell.text === 'Activo') {
+                                    cell.color = 'green';
+                                } else if (cell.text === 'Inactivo') {
+                                    cell.color = 'red';
+                                }
+                            }
+                        });
+                    }
+
+                    doc.styles.tableHeader = {
+                        fontSize: 12,
+                        bold: true,
+                        fillColor: '#f2f2f2',
+                        alignment: 'center'
+                    };
+                    doc.content[1].text = 'Usuario.pdf';
+                }
+            },
+            {
+                text: '<i class="fas fa-file-code"></i> JSON',
+                action: function (e, dt, button, config) {
+                    var data = dt.buttons.exportData();
+
+                    $.fn.dataTable.fileSave(
+                        new Blob([JSON.stringify(data)]),
+                        'Usuario.json'
+                    );
+                }
+            }
+        ],
+        responsive: true,
+        colReorder: true,
+        select: true
+    });
+
+    loadTable();
+    loadSeguridad();
+});

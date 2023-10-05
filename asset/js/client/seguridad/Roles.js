@@ -1,42 +1,19 @@
 var dataTableInitialized = false;
 
-function performAction() {
-    var action = $("#myModal").data("action");
+function showLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+}
 
-    if (action === "guardarCambios") {
-        guardarCambios();
-        $("#myModal").data("action", "");
-        $('#myModal').modal('hide');
-    } else {
-        validarCamposFormulario();
-
-        if ($('#codigo').valid() && $('#descripcion').valid()) {
-            agregarRol();
-            $('#myModal').modal('hide');
-        } else {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                title: 'Campos incompletos o inválidos',
-                text: 'Por favor, verifica todos los campos antes de continuar.',
-                icon: "error"
-            });
-        }
-    }
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'none';
 }
 
 async function loadTable() {
     try {
+        showLoader();
+
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/rol', {
             method: 'GET',
             headers: {
@@ -44,89 +21,61 @@ async function loadTable() {
             }
         });
 
-        if (!response.ok) {
-            throw new Error(`Error al cargar la tabla de roles: ${response.status}`);
-        }
+        if (response.ok) {
+            const items = await response.json();
+            const table = $('#table').DataTable();
 
-        const items = await response.json();
-        var registros = "";
-        items.data.forEach(function (rol, index, array) {
-            registros += `
-                <tr class="table-light fadeIn">
-                    <td class="table-cell-width">${rol.id}</td>
-                    <td class="table-cell-width">${rol.Codigo}</td>
-                    <td class="table-cell-width">${rol.Descripcion}</td>
-                    <td class="table-cell-width ${rol.Estado === 'Activo' ? 'text-success' : 'text-danger'}">${rol.Estado}</td>
-                    <td class="table-cell-width">
-                        <div class="row-actions">
-                            <div class="row-action" onclick="showDetails(${rol.id})">
-                                <i class="fa-solid fa-info-circle btn btn-primary"></i> 
-                            </div>
-                            <div class="row-action" onclick="findById(${rol.id})">
-                                <i class="fa-solid fa-user-pen btn btn-warning"></i> 
-                            </div>
-                            <div class="row-action" onclick="deleteById(${rol.id})">
-                                <i class="fa-solid fa-trash btn btn-danger"></i>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
+            table.clear();
 
-        $("#dataResult").html(registros);
+            items.data.forEach((rol) => {
+                const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${rol.id})"><i class="fa-solid fa-user-pen"></i></button>`;
+                const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${rol.id})"><i class="fa-solid fa-trash"></i></button>`;
 
-        if (!dataTableInitialized) {
-            $('#table').DataTable({
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
-                },
-                paging: true,
-                pageLength: 10, 
-                lengthMenu: [10, 20, 100], 
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        text: '<i class="fas fa-copy"></i> Copiar',
-                        extend: 'copyHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-excel"></i> Excel',
-                        extend: 'excelHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-csv"></i> CSV',
-                        extend: 'csvHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-pdf"></i> PDF', 
-                        extend: 'pdfHtml5',
-                        download: 'open'
-                    },
-                    {
-                        text: '<i class="fas fa-file-code"></i> JSON', 
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
+                const estadoClass = rol.Estado === 'Activo' ? 'text-success' : 'text-danger';
 
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Producto.json'
-                            );
-                        }
-                    }
-                ],
-                responsive: true,
-                colReorder: true,
-                select: true
+                const actions = `
+                    <div class="actions-container">
+                        ${editButton} ${deleteButton}
+                    </div>
+                `;
+
+                table.row.add([
+                    rol.id,
+                    rol.Codigo,
+                    rol.Descripcion,
+                    `<span class="${estadoClass} text-center">${rol.Estado}</span>`,
+                    actions
+                ]);
             });
 
+            table.draw();
 
-            dataTableInitialized = true;
+            hideLoader();
+
+            if (items.message && !mensajeMostrado) {
+                mensajeMostrado = true;
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    icon: 'success',
+                    title: items.message
+                });
+            }
         }
-
-
+        hideLoader();
     } catch (error) {
-        console.error(`Error al cargar la tabla de roles: ${error}`);
+        console.error("Error al realizar la petición Fetch:", error);
+        hideLoader();
     }
 }
 
@@ -187,70 +136,8 @@ async function findById(id) {
     }
 }
 
-async function agregarRol() {
-    var formData = {
-        Codigo: $('#codigo').val(),
-        Descripcion: $('#descripcion').val(),
-        Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
-    };
+function performAction() {
 
-    try {
-        const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/rol', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error al registrar el rol: ${response.status}`);
-        }
-
-        const result = await response.json();
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-            }
-        });
-
-        Toast.fire({
-            icon: 'success',
-            title: 'Registro exitoso',
-        });
-
-        Limpiar();
-        loadTable();
-    } catch (error) {
-        let errorMessage = "Ha ocurrido un error al registrar el rol: " + error.message;
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-            }
-        });
-
-        Toast.fire({
-            title: errorMessage,
-            icon: "error"
-        });
-    }
-}
-
-async function guardarCambios() {
     var id = $('#id').val();
 
     var formData = {
@@ -259,41 +146,97 @@ async function guardarCambios() {
         Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
     };
 
-    try {
-        const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/seguridad/rol/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
+
+    var url = id && id !== '0' ? 'https://hotel-api-hzf6.onrender.com/api/seguridad/rol/' + id : 'https://hotel-api-hzf6.onrender.com/api/seguridad/rol';
+    var type = id && id !== '0' ? 'PUT' : 'POST';
+
+    validarCamposFormulario();
+
+    function sendRequest() {
+        $.ajax({
+            url: url,
+            type: type,
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function (result) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+
+                Toast.fire({
+                    icon: id && id !== '0' ? 'warning' : 'success',
+                    title: result.message
+                });
+
+                loadTable();
+
+                Limpiar();
+                $("#myModal").data("action", "");
+                $('#myModal').modal('hide');
             },
-            body: JSON.stringify(formData)
-        });
+            error: function (jqXHR, textStatus, errorThrown) {
+                let errorMessage = "Ha ocurrido un error al ";
 
-        if (!response.ok) {
-            throw new Error(`Error al actualizar el rol: ${response.status}`);
-        }
+                if (id && id !== '0') {
+                    errorMessage += "actualizar la categoria";
+                } else {
+                    errorMessage += "registrar el rol";
+                }
 
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 4000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
+                if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                    errorMessage += ": " + jqXHR.responseJSON.message;
+                }
+
+                const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
+                const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    title: errorMessage,
+                    text: errorDescription,
+                    icon: "error"
+                });
             }
-        })
-
-        Toast.fire({
-            icon: 'warning',
-            title: 'Modificación exitosa',
         });
+    }
 
-        loadTable();
-        Limpiar();
-    } catch (error) {
-        let errorMessage = "Ha ocurrido un error al actualizar el rol: " + error.message;
-
+    if ($('#codigo').valid() && $('#descripcion').valid()) {
+        if (type === 'PUT') {
+            Swal.fire({
+                title: '¿Está seguro de guardar los cambios?',
+                text: 'Esta acción no se puede deshacer.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, guardar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sendRequest();
+                }
+            });
+        } else {
+            sendRequest();
+        }
+    } else {
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -307,73 +250,17 @@ async function guardarCambios() {
         });
 
         Toast.fire({
-            title: errorMessage,
+            title: 'Campos incompletos o inválidos',
+            text: 'Por favor, verifica todos los campos antes de continuar.',
             icon: "error"
         });
     }
-}
 
-async function guardarCambios() {
-    var id = $('#id').val();
-
-    var formData = {
-        Codigo: $('#codigo').val(),
-        Descripcion: $('#descripcion').val(),
-        Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
-    };
-
-    try {
-        const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/seguridad/rol/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error al actualizar el rol: ${response.status}`);
-        }
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 4000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-            }
-        })
-
-        Toast.fire({
-            icon: 'warning',
-            title: 'Modificación exitosa',
-        });
-
-        loadTable();
-        Limpiar();
-    } catch (error) {
-        let errorMessage = "Ha ocurrido un error al actualizar el rol: " + error.message;
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-            }
-        });
-
-        Toast.fire({
-            title: errorMessage,
-            icon: "error"
-        });
-    }
+    $('#myModal').on('hidden.bs.modal', function () {
+        var form = $("#formulario");
+        form.validate().resetForm();
+        $('. is-invalid').removeClass(' is-invalid');
+    });
 }
 
 async function deleteById(id) {
@@ -489,3 +376,94 @@ function validarCamposFormulario() {
         },
     });
 }
+
+$(document).ready(function () {
+    $('#table').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
+        },
+        paging: true,
+        pageLength: 5,
+        lengthMenu: [10, 20, 100],
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: '<i class="fas fa-copy"></i> Copiar',
+                extend: 'copyHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                extend: 'excelHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-csv"></i> CSV',
+                extend: 'csvHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-pdf"></i> PDF',
+                extend: 'pdfHtml5',
+                title: 'Usuario',
+                download: 'open',
+                customize: function (doc) {
+                    var table = doc.content[1].table;
+
+                    table.widths = ['10%', '15%', '30%', '10%', '1%'];
+                    table.padding = [0, 10, 0, 0];
+                    table.fontSize = 12;
+                    table.alignment = 'center';
+
+                    doc.content[1].table.headerRows = 1;
+                    doc.content[1].table.widths = ['20%', '20%', '20%', '20%', '35%'];
+                    doc.content[1].table.body[0].forEach(function (headerCell) {
+                        headerCell.fillColor = '#f2f2f2';
+                        headerCell.color = 'black';
+                        headerCell.fontSize = 14;
+                        headerCell.bold = true;
+                        headerCell.alignment = 'center';
+                        headerCell.margin = [0, 8, 0, 8];
+                    });
+
+                    for (var i = 1; i < doc.content[1].table.body.length; i++) {
+                        var row = doc.content[1].table.body[i];
+                        row.forEach(function (cell, j) {
+                            cell.fontSize = 12;
+                            cell.alignment = (j === 3) ? 'center' : 'left';
+                            cell.margin = [0, 5, 0, 5];
+                            if (j === 3) {
+                                if (cell.text === 'Activo') {
+                                    cell.color = 'green';
+                                } else if (cell.text === 'Inactivo') {
+                                    cell.color = 'red';
+                                }
+                            }
+                        });
+                    }
+
+                    doc.styles.tableHeader = {
+                        fontSize: 12,
+                        bold: true,
+                        fillColor: '#f2f2f2',
+                        alignment: 'center'
+                    };
+                    doc.content[1].text = 'Usuario.pdf';
+                }
+            },
+            {
+                text: '<i class="fas fa-file-code"></i> JSON',
+                action: function (e, dt, button, config) {
+                    var data = dt.buttons.exportData();
+
+                    $.fn.dataTable.fileSave(
+                        new Blob([JSON.stringify(data)]),
+                        'Usuario.json'
+                    );
+                }
+            }
+        ],
+        responsive: true,
+        colReorder: true,
+        select: true
+    });
+
+    loadTable();
+});

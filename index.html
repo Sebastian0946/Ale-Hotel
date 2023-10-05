@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ale-Hotel</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="shortcut icon" href="asset/img/logo.svg" type="image/x-icon">
     <link rel="stylesheet" href="asset/library/node_modules/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="asset/css/user/styles.css">
@@ -17,15 +18,14 @@
 
     <div class="container-nav">
         <nav>
-            <div class="nav_logo"><img src="asset/img/logo hotel.png" alt="logo Ale-Hotel"></div>
+            <div class="nav_logo"><img src="asset/img/logo principal.svg" alt="logo Ale-Hotel"></div>
             <ul class="nav_links">
-                <li class="link"><a href="#">Home</a></li>
-                <li class="link"><a href="#">Book</a></li>
+                <li class="link"><a href="#">Inicio</a></li>
+                <li class="link"><a href="#">Reserva</a></li>
                 <li class="link"><a href="#">Blog</a></li>
-                <li class="link"><a href="#">Concactanos</a></li>
+                <li class="link"><a href="#">Contáctanos</a></li>
                 <li class="link"><a href="#"><button class="btn btn-reservation">Reservar</button></a></li>
-                <li class="link"><button class="btn btn-login"><a href="views/login.html">Iniciar Sesión</a></button>
-                </li>
+                <li class="link"><button class="btn btn-login" onclick="redirigirALogin()">Iniciar Sesión</button></li>
             </ul>
         </nav>
     </div>
@@ -36,7 +36,7 @@
                 <h1>Disfruta de las vacaciones de tus sueños</h1>
                 <p>Reserva tu habitación y disfruta</p>
             </div>
-            <div class="booking-container">
+            <!-- <div class="booking-container">
                 <form action="">
                     <div class="form-group">
                         <div class="input-group">
@@ -61,7 +61,7 @@
                     </div>
                 </form>
                 <button class="btn"><i class="ri-search-line"></i></button>
-            </div>
+            </div> -->
         </div>
     </header>
 

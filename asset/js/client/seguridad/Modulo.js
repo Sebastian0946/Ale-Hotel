@@ -53,7 +53,7 @@ async function loadTable() {
                 const estadoClass = modulo.Estado === 'Activo' ? 'text-success' : 'text-danger';
 
                 const actions = `
-                    <div class="actions-container">
+                    <div class="actions-container" style="display: flex;">
                         ${editButton} ${deleteButton}
                     </div>
                 `;
@@ -238,7 +238,6 @@ function performAction() {
             }
         });
     }
-
     if ($('#codigo').valid() && $('#ruta').valid() && $('#etiqueta').valid()) {
         // Solo muestra la confirmación para solicitudes PUT
         if (type === 'PUT') {

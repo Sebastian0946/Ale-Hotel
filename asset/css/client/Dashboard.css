@@ -14,18 +14,19 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Mulish;
 }
 
 body {
     font-family: 'Montserrat', sans-serif;
     font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4;
+    /* Cambia el fondo del cuerpo según tus preferencias */
 }
 
 /* Estilos para el header */
 header {
-    background-color: #090e14;
-    color: #fff;
+    background-color: var(--primary-color);
+    color: white;
     padding: 20px 0;
     text-align: center;
 }
@@ -61,7 +62,6 @@ body.collapsed nav {
     width: 80px;
 }
 
-
 body.collapsed .hide {
     opacity: 0;
     position: absolute;
@@ -70,8 +70,7 @@ body.collapsed .hide {
     transition: all 0.1s ease-in-out;
 }
 
-/*? sidebar top */
-
+/* Estilos del sidebar top */
 .sidebar-top {
     position: relative;
     display: flex;
@@ -110,7 +109,6 @@ body.collapsed .sidebar-top {
     transition: 0.3s;
 }
 
-
 .expand-btn svg {
     stroke: white;
     transform: rotate(180deg);
@@ -125,13 +123,7 @@ body.collapsed .expand-btn svg {
     height: 48px;
 }
 
-body.collapsed .sidebar-links {
-    display: inline-block;
-    margin-right: 10px;
-}
-
-/*? menu links */
-
+/* Estilo base de los enlaces */
 .sidebar-links {
     display: flex;
     flex-direction: column;
@@ -160,21 +152,18 @@ body.collapsed .sidebar-links {
     transition: all 0.5s ease-in-out;
 }
 
-/* .sidebar-links li a svg {
-    color: var(--sidebar-gray-light);
-    height: 32px;
-    width: 32px;
+/* Estilos cuando el menú está colapsado */
+body.collapsed .sidebar-links {
+    align-items: flex-start;
+    flex-direction: row;
 }
 
-.sidebar-links li a:hover svg {
-    stroke: var(--sidebar-gray-light);
-} */
-
 .sidebar-links .link {
-    margin-left: 30px;
+    margin-left: 0;
     opacity: 1;
 }
 
+/* Estilos al hacer hover o cuando está activo */
 .sidebar-links li a:hover,
 .sidebar-links .active {
     width: 100%;
@@ -193,6 +182,7 @@ body.collapsed .sidebar-links {
     stroke: white;
 }
 
+/* Estilos para los dropdowns */
 .dropdown-menu a {
     color: black;
 }
@@ -253,8 +243,8 @@ body.collapsed .sidebar-links {
     margin-top: 0.5rem;
 }
 
-/*? bottom sidebar */
 
+/* Estilos para el sidebar bottom */
 .sidebar-bottom {
     display: flex;
     justify-content: center;
@@ -273,8 +263,7 @@ body.collapsed .sidebar-links {
     margin: 6px 0px;
 }
 
-/*? account part */
-
+/* Estilos para la sección de perfil */
 .sidebar__profile {
     display: flex;
     align-items: center;
@@ -344,8 +333,8 @@ body.collapsed .sidebar-links {
 }
 
 footer {
-    background-color: #090e14;
-    color: #fff;
+    background-color: var(--primary-color);
+    color: white;
     padding: 10px 0;
     text-align: center;
 }
@@ -365,7 +354,6 @@ footer {
 .swal2-popup .swal2-timer-progress-bar {
     background-color: #fff;
 }
-
 
 @keyframes grow {
     0% {

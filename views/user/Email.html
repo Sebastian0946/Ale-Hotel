@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,800;1,500;1,600&family=Poppins:wght@200;300;500;700&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        h1 {
+            margin-bottom: 15px;
+        }
+
+        .centered {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #007bff;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        /* Estilo para la imagen del logo */
+        .logo-img {
+            display: block;
+            margin: 0 auto;
+            max-width: 200px;
+            /* Ajusta el ancho máximo según sea necesario */
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .custom-table th,
+        .custom-table td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .custom-table th {
+            background-color: #f9f9f9;
+        }
+
+        .custom-table tr:hover {
+            background-color: #f5f5f5;
+            transition: background-color 0.3s ease;
+        }
+
+        .thank-you {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="centered">
+        <div class="container">
+            <h1>Bienvenido a Ale-Hotel</h1>
+            <p>Gracias por elegir Ale-Hotel para su estadía. En Ale-Hotel, nos enorgullece ofrecer una experiencia
+                excepcional a nuestros huéspedes.</p>
+            <p>Nuestro hotel cuenta con instalaciones de primera clase, un personal amable y un ambiente relajante para
+                que disfrute de su estancia al máximo.</p>
+            <div class="card">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <a href="https://ale-hotel-7af0b2.netlify.app/"><img class="logo-img" src="https://ale-hotel-7af0b2.netlify.app/asset/img/logo%20hotel.png" alt="Logo del Hotel"></a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Nombres:</strong></td>
+                            <td>{{name}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Apellidos:</strong></td>
+                            <td>{{lastName}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Teléfono:</strong></td>
+                            <td>{{phone}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tipo de Habitación:</strong></td>
+                            <td>{{typeRoom}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: center;">
+                <img src="https://ale-hotel-7af0b2.netlify.app/asset/img/gracias.gif" width="100" controls autoplay
+                    loop>
+            </div>
+            <p class="thank-you">¡Gracias por su reserva en Ale-Hotel! Esperamos que tenga una estancia agradable y
+                estaremos encantados de atender todas sus necesidades durante su visita.</p>
+        </div>
+    </div>
+</body>
+</html>

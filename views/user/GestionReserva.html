@@ -10,63 +10,83 @@
 </head>
 
 <body>
-
-    <div class="container mt-5">
+    <div class="container-fluid mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card" id="formulario">
-                    <h2 class="text-center">Registro de Persona</h2>
-                    <form>
-                        <div class="mb-3">
-                            <label for="tipoDocumento" class="form-label">Tipo de Documento</label>
-                            <select class="form-select" id="tipoDocumento" required>
-                                <option value="">Seleccionar</option>
-                                <option value="cc">Cédula de Ciudadanía</option>
-                                <option value="ti">Tarjeta de Identidad</option>
-                                <option value="ce">Cédula de Extranjería</option>
-                            </select>
+            <div class="col-md-6">
+                <form id="formRegistro">
+                    <input type="text" name="reply-to" value="alehotelservices@gmail.com" hidden disabled>
+                    <div class="card" id="formularioRegistro">
+                        <h2 class="text-center">Registro de Persona</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="tipoDocumento" class="form-label">Tipo de Documento<span>*</span>
+                                        :</label>
+                                    <select class="form-select" id="tipoDocumento" required>
+                                        <option value="">Seleccionar</option>
+                                        <option value="CC">Cédula de Ciudadanía</option>
+                                        <option value="CE">Cédula de Extranjería</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="documento" class="form-label">Número de Documento<span>*</span>
+                                        :</label>
+                                    <input type="text" class="form-control" id="documento" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nombres" class="form-label">Nombres<span>*</span> :</label>
+                                    <input type="text" class="form-control" name="name" id="nombres" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="apellidos" class="form-label">Apellidos<span>*</span> :</label>
+                                    <input type="text" class="form-control" name="lastName" id="apellidos" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="municipio" class="form-label">Departamento<span>*</span> :</label>
+                                    <select class="form-select" id="departamento" onchange="cargarMunicipios()"
+                                        required>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="municipio" class="form-label">Municipio<span>*</span> :</label>
+                                    <select class="form-select" id="municipio" required>
+
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="telefono" class="form-label">Teléfono<span>*</span> :</label>
+                                    <input type="tel" class="form-control" name="phone" id="telefono" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="correo" class="form-label">Correo Electrónico<span>*</span> :</label>
+                                    <input type="email" class="form-control" name="typeRoom" id="correo" required>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="documento" class="form-label">Número de Documento</label>
-                            <input type="text" class="form-control" id="documento" required>
+                        <div class="text-center">
+                            <button id="btnRegistro" class="btn btn-primary btn-block p-1"
+                                type="button">Siguiente</button>
                         </div>
-                        <div class="mb-3">
-                            <label for="nombres" class="form-label">Nombres</label>
-                            <input type="text" class="form-control" id="nombres" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="apellidos" class="form-label">Apellidos</label>
-                            <input type="text" class="form-control" id="apellidos" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="municipio" class="form-label">Municipio</label>
-                            <input type="text" class="form-control" id="municipio" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="departamento" class="form-label">Departamento</label>
-                            <input type="text" class="form-control" id="departamento" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label">Teléfono</label>
-                            <input type="tel" class="form-control" id="telefono" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="correo" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="correo" required>
-                        </div>
-                        <button id="btnSiguiente1" class="btn btn-primary btn-block">Siguiente</button>
-                    </form>
-                    <form id="formularioTipoHabitacion" style="display: none;">
+                    </div>
+                    <div id="formularioTipoHabitacion" style="display: none;">
+                        <h2 class="text-center">Tipo de Habitación</h2>
                         <!-- Campos del formulario de Tipo de Habitación -->
-                        <!-- Agrega tus campos de selección de tipo de habitación aquí -->
-                        <button id="btnAtras" class="btn btn-secondary">Atrás</button>
-                        <button id="btnSiguiente2" class="btn btn-primary">Siguiente</button>
-                    </form>
-                </div>
+                        <!-- ... -->
+                        <div class="text-center">
+                            <button id="btnAtras" class="btn btn-secondary">Atrás</button>
+                            <button id="btnReserva" type="button" class="btn btn-primary" value="reserva" onclick="enviarCOrreo();">Reservar</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
+    <script type="text/javascript">emailjs.init('S5jqwfWkRbqskemmW')
+    </script>
     <script src="../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../asset/js/user/GestionReserva.js"></script>
 </body>

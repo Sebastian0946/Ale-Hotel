@@ -7,6 +7,10 @@ acordeon.forEach(acco => {
     }
 })
 
+function redirigirALogin() {
+    window.location.href = 'views/login.html';
+}
+
 $(document).ready(function () {
     var swiper = new Swiper('.swiper-container', {
         slidesPerView: 3,
@@ -76,7 +80,7 @@ tarjetas.forEach((tarjeta) => {
                 <div class="thanks-icon" id="thanks-icon"> <!-- Icono oculto -->
                     <img src="asset/img/thank.gif" alt="Persona agradeciendo">
                 </div>
-                <a class="btn btn-success reserve-button" href="views/user/GestionReserva.html id="reserve-button">Reservar</a>
+                <a class="btn btn-success reserve-button" href="views/user/GestionReserva.html" id="reserve-button">Reservar</a>
             </div>
         </div>
     `;
@@ -104,3 +108,4 @@ reserveButtons.forEach((button) => {
         }, 3000); // Cambia el tiempo según tus preferencias (3 segundos en este caso)
     });
 });
+

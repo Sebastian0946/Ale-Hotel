@@ -26,9 +26,9 @@ function outSin() {
         icon: 'info',
         title: '¡Hasta la próxima!',
         text: 'Sesión cerrada exitosamente.',
-        timer: 1500, 
-        timerProgressBar: true, 
-        showConfirmButton: false 
+        timer: 1500,
+        timerProgressBar: true,
+        showConfirmButton: false
     }).then(() => {
         sessionStorage.clear();
         window.location.href = '../login.html'; // Cambia 'login.html' por la URL de tu página de inicio de sesión
@@ -80,3 +80,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+$(document).ready(function () {
+    $("#sidemenu li a").on("click", function () {
+        $("body").removeClass("collapsed");
+    });
+});

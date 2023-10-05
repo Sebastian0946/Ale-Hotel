@@ -41,7 +41,7 @@ async function loadTable() {
                     </div>
                 `;
 
-                table.row.add([formulario.id, formulario.Codigo, formulario.ModuloId.Ruta, formulario.Ruta, formularioIcono, formulario.Etiqueta, `<span class="${estadoClass} text-center">${formulario.Estado}</span>`, actions]);
+                table.row.add([formulario.id, formulario.Codigo, formulario.ModuloId.Ruta, formulario.ModuloId.Etiqueta, formulario.Ruta, formulario.Etiqueta, formularioIcono, `<span class="${estadoClass} text-center">${formulario.Estado}</span>`, actions]);
             });
 
             table.draw();
@@ -148,7 +148,6 @@ async function findById(id) {
 
 
 function performAction() {
-
     var id = $('#id').val();
 
     var formData = {
@@ -166,8 +165,8 @@ function performAction() {
     var type = id && id !== '0' ? 'PUT' : 'POST';
 
     validarCamposFormulario();
-
-    if ($('#codigo').valid() && $('#ruta').valid() && $('#etiqueta').valid() && $('#icono').valid() && $('#moduloId').valid()) {
+    // Función para enviar la solicitud PUT o POST
+    function sendRequest() {
         $.ajax({
             url: url,
             type: type,
@@ -232,6 +231,26 @@ function performAction() {
                 });
             }
         });
+    }
+    
+    if ($('#codigo').valid() && $('#ruta').valid() && $('#etiqueta').valid() && $('#icono').valid() && $('#moduloId').valid()) {
+        // Solo muestra la confirmación para solicitudes PUT
+        if (type === 'PUT') {
+            Swal.fire({
+                title: '¿Está seguro de guardar los cambios?',
+                text: 'Esta acción no se puede deshacer.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, guardar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sendRequest();
+                }
+            });
+        } else {
+            sendRequest();
+        }
     } else {
         const Toast = Swal.mixin({
             toast: true,
@@ -255,7 +274,7 @@ function performAction() {
     $('#myModal').on('hidden.bs.modal', function () {
         var form = $("#formulario");
         form.validate().resetForm();
-        $('.is-invalid').removeClass('is-invalid');
+        $('. is-invalid').removeClass(' is-invalid');
     });
 }
 

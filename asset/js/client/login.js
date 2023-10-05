@@ -4,6 +4,8 @@ function signIn(e) {
     let usuario = document.getElementById("usuario").value;
     let contrasena = document.getElementById("contrasena").value;
 
+    $("#loader").show();
+
     $.ajax({
         url: 'https://hotel-api-hzf6.onrender.com/api/seguridad/usuario',
         method: "GET",
@@ -12,6 +14,7 @@ function signIn(e) {
         },
         success: function (response) {
 
+            // Resto de tu código de éxito
             const usuarios = response.data;
 
             const userExists = usuarios.some(function (usuarioData) {
@@ -21,6 +24,8 @@ function signIn(e) {
             if (userExists) {
                 sessionStorage.setItem("usuario", usuario);
                 sessionStorage.setItem("contrasena", contrasena);
+
+                $("#loader").hide();
 
                 Swal.fire({
                     icon: "success",
@@ -32,6 +37,9 @@ function signIn(e) {
                     window.location.href = "client/DashBoard.html";
                 });
             } else {
+                // Oculta el loader en caso de error
+                $("#loader").hide();
+
                 Swal.fire({
                     icon: "error",
                     title: "Error al autenticar",
@@ -41,7 +49,26 @@ function signIn(e) {
             }
         },
         error: function (xhr, status, error) {
+            // Oculta el loader en caso de error
+            $("#loader").hide();
+
             console.log("Ha ocurrido un error: " + error);
         }
     });
 }
+
+function togglePasswordVisibility() {
+    var passwordInput = document.getElementById("contrasena");
+    var toggleIcon = document.getElementById("passwordToggleIcon");
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        toggleIcon.classList.remove("fa-eye");
+        toggleIcon.classList.add("fa-eye-slash");
+    } else {
+        passwordInput.type = "password";
+        toggleIcon.classList.remove("fa-eye-slash");
+        toggleIcon.classList.add("fa-eye");
+    }
+}
+

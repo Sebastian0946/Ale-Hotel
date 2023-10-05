@@ -4,6 +4,24 @@ body {
     margin: auto;
 }
 
+.loader {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    z-index: 9999;
+    text-align: center;
+}
+
+.loader img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
 .bg {
     background-image: url(../img/hotel-back.png);
@@ -53,6 +71,7 @@ body {
     animation: grow 0.2s ease-in-out;
     color: #fff;
 }
+
 
 @keyframes grow {
     0% {
