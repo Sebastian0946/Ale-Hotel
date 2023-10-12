@@ -129,7 +129,7 @@ function findById(id) {
                     icon: "error"
                 });
 
-                console.log(`Error al realizar la petición Ajax: ${textStatus}, ${errorThrown}`);
+                console.log(`Error al realizar la petición: ${textStatus}, ${errorThrown}`);
             }
         });
     });
@@ -189,7 +189,7 @@ function performAction() {
                 let errorMessage = "Ha ocurrido un error al ";
 
                 if (id && id !== '0') {
-                    errorMessage += "actualizar el inventario";
+                    errorMessage += "actualizar el inventario de habitación";
                 } else {
                     errorMessage += "registrar el rol";
                 }

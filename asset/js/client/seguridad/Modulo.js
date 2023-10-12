@@ -171,7 +171,6 @@ function performAction() {
 
     validarCamposFormulario();
 
-    // Función para enviar la solicitud PUT o POST
     function sendRequest() {
         $.ajax({
             url: url,
@@ -206,7 +205,7 @@ function performAction() {
                 let errorMessage = "Ha ocurrido un error al ";
 
                 if (id && id !== '0') {
-                    errorMessage += "actualizar la categoria";
+                    errorMessage += "actualizar el módulo";
                 } else {
                     errorMessage += "registrar el rol";
                 }

@@ -6,89 +6,147 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Reservas - Software Hotelero</title>
     <link rel="stylesheet" href="../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../asset/library/node_modules/flatpickr/dist/flatpickr.min.css">
+
     <link rel="stylesheet" href="../../asset/css/user/GestionReserva.css">
+
+    <script src="../../asset/library/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../../asset/library/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
 </head>
 
 <body>
+
+    <div id="loader" class="loader">
+        <div>
+            <div class="spinner"></div>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
     <div class="container-fluid mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-10">
                 <form id="formRegistro">
-                    <input type="text" name="reply-to" value="alehotelservices@gmail.com" hidden disabled>
-                    <div class="card" id="formularioRegistro">
+                    <input type="text" id="reply-to" name="reply-to" value="alehotelservices@gmail.com" hidden disabled>
+                    <div class="card" id="formularioRegistroPersona">
                         <h2 class="text-center">Registro de Persona</h2>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="tipoDocumento" class="form-label">Tipo de Documento<span>*</span>
-                                        :</label>
-                                    <select class="form-select" id="tipoDocumento" required>
+                                    <label for="tipoDocumento" class="form-label">Tipo de
+                                        Documento<span>*</span>:</label>
+                                    <select class="form-select" id="tipoDocumento" name="tipoDocumento" required>
                                         <option value="">Seleccionar</option>
                                         <option value="CC">Cédula de Ciudadanía</option>
                                         <option value="CE">Cédula de Extranjería</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="documento" class="form-label">Número de Documento<span>*</span>
-                                        :</label>
-                                    <input type="text" class="form-control" id="documento" required>
+                                    <label for="municipio" class="form-label">Departamento<span>*</span> :</label>
+                                    <select class="form-select" id="departamento" name="departamento" required>
+                                        <option selected value="0" disabled>-- Seleccionar --</option>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <label for="nombres" class="form-label">Nombres<span>*</span> :</label>
-                                    <input type="text" class="form-control" name="name" id="nombres" required>
+                                    <input type="text" class="form-control" name="name" id="nombres"
+                                        placeholder="Nombres" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="apellidos" class="form-label">Apellidos<span>*</span> :</label>
-                                    <input type="text" class="form-control" name="lastName" id="apellidos" required>
+                                    <label for="apellidos" class="form-label">Apellidos<span>*</span>:</label>
+                                    <input type="text" class="form-control" name="lastName" id="apellidos"
+                                        placeholder="Apellidos" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="municipio" class="form-label">Departamento<span>*</span> :</label>
-                                    <select class="form-select" id="departamento" onchange="cargarMunicipios()"
-                                        required>
-                                    </select>
-                                </div>
+                                    <label for="documento" class="form-label">Número de Documento<span>*</span>:</label>
+                                    <input type="text" class="form-control" id="documento" name="documento" placeholder="Documento de identidad" required>
+                                </div>                                
                                 <div class="mb-3">
                                     <label for="municipio" class="form-label">Municipio<span>*</span> :</label>
-                                    <select class="form-select" id="municipio" required>
-
+                                    <select class="form-select" id="municipio" name="municipio" required>
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label for="telefono" class="form-label">Teléfono<span>*</span> :</label>
-                                    <input type="tel" class="form-control" name="phone" id="telefono" required>
+                                    <input type="tel" class="form-control" name="phone" id="telefono"
+                                        placeholder="Telefono" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="correo" class="form-label">Correo Electrónico<span>*</span> :</label>
-                                    <input type="email" class="form-control" name="typeRoom" id="correo" required>
+                                    <input type="email" class="form-control" name="email" id="correo"
+                                        placeholder="example@gmail.com" required>
                                 </div>
                             </div>
                         </div>
                         <div class="text-center">
-                            <button id="btnRegistro" class="btn btn-primary btn-block p-1"
-                                type="button">Siguiente</button>
+                            <button id="btnRegistro" class="btn btn-primary btn-block p-2" type="submit">Siguiente</button>
                         </div>
                     </div>
                     <div id="formularioTipoHabitacion" style="display: none;">
                         <h2 class="text-center">Tipo de Habitación</h2>
-                        <!-- Campos del formulario de Tipo de Habitación -->
-                        <!-- ... -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="adultos" class="form-label">Adultos<span>*</span>:</label>
+                                    <select class="form-select" id="adultos" name="adultos" required>
+                                        <option value="0">-- Selecione adultos --</option>
+                                        <option value="1 adulto">1 adulto</option>
+                                        <option value="2 adultos">2 adultos</option>
+                                        <option value="3 adultos">3 adultos</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ninos" class="form-label">Niños<span>*</span>:</label>
+                                    <select class="form-select" id="ninos" name="ninos" required>
+                                        <option value="0">-- Selecione niños --</option>
+                                        <option value="0 niños">0 niños</option>
+                                        <option value="1 niño">1 niño</option>
+                                        <option value="2 niños">2 niños</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="fechaEntrada" class="form-label">Fecha de Entrada<span>*</span>:</label>
+                                    <input type="date" class="form-control" id="fechaEntrada" name="fechaEntrada"
+                                        required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="fechaSalida" class="form-label">Fecha de Salida<span>*</span>:</label>
+                                    <input type="date" class="form-control" id="fechaSalida" name="fechaSalida"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tipoHabitacion" class="form-label">Tipo de Habitación<span>*</span>:</label>
+                                <select class="form-select" id="tipohabitacionUsuario" name="tipohabitacionId" required>
+                                    <!-- Opciones de habitaciones generadas dinámicamente -->
+                                </select>
+                            </div>
+                            <div id="habitacionCard" style="display: none; margin-bottom: 15px;">
+                                <!-- La tarjeta se generará aquí -->
+                            </div>
+                        </div>
                         <div class="text-center">
                             <button id="btnAtras" class="btn btn-secondary">Atrás</button>
-                            <button id="btnReserva" type="button" class="btn btn-primary" value="reserva" onclick="enviarCOrreo();">Reservar</button>
+                            <button id="btnReserva" type="button" class="btn btn-primary" onclick="registrarPersona()">Reserva</button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
-    <script type="text/javascript">emailjs.init('S5jqwfWkRbqskemmW')
-    </script>
+    <script type="text/javascript" src="../../asset/library/node_modules/@emailjs/browser/dist/email.min.js"></script>
     <script src="../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../asset/library/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="../../asset/js/client/GetList.js"></script>
+    <script type="text/javascript">emailjs.init('S5jqwfWkRbqskemmW')</script>
     <script src="../../asset/js/user/GestionReserva.js"></script>
 </body>
 
 </html>
+<script>
+    loadParametrizacion();
+</script>

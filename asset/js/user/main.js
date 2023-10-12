@@ -36,22 +36,22 @@ $(document).ready(function () {
 
 const tarjetas = [
     {
-        imagen: "asset/img/sencilla.jpg",
+        imagen: "asset/img/Habitacion sencilla.jpg",
         titulo: "Habitación sencilla",
         precio: "$145.000",
     },
     {
-        imagen: "asset/img/doble.jpg",
+        imagen: "asset/img/Habitacion doble.jpg",
         titulo: "Habitación doble",
         precio: "$200.000",
     },
     {
-        imagen: "asset/img/matrimonial.jpg",
+        imagen: "asset/img/Habitacion matrimonial.jpg",
         titulo: "Habitación matrimonial",
         precio: "$250.000",
     },
     {
-        imagen: "asset/img/Vip.jpg",
+        imagen: "asset/img/Habitacion VIP.jpg",
         titulo: "Habitación VIP",
         precio: "$350.000",
     },

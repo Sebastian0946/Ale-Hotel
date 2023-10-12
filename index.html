@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ale-Hotel</title>
+    <title>Palmares de Alejandria</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link rel="shortcut icon" href="asset/img/logo.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="asset/img/logo hotel.png" type="image/x-icon">
     <link rel="stylesheet" href="asset/library/node_modules/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="asset/css/user/styles.css">
@@ -18,19 +18,19 @@
 
     <div class="container-nav">
         <nav>
-            <div class="nav_logo"><img src="asset/img/logo principal.svg" alt="logo Ale-Hotel"></div>
+            <div class="nav_logo"><img src="asset/img/logo hotel.png" alt="logo Ale-Hotel"></div>
             <ul class="nav_links">
-                <li class="link"><a href="#">Inicio</a></li>
-                <li class="link"><a href="#">Reserva</a></li>
-                <li class="link"><a href="#">Blog</a></li>
-                <li class="link"><a href="#">Contáctanos</a></li>
-                <li class="link"><a href="#"><button class="btn btn-reservation">Reservar</button></a></li>
+                <li class="link"><a href="#Inicio">Inicio</a></li>
+                <li class="link"><a href="#Ubicacion">Ubicación</a></li>
+                <li class="link"><a href="#Blog">Blog</a></li>
+                <li class="link"><a href="#Footer">Contáctanos</a></li>
+                <li class="link"><a href="views/user/GestionReserva.html"><button class="btn btn-reservation">Reservar</button></a></li>
                 <li class="link"><button class="btn btn-login" onclick="redirigirALogin()">Iniciar Sesión</button></li>
             </ul>
         </nav>
     </div>
 
-    <header class="section__container section__header">
+    <header class="section__container section__header" id="Inicio">
         <div class="header-image-container">
             <div class="header-content">
                 <h1>Disfruta de las vacaciones de tus sueños</h1>
@@ -65,7 +65,7 @@
         </div>
     </header>
 
-    <section class="section__container popular-container">
+    <section class="section__container popular-container" id="Blog">
         <h2 class="section__header">Habitaciones populares</h2>
         <div class="swiper-container">
             <div class="swiper-wrapper" id="swiper-wrapper">
@@ -125,29 +125,29 @@
                 </div>
 
                 <div class="box">
-                    <h3>¿Cuáles son los métodos de pagos?</h3>
+                    <h3>¿Cuáles son nuestros servicios?</h3>
                     <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores iure nam sit magni velit.</p>
                 </div>
 
                 <div class="box">
-                    <h3>¿Cuáles son los métodos de pagos?</h3>
+                    <h3>¿Donde nos ubicamos?</h3>
                     <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores iure nam sit magni velit.</p>
                 </div>
 
                 <div class="box">
-                    <h3>¿Cuáles son los métodos de pagos?</h3>
+                    <h3>¿Que habitaciones ofrecemos?</h3>
                     <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores iure nam sit magni velit.</p>
                 </div>
 
                 <div class="box">
-                    <h3>¿Cuáles son los métodos de pagos?</h3>
+                    <h3>¿Tipo de licores?</h3>
                     <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores iure nam sit magni velit.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="section__container section__map">
+    <section class="section__container section__map" id="Ubicacion">
 
         <h1 class="heading">Donde nos ubicamos</h1>
 
@@ -159,7 +159,7 @@
         </div>
     </section>
 
-    <footer class="footer">
+    <footer class="footer" id="Footer">
         <div class="section__container footer__container">
             <div class="footer-col">
                 <h3><img src="asset/img/logo sin fondo.png" alt=""></h3>
@@ -193,5 +193,4 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="asset/js/user/main.js"></script>
 </body>
-
 </html>

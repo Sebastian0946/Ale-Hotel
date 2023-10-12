@@ -130,7 +130,7 @@ function loadInventario() {
         success: function (items) {
             var registros = `<option selected='' selected disabled hidden value='0'>-- Seleccione inventario --</option>`;
             items.data.forEach(function (inventario, index, array) {
-                registros += `<option value='` + inventario.id + `'>` + inventario.Codigo + ": " + inventario.ProductoId.Nombre+ ": "+ inventario.Cantidad + `</option>`;
+                registros += `<option value='` + inventario.id + `'>` + inventario.Codigo + ": " + inventario.ProductoId.Nombre + ": " + inventario.Cantidad + `</option>`;
             })
             $("#inventarioId").html(registros);
         }
@@ -152,6 +152,7 @@ function loadParametrizacion() {
             $("#usuarioId").html(registros);
         }
     });
+
     $.ajax({
         url: 'https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion',
         method: "GET",
@@ -164,6 +165,60 @@ function loadParametrizacion() {
                 registros += `<option value='` + tipo.id + `'>` + tipo.Descripcion + `</option>`;
             })
             $("#tipohabitacionId").html(registros);
+        }
+    });
+
+    $.ajax({
+        url: 'https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        success: function (items) {
+            var registros = `<option selected="" value="0">-- Seleccione tipo de habitación --</option>`;
+            items.data.forEach(function (TipoHabitacion) {
+                registros += `<option value="${TipoHabitacion.id} - ${TipoHabitacion.Descripcion}">${TipoHabitacion.Descripcion}</option>`;
+            });
+            $('#tipohabitacionUsuario').html(registros);
+        },
+    });
+
+    $("#tipohabitacionUsuario").on("change", function () {
+        var habitacionOption = $(this).val();
+
+        if (habitacionOption !== "0") {
+            var habitacionId = habitacionOption.split(' - ')[0]; 
+            console.log("ID de Tipo de Habitación:", habitacionId);
+
+            $.ajax({
+                url: 'https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion/' + habitacionId,
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                success: function (habitacion) {
+
+                    var cantidad = habitacion.data.Cantidad;
+
+                    var cantidadFormateada = cantidad.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+                    var tarjetaHTML = `
+                        <div class="cardRoom">
+                            <img src="../../asset/img/${habitacion.data.Descripcion}.jpg" class="card-img-top" alt="Foto de la habitación">
+                            <div class="card-body">
+                                <h5 class="card-title">${habitacion.data.Descripcion}</h5>
+                                <p class="card-text">Precio: $${cantidadFormateada}</p>
+                            </div>
+                        </div>
+                    `;
+                    $("#habitacionCard").html(tarjetaHTML).show();
+                },
+                error: function (error) {
+                    console.error("Error al obtener los detalles de la habitación:", error);
+                }
+            });
+        } else {
+            $("#habitacionCard").hide();
         }
     });
 }
@@ -179,9 +234,24 @@ function loadSistema() {
         success: function (items) {
             var registros = `<option selected='' selected disabled hidden value='0'>-- Seleccione habitacion --</option>`;
             items.data.forEach(function (habitacion, index, array) {
-                registros += `<option value='` + habitacion.id + `'>` + habitacion.Codigo +": "+habitacion.Descripcion+ `</option>`;
+                registros += `<option value='` + habitacion.id + `'>` + habitacion.Codigo + ": " + habitacion.Descripcion + `</option>`;
             })
             $("#habitacionId").html(registros);
+        }
+    });
+
+    $.ajax({
+        url: 'https://hotel-api-hzf6.onrender.com/api/sistema/descuento',
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        success: function (items) {
+            var registros = `<option selected='' selected disabled hidden value='0'>-- Seleccione descuento --</option>`;
+            items.data.forEach(function (descuento, index, array) {
+                registros += `<option value='` + descuento.id + `'>` + descuento.PorcentajeDescuento + "%" + `</option>`;
+            })
+            $("#descuentoId").html(registros);
         }
     });
 }

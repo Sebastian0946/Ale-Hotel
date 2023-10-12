@@ -2,6 +2,8 @@ body {
     background: #ffe259;
     background: linear-gradient(to right, #ffa751, #ffe259);
     margin: auto;
+    font-family: 'Montserrat', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .loader {

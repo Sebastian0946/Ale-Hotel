@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@emailjs/browser": "^3.11.0",
     "@loadingio/loading.css": "^3.1.0",
     "@popperjs/core": "^2.11.8",
     "animejs": "^3.2.1",
@@ -8,6 +9,7 @@
     "datatables.net-buttons": "^2.4.2",
     "datatables.net-dt": "^1.13.4",
     "datatables.net-select": "^1.7.0",
+    "flatpickr": "^4.6.13",
     "font-awesome": "^4.7.0",
     "jquery": "^3.7.0",
     "jquery-validation": "^1.19.5",

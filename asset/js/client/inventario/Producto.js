@@ -154,7 +154,6 @@ function previewImage() {
     }
 }
 
-
 function performAction() {
 
     var id = $('#id').val();

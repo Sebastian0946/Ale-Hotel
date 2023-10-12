@@ -1,20 +1,21 @@
 var dataTableInitialized = false;
 
-function performAction() {
-    var action = $("#myModal").data("action");
+var mensajeMostrado = false
 
-    if (action === "guardarCambios") {
-        guardarCambios();
-        $("#myModal").data("action", "");
-    } else {
-        agregarEstadoFactura();
-    }
-    // Cerrar el modal
-    $('#myModal').modal('hide');
+function showLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+}
+
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'none';
 }
 
 async function loadTable() {
     try {
+        showLoader();
+
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/sistema/estadoFactura', {
             method: 'GET',
             headers: {
@@ -22,108 +23,54 @@ async function loadTable() {
             }
         });
 
-        if (!response.ok) {
-            throw new Error(`Error al obtener la lista de estados de factura: ${response.status}`);
-        }
+        if (response.ok) {
+            const items = await response.json();
+            const table = $('#table').DataTable();
 
-        const responseData = await response.json();
-        const { message, data } = responseData;
+            table.clear();
 
-        let registros = "";
-        data.forEach(function (estadoFactura, index, array) {
-            registros += `
-                <tr class="table-light fadeIn">
-                    <td class="table-cell-width">${estadoFactura.id}</td>
-                    <td class="table-cell-width">${estadoFactura.Codigo}</td>
-                    <td class="table-cell-width">${estadoFactura.Descripcion}</td>
-                    <td class="table-cell-width ${estadoFactura.Estado === 'Activo' ? 'text-success' : 'text-danger'}">${estadoFactura.Estado}</td>
-                    <td class="table-cell-width">
-                        <div class="row-actions">
-                            <div class="row-action" onclick="showDetails(${estadoFactura.id})">
-                                <i class="fa-solid fa-info-circle btn btn-primary"></i>
-                            </div>
-                            <div class="row-action" onclick="findById(${estadoFactura.id})">
-                                <i class="fa-solid fa-user-pen btn btn-warning"></i>
-                            </div>
-                            <div class="row-action" onclick="deleteById(${estadoFactura.id})">
-                                <i class="fa-solid fa-trash btn btn-danger"></i>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
+            items.data.forEach((estadoFactura) => {
+                const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${estadoFactura.id})"><i class="fa-solid fa-user-pen"></i></button>`;
+                const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${estadoFactura.id})"><i class="fa-solid fa-trash"></i></button>`;
+                const payButton = `<button type="button" class="btn btn-primary mx-3 btn-pay" data-factura-id="${estadoFactura.id}"><i class="fa-solid fa-file-invoice"></i></button>`;
 
-        document.getElementById('dataResult').innerHTML = registros;
+                const estadoClass = estadoFactura.Estado === 'Activo' ? 'text-success' : 'text-danger';
 
-        if (!dataTableInitialized) {
-            $('#table').DataTable({
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
-                },
-                paging: true,
-                pageLength: 10,
-                lengthMenu: [10, 20, 100], 
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        text: '<i class="fas fa-copy"></i> Copiar', 
-                        extend: 'copyHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-excel"></i> Excel', 
-                        extend: 'excelHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-csv"></i> CSV',
-                        extend: 'csvHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-pdf"></i> PDF', 
-                        extend: 'pdfHtml5',
-                        download: 'open'
-                    },
-                    {
-                        text: '<i class="fas fa-file-code"></i> JSON', 
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
+                const actions = `
+                    <div class="actions-container">
+                        ${editButton} ${deleteButton} ${payButton}
+                    </div>
+                `;
 
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Producto.json'
-                            );
-                        }
+                table.row.add([estadoFactura.id, estadoFactura.Codigo, estadoFactura.Descripcion, `<span class="${estadoClass}">${estadoFactura.Estado}</span>`, actions]);
+            });
+
+            table.draw();
+
+            if (items.message && !mensajeMostrado) {
+                mensajeMostrado = true;
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
                     }
-                ],
-                responsive: true,
-                colReorder: true,
-                select: true
-            });
+                });
 
-            dataTableInitialized = true;
+                Toast.fire({
+                    icon: 'success',
+                    title: items.message
+                });
+            }
         }
-
-        if (message) {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                icon: 'success',
-                title: message,
-            });
-        }
-
+        hideLoader();
     } catch (error) {
-        console.error(`Error al cargar la tabla: ${error.message}`);
+        console.error("Error al realizar la petición Fetch:", error);
+        hideLoader();
     }
 }
 
@@ -337,4 +284,144 @@ function Limpiar() {
     $('#codigo').val('');
     $('#descripcion').val('0');
     $("#estado").prop('checked', false);
+}
+
+$(document).ready(function () {
+
+    $('#table').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
+        },
+        paging: true,
+        pageLength: 5,
+        lengthMenu: [10, 20, 100],
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: '<i class="fas fa-copy"></i> Copiar',
+                extend: 'copyHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                extend: 'excelHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-csv"></i> CSV',
+                extend: 'csvHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-pdf"></i> PDF',
+                extend: 'pdfHtml5',
+                title: 'Registro habitaciónes',
+                download: 'open',
+                customize: function (doc) {
+                    var table = doc.content[1].table;
+
+                    table.widths = ['10%', '15%', '30%', '10%', '1%'];
+                    table.padding = [0, 10, 0, 0];
+                    table.fontSize = 12;
+                    table.alignment = 'center';
+
+                    doc.content[1].table.headerRows = 1;
+                    doc.content[1].table.widths = ['20%', '20%', '20%', '20%', '35%'];
+                    doc.content[1].table.body[0].forEach(function (headerCell) {
+                        headerCell.fillColor = '#f2f2f2';
+                        headerCell.color = 'black';
+                        headerCell.fontSize = 14;
+                        headerCell.bold = true;
+                        headerCell.alignment = 'center';
+                        headerCell.margin = [0, 8, 0, 8];
+                    });
+
+                    for (var i = 1; i < doc.content[1].table.body.length; i++) {
+                        var row = doc.content[1].table.body[i];
+                        row.forEach(function (cell, j) {
+                            cell.fontSize = 12;
+                            cell.alignment = (j === 3) ? 'center' : 'left';
+                            cell.margin = [0, 5, 0, 5];
+                            if (j === 3) {
+                                if (cell.text === 'Activo') {
+                                    cell.color = 'green';
+                                } else if (cell.text === 'Inactivo') {
+                                    cell.color = 'red';
+                                }
+                            }
+                        });
+                    }
+
+                    doc.styles.tableHeader = {
+                        fontSize: 12,
+                        bold: true,
+                        fillColor: '#f2f2f2',
+                        alignment: 'center'
+                    };
+                    doc.content[1].text = 'registroHabitación.pdf';
+                }
+            },
+            {
+                text: '<i class="fas fa-file-code"></i> JSON',
+                action: function (e, dt, button, config) {
+                    var data = dt.buttons.exportData();
+
+                    $.fn.dataTable.fileSave(
+                        new Blob([JSON.stringify(data)]),
+                        'registro de habitaciónes.json'
+                    );
+                }
+            }
+        ],
+        responsive: true,
+        colReorder: true,
+        select: true
+    });
+
+    loadTable();
+});
+
+$(document).on('click', '.btn-pay', function () {
+    const facturaId = $(this).data('factura-id');
+    cargarFactura(facturaId);
+});
+
+function cargarFactura(id) {
+    // Hacer una solicitud AJAX a la API para obtener los detalles de la factura
+    $.ajax({
+        url: `https://hotel-api-hzf6.onrender.com/api/sistema/estadoFactura/${id}`, // Reemplaza esto con la URL real de tu API
+        method: 'GET',
+        dataType: 'json',
+        success: function (factura) {
+            // Crear dinámicamente la estructura de la modal y mostrar los datos de la factura
+            const modalContent = `
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Detalles de la Factura</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Factura ID:</strong> ${factura.id}</p>
+                            <p><strong>Cliente:</strong> ${factura.cliente}</p>
+                            <p><strong>Total:</strong> ${factura.total}</p>
+                            <!-- Agrega más campos de factura según tus necesidades -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-primary">Pagar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Agregar la estructura de la modal al elemento con ID 'facturaModal'
+            $('#facturaModal').html(modalContent);
+
+            // Mostrar la modal
+            $('#facturaModal').modal('show');
+        },
+        error: function (error) {
+            console.error('Error al cargar los detalles de la factura', error);
+        }
+    });
 }

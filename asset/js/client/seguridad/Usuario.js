@@ -200,7 +200,7 @@ function performAction() {
                 let errorMessage = "Ha ocurrido un error al ";
 
                 if (id && id !== '0') {
-                    errorMessage += "actualizar la categoria";
+                    errorMessage += "actualizar el usuario";
                 } else {
                     errorMessage += "registrar el rol";
                 }
@@ -437,29 +437,42 @@ $(document).ready(function () {
                 customize: function (doc) {
                     var table = doc.content[1].table;
 
-                    table.widths = ['10%', '15%', '30%', '10%', '1%'];
-                    table.padding = [0, 10, 0, 0];
+                    // Calcula el ancho de cada columna de manera uniforme
+                    var columnWidth = 100 / 6 + '%';
+                    var columnWidths = Array(6).fill(columnWidth);
+
+                    // Configuración de estilo de la tabla
+                    table.widths = columnWidths;
                     table.fontSize = 12;
                     table.alignment = 'center';
+                    table.margin = [0, 10, 0, 10];
 
-                    doc.content[1].table.headerRows = 1;
-                    doc.content[1].table.widths = ['20%', '20%', '20%', '20%', '35%'];
-                    doc.content[1].table.body[0].forEach(function (headerCell) {
+                    // Configuración de los bordes
+                    table.headerRows = 1; // Número de filas que son parte de la cabecera
+                    table.body[0].forEach(function (headerCell) {
                         headerCell.fillColor = '#f2f2f2';
                         headerCell.color = 'black';
                         headerCell.fontSize = 14;
                         headerCell.bold = true;
-                        headerCell.alignment = 'center';
+                        headerCell.alignment = 'left';
                         headerCell.margin = [0, 8, 0, 8];
+                        headerCell.vLineWidth = 1; // Grosor de las líneas verticales
+                        headerCell.hLineWidth = 1; // Grosor de las líneas horizontales
                     });
 
-                    for (var i = 1; i < doc.content[1].table.body.length; i++) {
-                        var row = doc.content[1].table.body[i];
+                    for (var i = 1; i < table.body.length; i++) {
+                        var row = table.body[i];
                         row.forEach(function (cell, j) {
                             cell.fontSize = 12;
-                            cell.alignment = (j === 3) ? 'center' : 'left';
-                            cell.margin = [0, 5, 0, 5];
+                            cell.fillColor = i % 2 === 0 ? '#f2f2f2' : 'white'; // Alterna colores de fondo para resaltar filas
+                            cell.color = 'black';
+                            cell.alignment = 'left'; // Cambia la alineación a la izquierda
+                            cell.margin = [5, 5, 5, 5];
+                            cell.vLineWidth = 1; // Grosor de las líneas verticales
+                            cell.hLineWidth = 1; // Grosor de las líneas horizontales
+
                             if (j === 3) {
+                                cell.alignment = 'center';
                                 if (cell.text === 'Activo') {
                                     cell.color = 'green';
                                 } else if (cell.text === 'Inactivo') {
@@ -469,19 +482,19 @@ $(document).ready(function () {
                         });
                     }
 
-                    doc.styles.tableHeader = {
-                        fontSize: 12,
-                        bold: true,
-                        fillColor: '#f2f2f2',
-                        alignment: 'center'
-                    };
                     doc.content[1].text = 'Usuario.pdf';
                 }
             },
             {
                 text: '<i class="fas fa-file-code"></i> JSON',
                 action: function (e, dt, button, config) {
-                    var data = dt.buttons.exportData();
+                    var pageInfo = dt.page.info();
+                    var data = {
+                        recordsTotal: pageInfo.recordsTotal,
+                        recordsFiltered: pageInfo.recordsDisplay,
+                        draw: pageInfo.draw,
+                        data: dt.buttons.exportData()
+                    };
 
                     $.fn.dataTable.fileSave(
                         new Blob([JSON.stringify(data)]),
@@ -496,5 +509,4 @@ $(document).ready(function () {
     });
 
     loadTable();
-    loadSeguridad();
 });

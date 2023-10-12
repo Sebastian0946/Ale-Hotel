@@ -1,127 +1,129 @@
 <!DOCTYPE html>
 <html>
 
-
-
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,800;1,500;1,600&family=Poppins:wght@200;300;500;700&display=swap');
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            font-family: 'Poppins', sans-serif;
-            background-color: #f7f7f7;
-        }
-
-        h1 {
-            margin-bottom: 15px;
-        }
-
-        .centered {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 600px;
-            padding: 20px;
-            border-radius: 5px;
-            background-color: #ffffff;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            border-top: 4px solid #007bff;
-        }
-
-        h1 {
-            text-align: center;
-            color: #007bff;
-        }
-
-        /* Estilo para la imagen del logo */
-        .logo-img {
-            display: block;
-            margin: 0 auto;
-            max-width: 200px;
-            /* Ajusta el ancho máximo según sea necesario */
-        }
-
-        .custom-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .custom-table th,
-        .custom-table td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        .custom-table th {
-            background-color: #f9f9f9;
-        }
-
-        .custom-table tr:hover {
-            background-color: #f5f5f5;
-            transition: background-color 0.3s ease;
-        }
-
-        .thank-you {
-            text-align: center;
-            margin-top: 20px;
-            font-weight: bold;
-            color: #007bff;
-        }
-    </style>
 </head>
 
 <body>
-    <div class="centered">
-        <div class="container">
-            <h1>Bienvenido a Ale-Hotel</h1>
-            <p>Gracias por elegir Ale-Hotel para su estadía. En Ale-Hotel, nos enorgullece ofrecer una experiencia
-                excepcional a nuestros huéspedes.</p>
-            <p>Nuestro hotel cuenta con instalaciones de primera clase, un personal amable y un ambiente relajante para
-                que disfrute de su estancia al máximo.</p>
-            <div class="card">
-                <table class="custom-table">
+    <div
+        style="font-family: 'Montserrat', sans-serif; font-family: 'Poppins', sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; width: 100%;">
+        <div
+            style="display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 0;">
+            <div
+                style="max-width: 800px; padding: 20px; border-radius: 5px; background-color: #ffffff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); border-top: 4px solid #007bff; width: 90%; margin: 0 auto;">
+                <div
+                    style="background-color: #007bff; color: #ffffff; padding: 20px; text-align: center; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+                    <a href="https://ale-hotel-7af0b2.netlify.app/"
+                        style="text-decoration: none; color: #ffffff; font-size: 24px; font-weight: bold; transition: color 0.3s;">Bienvenido
+                        a
+                        Palmares de Alejandria</a>
+                </div>
+                <p style="font-weight: bold; margin: 15px; font-size: 16px; color: #333333;">Gracias por elegir Palmares
+                    de Alejandria
+                    para su estad&iacute;a. Nos enorgullece ofrecer una experiencia excepcional a nuestros
+                    hu&eacute;spedes.</p>
+                <p style="font-weight: bold; margin: 15px; font-size: 16px; color: #333333;">Nuestro hotel cuenta con
+                    instalaciones de
+                    primera clase, un
+                    personal amable y un ambiente relajante para que disfrute de su estancia al m&aacute;ximo.</p>
+                <div style="text-align: center;">
+                    <div style="max-width: 200px; margin: 0 auto;">
+                        <a href="https://ale-hotel-7af0b2.netlify.app/"><img style="max-width: 100%;"
+                                src="https://ale-hotel-7af0b2.netlify.app/asset/img/logo%20hotel.png"
+                                alt="Logo del Hotel"></a>
+                    </div>
+                </div>
+                <table
+                    style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 16px; border: 1px solid #ddd; transition: background-color 0.3s;">
                     <thead>
                         <tr>
-                            <th colspan="2">
-                                <a href="https://ale-hotel-7af0b2.netlify.app/"><img class="logo-img" src="https://ale-hotel-7af0b2.netlify.app/asset/img/logo%20hotel.png" alt="Logo del Hotel"></a>
-                            </th>
+                            <th
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f9f9f9;">
+                                Nombres:</th>
+                            <td
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; transition: background-color 0.3s;">
+                                {{name}}</td>
+                        </tr>
+                        <tr>
+                            <th
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f9f9f9;">
+                                Apellidos:</th>
+                            <td
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; transition: background-color 0.3s;">
+                                {{lastName}}</td>
+                        </tr>
+                        <tr>
+                            <th
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f9f9f9;">
+                                Tel&eacute;fono:</th>
+                            <td
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; transition: background-color 0.3s;">
+                                {{phone}}</td>
+                        </tr>
+                        <tr>
+                            <th
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f9f9f9;">
+                                Correo Electronico:</th>
+                            <td
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; transition: background-color 0.3s;">
+                                {{email}}</td>
+                        </tr>
+                        <tr>
+                            <th
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f9f9f9;">
+                                Tipo habitación:</th>
+                            <td
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; transition: background-color 0.3s;">
+                                {{tipohabitacionId}}</td>
+                        </tr>
+
+                        <tr>
+                            <th
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f9f9f9;">
+                                Fecha entrada:</th>
+                            <td
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; transition: background-color 0.3s;">
+                                {{fechaEntrada}}</td>
+                        </tr>
+                        <tr>
+                            <th
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; background-color: #f9f9f9;">
+                                Fecha salida:</th>
+                            <td
+                                style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd; transition: background-color 0.3s;">
+                                {{fechaSalida}}</td>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Nombres:</strong></td>
-                            <td>{{name}}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Apellidos:</strong></td>
-                            <td>{{lastName}}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Teléfono:</strong></td>
-                            <td>{{phone}}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Tipo de Habitación:</strong></td>
-                            <td>{{typeRoom}}</td>
-                        </tr>
-                    </tbody>
                 </table>
+                <p
+                    style="text-align: center; margin-top: 20px; font-weight: bold; color: #007bff; font-size: 18px; transition: color 0.3s;">
+                    &iexcl;Gracias por
+                    su reserva en Palmares de Alejandria! Esperamos que tenga una estancia agradable y estaremos
+                    encantados de
+                    atender todas sus necesidades durante su visita.</p>
+                <div
+                    style="display: flex; justify-content: space-between; background-color: #333333; color: #ffffff; padding: 20px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; transition: background-color 0.3s;">
+                    <div style="flex: 1; text-align: left;">
+                        <p style="font-weight: normal; font-size: 14px; color: #888;">Para consultas y asistencia, por
+                            favor
+                            cont&aacute;ctenos a:</p>
+                        <p style="font-weight: normal; font-size: 14px; color: #ffffff;">Tel&eacute;fono: +57 3133246040
+                        </p>
+                        <p style="font-weight: normal; font-size: 14px; color: #ffffff;">Email:
+                            alehotelservices@gmail.com</p>
+                    </div>
+                    <div style="flex: 1; text-align: right;">
+                        <p style="font-weight: normal; font-size: 14px; color: #888;">Software de Reservas</p>
+                        <p style="font-weight: normal; font-size: 14px; color: #ffffff;"><a
+                                href="https://ale-hotel-7af0b2.netlify.app"
+                                style="text-decoration: none; color: #ffffff;">Centro de Ayuda</a></p>
+                    </div>
+                </div>
+                <p style="text-align: center; font-size: 12px; color: #888; margin-top: 10px;">Este correo
+                    electr&oacute;nico es confidencial y solo est&aacute; destinado al destinatario.</p>
             </div>
-            <div style="text-align: center;">
-                <img src="https://ale-hotel-7af0b2.netlify.app/asset/img/gracias.gif" width="100" controls autoplay
-                    loop>
-            </div>
-            <p class="thank-you">¡Gracias por su reserva en Ale-Hotel! Esperamos que tenga una estancia agradable y
-                estaremos encantados de atender todas sus necesidades durante su visita.</p>
         </div>
     </div>
 </body>
+
 </html>

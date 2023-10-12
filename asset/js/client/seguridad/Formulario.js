@@ -200,7 +200,7 @@ function performAction() {
                 let errorMessage = "Ha ocurrido un error al ";
 
                 if (id && id !== '0') {
-                    errorMessage += "actualizar la categoria";
+                    errorMessage += "actualizar el formulario";
                 } else {
                     errorMessage += "registrar el rol";
                 }
@@ -234,7 +234,6 @@ function performAction() {
     }
     
     if ($('#codigo').valid() && $('#ruta').valid() && $('#etiqueta').valid() && $('#icono').valid() && $('#moduloId').valid()) {
-        // Solo muestra la confirmación para solicitudes PUT
         if (type === 'PUT') {
             Swal.fire({
                 title: '¿Está seguro de guardar los cambios?',

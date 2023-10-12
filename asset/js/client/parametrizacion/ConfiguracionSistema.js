@@ -195,7 +195,7 @@ function performAction() {
                 let errorMessage = "Ha ocurrido un error al ";
 
                 if (id && id !== '0') {
-                    errorMessage += "actualizar la categoria";
+                    errorMessage += "actualizar la configuracion sistema";
                 } else {
                     errorMessage += "registrar el rol";
                 }

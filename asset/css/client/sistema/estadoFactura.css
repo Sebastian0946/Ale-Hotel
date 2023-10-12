@@ -1,0 +1,45 @@
+#facturaModal .modal-dialog {
+    max-width: 600px;
+}
+
+#facturaModal .modal-content {
+    border: none;
+}
+
+#facturaModal .modal-header {
+    background-color: #007BFF;
+    color: #fff;
+    border-bottom: none;
+}
+
+#facturaModal .modal-title {
+    font-size: 24px;
+}
+
+#facturaModal .modal-body {
+    padding: 20px;
+}
+
+#facturaModal .modal-footer {
+    border-top: none;
+}
+
+#facturaModal .btn-secondary {
+    background-color: #6C757D;
+    color: #fff;
+}
+
+#facturaModal .btn-primary {
+    background-color: #28A745;
+    color: #fff;
+}
+
+#facturaModal p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+#facturaModal strong {
+    font-weight: bold;
+}

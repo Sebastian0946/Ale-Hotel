@@ -6,7 +6,7 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Rol</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    
+
     <!-- Librerias CSS -->
     <link rel="stylesheet" href="../../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../../asset/library/node_modules/datatables.net-dt/css/jquery.dataTables.min.css">
@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../../../asset/css/client/Table.css">
 
 
-    
+
     <!-- Librerias js -->
     <script src="../../../asset/library/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../../../asset/library/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
@@ -24,7 +24,8 @@
     <script src="../../../asset/library/node_modules/jszip/dist/jszip.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/pdfmake.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/vfs_fonts.js"></script>
-    <script src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
+    <script
+        src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
 </head>
 
 <body>
@@ -40,7 +41,8 @@
             <h1>Registro rol</h1>
         </div>
 
-        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal" data-bs-target="#myModal" onclick="Limpiar();">
+        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal"
+            data-bs-target="#myModal" onclick="Limpiar();">
             <i class="fa-solid fa-plus"></i>
         </button>
 
@@ -57,20 +59,14 @@
                                 <input type="text" id="id" name="id" hidden>
                                 <table class="table-modal">
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <label class="form-label">Código: </label>
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" name="codigo" id="codigo" placeholder="Código">
-                                            </td>
-                                        </tr>
+                                        <input type="text" class="form-control" name="codigo" id="codigo" placeholder="Código" hidden>
                                         <tr>
                                             <td>
                                                 <label class="form-label">Descripción: </label>
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" name="descripcion" id="descripcion" placeholder="Descripción">
+                                                <input type="text" class="form-control" name="descripcion"
+                                                    id="descripcion" placeholder="Descripción">
                                             </td>
                                         </tr>
                                         <tr>
@@ -88,8 +84,10 @@
                                     </tbody>
                                 </table>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="Limpiar();" title="Cerrar">Cerrar</button>
-                                    <button type="button" class="btn btn-success" onclick="performAction();" title="Guardar">Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                        onclick="Limpiar();" title="Cerrar">Cerrar</button>
+                                    <button type="button" class="btn btn-success" onclick="performAction();"
+                                        title="Guardar">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -97,7 +95,8 @@
                 </div>
             </div>
             <!-- Tabla -->
-            <table id="table" class="display table table-bordered p-2 m-lg-2 animate__animated animate__fadeIn" style="width: 100%;">
+            <table id="table" class="display table table-bordered p-2 m-lg-2 animate__animated animate__fadeIn"
+                style="width: 100%;">
                 <thead>
                     <tr>
                         <th>Id</th>

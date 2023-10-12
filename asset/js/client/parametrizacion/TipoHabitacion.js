@@ -195,7 +195,7 @@ function performAction() {
                 let errorMessage = "Ha ocurrido un error al ";
 
                 if (id && id !== '0') {
-                    errorMessage += "actualizar la categoria";
+                    errorMessage += "actualizar el tipo de habitación";
                 } else {
                     errorMessage += "registrar el rol";
                 }
@@ -333,8 +333,8 @@ function Limpiar() {
 function validarCamposFormulario() {
 
     $.validator.addMethod("letras", function (value, element) {
-        return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
-    }, "Por favor, ingresa solo letras.");
+        return this.optional(element) || /^[a-zA-Z\s.]+$/.test(value);
+    }, "Por favor, ingresa solo letras y puntos.");
 
     $('#formulario').validate({
         rules: {
@@ -468,5 +468,4 @@ $(document).ready(function () {
     });
 
     loadTable();
-    loadParametrizacion();
 });

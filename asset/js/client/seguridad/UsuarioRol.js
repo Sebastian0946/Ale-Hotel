@@ -1,42 +1,19 @@
 var dataTableInitialized = false;
 
-function performAction() {
-    var action = $("#myModal").data("action");
+function showLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+}
 
-    if (action === "guardarCambios") {
-        guardarCambios();
-        $("#myModal").data("action", "");
-    } else {
-        validarCamposFormulario();
-
-        if ($('#usuarioId').valid() && $('#rolId').valid()) {
-            agregarUsuarioRol();
-            $('#myModal').modal('hide');
-        } else {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
-
-            Toast.fire({
-                title: 'Campos incompletos o inválidos',
-                text: 'Por favor, verifica todos los campos antes de continuar.',
-                icon: "error"
-            });
-        }
-    }
-    $('#myModal').modal('hide');
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'none';
 }
 
 async function loadTable() {
     try {
+        showLoader();
+
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/usuarioRol', {
             method: 'GET',
             headers: {
@@ -44,100 +21,61 @@ async function loadTable() {
             }
         });
 
-        if (!response.ok) {
-            throw new Error(`Error al obtener la lista de rol de usuario: ${response.status}`);
-        }
+        if (response.ok) {
+            const items = await response.json();
+            const table = $('#table').DataTable();
 
-        const items = await response.json();
-        var registros = "";
-        items.data.forEach(function (usuarioRol, index, array) {
-            registros += `
-                <tr class="table-light fadeIn">
-                    <td class="table-cell-width">${usuarioRol.id}</td>
-                    <td class="table-cell-width">${usuarioRol.UsuariosId.Usuario}</td>
-                    <td class="table-cell-width">${usuarioRol.RolesId.Descripcion}</td>
-                    <td class="table-cell-width ${usuarioRol.Estado === 'Activo' ? 'text-success' : 'text-danger'}">${usuarioRol.Estado}</td>
-                    <td class="table-cell-width">
-                        <div class="row-actions">
-                            <div class="row-action" onclick="showDetails(${usuarioRol.id})">
-                                <i class="fa-solid fa-info-circle btn btn-primary"></i> 
-                            </div>
-                            <div class="row-action" onclick="findById(${usuarioRol.id})">
-                                <i class="fa-solid fa-user-pen btn btn-warning"></i> 
-                            </div>
-                            <div class="row-action" onclick="deleteById(${usuarioRol.id})">
-                                <i class="fa-solid fa-trash btn btn-danger"></i>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        })
-        $("#dataResult").html(registros);
+            table.clear();
 
-        if (!dataTableInitialized) {
-            $('#table').DataTable({
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
-                },
-                paging: true,
-                pageLength: 10, 
-                lengthMenu: [10, 20, 100], 
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        text: '<i class="fas fa-copy"></i> Copiar', 
-                        extend: 'copyHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-excel"></i> Excel',
-                        extend: 'excelHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-csv"></i> CSV',
-                        extend: 'csvHtml5'
-                    },
-                    {
-                        text: '<i class="fas fa-file-pdf"></i> PDF',
-                        extend: 'pdfHtml5',
-                        download: 'open'
-                    },
-                    {
-                        text: '<i class="fas fa-file-code"></i> JSON', 
-                        action: function (e, dt, button, config) {
-                            var data = dt.buttons.exportData();
+            items.data.forEach((usuarioRol) => {
+                const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${usuarioRol.id})"><i class="fa-solid fa-user-pen"></i></button>`;
+                const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${usuarioRol.id})"><i class="fa-solid fa-trash"></i></button>`;
 
-                            $.fn.dataTable.fileSave(
-                                new Blob([JSON.stringify(data)]),
-                                'Producto.json'
-                            );
-                        }
-                    }
-                ],
-                responsive: true,
-                colReorder: true,
-                select: true
+                const estadoClass = usuarioRol.Estado === 'Activo' ? 'text-success' : 'text-danger';
+
+                const actions = `
+                    <div class="actions-container">
+                        ${editButton} ${deleteButton}
+                    </div>
+                `;
+
+                table.row.add([
+                    usuarioRol.id,
+                    usuarioRol.UsuariosId.Usuario,
+                    `<div class="col-3">${usuarioRol.RolesId.Descripcion}</div>`,
+                    `<span class="${estadoClass} text-center">${usuarioRol.Estado}</span>`,
+                    actions
+                ]);
             });
 
-            dataTableInitialized = true;
-        }
+            table.draw();
 
-    } catch (error) {
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            hideLoader();
+
+            if (items.message && !mensajeMostrado) {
+                mensajeMostrado = true;
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    icon: 'success',
+                    title: items.message
+                });
             }
-        });
-        Toast.fire({
-            title: error.message,
-            icon: "error"
-        });
+        }
+        hideLoader();
+    } catch (error) {
+        console.error("Error al realizar la petición Fetch:", error);
+        hideLoader();
     }
 }
 
@@ -201,30 +139,110 @@ async function findById(id) {
     }
 }
 
-async function agregarUsuarioRol() {
-    try {
-        const formData = {
-            UsuariosId: {
-                id: $('#usuarioId').val()
-            },
-            RolesId: {
-                id: $('#rolId').val()
-            },
-            Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
-        };
+function performAction() {
 
-        const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/usuarioRol', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
+    const id = $('#id').val();
+
+    const formData = {
+        UsuariosId: {
+            id: $('#usuarioId').val()
+        },
+        RolesId: {
+            id: $('#rolId').val()
+        },
+        Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
+    };
+
+    var url = id && id !== '0' ? 'https://hotel-api-hzf6.onrender.com/api/seguridad/usuarioRol/' + id : 'https://hotel-api-hzf6.onrender.com/api/seguridad/usuarioRol';
+    var type = id && id !== '0' ? 'PUT' : 'POST';
+
+    validarCamposFormulario();
+
+    function sendRequest() {
+        $.ajax({
+            url: url,
+            type: type,
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function (result) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+
+                Toast.fire({
+                    icon: id && id !== '0' ? 'warning' : 'success',
+                    title: result.message
+                });
+
+                loadTable();
+
+                Limpiar();
+                $("#myModal").data("action", "");
+                $('#myModal').modal('hide');
             },
-            body: JSON.stringify(formData)
+            error: function (jqXHR, textStatus, errorThrown) {
+                let errorMessage = "Ha ocurrido un error al ";
+
+                if (id && id !== '0') {
+                    errorMessage += "actualizar el rol del usuario";
+                } else {
+                    errorMessage += "registrar el rol";
+                }
+
+                if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                    errorMessage += ": " + jqXHR.responseJSON.message;
+                }
+
+                const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
+                const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    title: errorMessage,
+                    text: errorDescription,
+                    icon: "error"
+                });
+            }
         });
+    }
 
-        if (!response.ok) {
-            throw new Error(`Error al registrar el rol de usuario: ${response.status}`);
+    if ($('#usuarioId').valid() && $('#rolId').valid()) {
+        if (type === 'PUT') {
+            Swal.fire({
+                title: '¿Está seguro de guardar los cambios?',
+                text: 'Esta acción no se puede deshacer.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, guardar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sendRequest();
+                }
+            });
+        } else {
+            sendRequest();
         }
-
+    } else {
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -238,104 +256,19 @@ async function agregarUsuarioRol() {
         });
 
         Toast.fire({
-            icon: 'success',
-            title: 'Registro exitoso',
-        });
-
-        Limpiar();
-        loadTable();
-    } catch (error) {
-        const errorMessage = `Ha ocurrido un error al registrar el rol de usuario: ${error.message}`;
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-            }
-        });
-
-        Toast.fire({
-            title: errorMessage,
+            title: 'Campos incompletos o inválidos',
+            text: 'Por favor, verifica todos los campos antes de continuar.',
             icon: "error"
         });
-
-        console.error(`Error al realizar la petición fetch: ${error.message}`);
     }
+
+    $('#myModal').on('hidden.bs.modal', function () {
+        var form = $("#formulario");
+        form.validate().resetForm();
+        $('. is-invalid').removeClass(' is-invalid');
+    });
 }
 
-async function guardarCambios() {
-    try {
-        const id = $('#id').val();
-
-        const formData = {
-            UsuariosId: {
-                id: $('#usuarioId').val()
-            },
-            RolesId: {
-                id: $('#rolId').val()
-            },
-            Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
-        };
-
-        const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/seguridad/usuarioRol/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error al actualizar el rol del usuario: ${response.status}`);
-        }
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 4000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        });
-
-        Toast.fire({
-            icon: 'warning',
-            title: 'Modificación exitosa',
-        });
-
-        loadTable();
-        Limpiar();
-    } catch (error) {
-        const errorMessage = `Ha ocurrido un error al actualizar el rol del usuario: ${error.message}`;
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-            }
-        });
-
-        Toast.fire({
-            title: errorMessage,
-            icon: "error"
-        });
-
-        console.error(`Error al realizar la petición fetch: ${error.message}`);
-    }
-}
 
 async function deleteById(id) {
     const confirmation = await Swal.fire({
@@ -444,3 +377,95 @@ function validarCamposFormulario() {
         },
     });
 }
+
+$(document).ready(function () {
+    $('#table').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
+        },
+        paging: true,
+        pageLength: 5,
+        lengthMenu: [10, 20, 100],
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: '<i class="fas fa-copy"></i> Copiar',
+                extend: 'copyHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                extend: 'excelHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-csv"></i> CSV',
+                extend: 'csvHtml5'
+            },
+            {
+                text: '<i class="fas fa-file-pdf"></i> PDF',
+                extend: 'pdfHtml5',
+                title: 'Usuario',
+                download: 'open',
+                customize: function (doc) {
+                    var table = doc.content[1].table;
+
+                    table.widths = ['10%', '15%', '30%', '10%', '1%'];
+                    table.padding = [0, 10, 0, 0];
+                    table.fontSize = 12;
+                    table.alignment = 'center';
+
+                    doc.content[1].table.headerRows = 1;
+                    doc.content[1].table.widths = ['20%', '20%', '20%', '20%', '35%'];
+                    doc.content[1].table.body[0].forEach(function (headerCell) {
+                        headerCell.fillColor = '#f2f2f2';
+                        headerCell.color = 'black';
+                        headerCell.fontSize = 14;
+                        headerCell.bold = true;
+                        headerCell.alignment = 'center';
+                        headerCell.margin = [0, 8, 0, 8];
+                    });
+
+                    for (var i = 1; i < doc.content[1].table.body.length; i++) {
+                        var row = doc.content[1].table.body[i];
+                        row.forEach(function (cell, j) {
+                            cell.fontSize = 12;
+                            cell.alignment = (j === 3) ? 'center' : 'left';
+                            cell.margin = [0, 5, 0, 5];
+                            if (j === 3) {
+                                if (cell.text === 'Activo') {
+                                    cell.color = 'green';
+                                } else if (cell.text === 'Inactivo') {
+                                    cell.color = 'red';
+                                }
+                            }
+                        });
+                    }
+
+                    doc.styles.tableHeader = {
+                        fontSize: 12,
+                        bold: true,
+                        fillColor: '#f2f2f2',
+                        alignment: 'center'
+                    };
+                    doc.content[1].text = 'Usuario.pdf';
+                }
+            },
+            {
+                text: '<i class="fas fa-file-code"></i> JSON',
+                action: function (e, dt, button, config) {
+                    var data = dt.buttons.exportData();
+
+                    $.fn.dataTable.fileSave(
+                        new Blob([JSON.stringify(data)]),
+                        'Usuario.json'
+                    );
+                }
+            }
+        ],
+        responsive: true,
+        colReorder: true,
+        select: true
+    });
+
+    loadTable();
+    loadSeguridad();
+});

@@ -40,7 +40,7 @@ async function loadTable() {
                     </div>
                 `;
 
-                table.row.add([habitacion.id, habitacion.TipoHabitacionesId.Descripcion, habitacion.Codigo, habitacion.Descripcion, `<span class="${estadoClass}">${habitacion.Estado}</span>`, actions]);
+                table.row.add([habitacion.id, habitacion.HuespedId.PersonaId.Nombres+" "+habitacion.HuespedId.PersonaId.Apellidos , habitacion.TipoHabitacionesId.Descripcion, habitacion.Codigo, habitacion.Descripcion, `<span class="${estadoClass}">${habitacion.Estado}</span>`, actions]);
             });
 
             table.draw();
