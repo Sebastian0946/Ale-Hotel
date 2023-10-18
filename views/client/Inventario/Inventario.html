@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventario</title>
 
-     <!-- Librerias CSS -->
+    <!-- Librerias CSS -->
     <link rel="stylesheet" href="../../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../../asset/library/node_modules/datatables.net-dt/css/jquery.dataTables.min.css">
 
@@ -22,13 +22,14 @@
     <script src="../../../asset/library/node_modules/jszip/dist/jszip.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/pdfmake.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/vfs_fonts.js"></script>
-    <script src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
+    <script
+        src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
 </head>
+
 <body>
 
-    <div id="loader">
-        <div class="lds-dual-ring"></div>
-        <div class="text">Cargando...</div>
+    <div id="loader" class="loader">
+        <img src="../../../asset/img/loaderLogin.gif" alt="Loading..." width="100">
     </div>
 
     <div class="container">
@@ -37,7 +38,8 @@
             <h1>Registro inventario</h1>
         </div>
 
-        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal" data-bs-target="#myModal" onclick="Limpiar();">
+        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal"
+            data-bs-target="#myModal" onclick="Limpiar();">
             <i class="fa-solid fa-plus"></i>
         </button>
 
@@ -52,24 +54,16 @@
                         <div class="modal-body">
                             <form id="formulario">
                                 <input type="text" name="id" id="id" hidden>
+                                <input type="text" class="form-control" id="codigo" name="codigo" hidden>
                                 <table class="table">
                                     <tbody>
-                                        
-                                        <tr>
-                                            <td>
-                                                <label for="codigo" class="form-label">Código: </label>
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" id="codigo" name="codigo">
-                                            </td>
-                                        </tr>
                                         <tr>
                                             <td>
                                                 <label for="producto" class="form-label">Registrar producto: </label>
                                             </td>
                                             <td>
                                                 <select class="form-select" name="productoId" id="productoId">
-            
+
                                                 </select>
                                             </td>
                                         </tr>
@@ -78,15 +72,18 @@
                                                 <label for="precioVenta" class="form-label">Precio venta: </label>
                                             </td>
                                             <td>
-                                                <input type="text" id="precioVenta" name="precioVenta" class="form-control">
+                                                <input type="text" id="precioVenta" name="precioVenta"
+                                                    class="form-control">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <label for="precioProveedor" class="form-label">Precio preveedor: </label>
+                                                <label for="precioProveedor" class="form-label">Precio preveedor:
+                                                </label>
                                             </td>
                                             <td>
-                                                <input type="text" id="precioProveedor" name="precioProveedor" class="form-control">
+                                                <input type="text" id="precioProveedor" name="precioProveedor"
+                                                    class="form-control">
                                             </td>
                                         </tr>
                                         <tr>
@@ -103,7 +100,8 @@
                                             </td>
                                             <td>
                                                 <div class="switch">
-                                                    <input type="checkbox" id="estado" name="estado" value="1" class="toggle-switch-checkbox">
+                                                    <input type="checkbox" id="estado" name="estado" value="1"
+                                                        class="toggle-switch-checkbox">
                                                     <label for="estado" class="toggle-switch-label"></label>
                                                 </div>
                                             </td>
@@ -111,8 +109,10 @@
                                     </tbody>
                                 </table>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="Limpiar();" title="Cerrar">Cerrar</button>
-                                    <button type="button" class="btn btn-success" onclick="performAction();" title="Guardar">Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                        onclick="Limpiar();" title="Cerrar">Cerrar</button>
+                                    <button type="button" class="btn btn-success" onclick="performAction();"
+                                        title="Guardar">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -135,7 +135,7 @@
                 <tbody>
                     <!-- Aquí se agregarán las filas con los datos ingresados -->
                 </tbody>
-                
+
             </table>
         </div>
     </div>
@@ -148,6 +148,7 @@
     <script src="../../../asset/library/icons/icons.js"></script>
     <script src="../../../asset/js/client/Animacion.js"></script>
 </body>
+
 </html>
 <script>
     loadTable();

@@ -1,18 +1,11 @@
 var dataTableInitialized = false;
-
-function showLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'flex';
-}
-
-function hideLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'none';
-}
+var mensajeMostrado = false;
 
 async function loadTable() {
     try {
-        showLoader();
+
+        const loader = $("#loader");
+        loader.show();
 
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/inventario/producto', {
             method: 'GET',
@@ -27,7 +20,9 @@ async function loadTable() {
 
             table.clear();
 
-            items.data.forEach((producto) => {
+            const actives = items.data.filter((producto) => producto.Estado === 'Activo');
+
+            actives.forEach((producto) => {
                 const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${producto.id})"><i class="fa-solid fa-user-pen"></i></button>`;
                 const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${producto.id})"><i class="fa-solid fa-trash"></i></button>`;
 
@@ -46,7 +41,7 @@ async function loadTable() {
 
             table.draw();
 
-            hideLoader();
+            loader.hide();
 
             if (items.message && !mensajeMostrado) {
                 mensajeMostrado = true;
@@ -68,70 +63,68 @@ async function loadTable() {
                 });
             }
         }
-        hideLoader();
+        loader.hide();
     } catch (error) {
         console.error("Error al realizar la petición Fetch:", error);
-        hideLoader();
+        loader.hide();
     }
 }
 
 function findById(id) {
-    $(document).ready(function () {
-        $.ajax({
-            url: 'https://hotel-api-hzf6.onrender.com/api/inventario/producto/' + id,
-            type: 'GET',
-            dataType: 'json',
-            success: function (producto) {
-                $('#id').val(producto.data.id);
-                $('#codigo').val(producto.data.Codigo);
-                $('#nombre').val(producto.data.Nombre);
-                $('#categoriaId').val(producto.data.CategoriaId.id);
-                $("#estado").prop("checked", producto.data.Estado === 'Activo');
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 5000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer);
-                        toast.addEventListener('mouseleave', Swal.resumeTimer);
-                    }
-                });
+    $.ajax({
+        url: 'https://hotel-api-hzf6.onrender.com/api/inventario/producto/' + id,
+        type: 'GET',
+        dataType: 'json',
+        success: function (producto) {
+            $('#id').val(producto.data.id);
+            $('#codigo').val(producto.data.Codigo);
+            $('#nombre').val(producto.data.Nombre);
+            $('#categoriaId').val(producto.data.CategoriaId.id);
+            $("#estado").prop("checked", producto.data.Estado === 'Activo');
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
 
-                Toast.fire({
-                    icon: 'success',
-                    title: producto.message
-                });
-                $("#myModal").data("action", "guardarCambios");
-                $('#myModal').modal('show');
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                let errorMessage = "Error al obtener el modulo";
-                const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
-                const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
+            Toast.fire({
+                icon: 'success',
+                title: producto.message
+            });
+            $("#myModal").data("action", "guardarCambios");
+            $('#myModal').modal('show');
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            let errorMessage = "Error al obtener el modulo";
+            const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
+            const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
 
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 5000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer);
-                        toast.addEventListener('mouseleave', Swal.resumeTimer);
-                    }
-                });
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
 
-                Toast.fire({
-                    title: errorMessage,
-                    text: errorDescription,
-                    icon: "error"
-                });
+            Toast.fire({
+                title: errorMessage,
+                text: errorDescription,
+                icon: "error"
+            });
 
-                console.log(`Error al realizar la petición Ajax: ${textStatus}, ${errorThrown}`);
-            }
-        });
+            console.log(`Error al realizar la petición Ajax: ${textStatus}, ${errorThrown}`);
+        }
     });
 }
 
@@ -159,7 +152,7 @@ function performAction() {
     var id = $('#id').val();
 
     var formData = {
-        Codigo: $('#codigo').val(),
+        Codigo: id && id !== '0' ? $('#codigo').val() : generateRandomCode(),
         Nombre: $('#nombre').val(),
         CategoriaId: {
             id: $('#categoriaId').val()
@@ -178,7 +171,7 @@ function performAction() {
 
     validarCamposFormulario();
 
-    if ($('#codigo').valid() && $('#nombre').valid() && $('#categoriaId').valid()) {
+    if ($('#nombre').valid() && $('#categoriaId').valid()) {
         $.ajax({
             url: url,
             type: type,
@@ -268,6 +261,11 @@ function performAction() {
         form.validate().resetForm();
         $('.is-invalid').removeClass('is-invalid');
     });
+
+    function generateRandomCode() {
+        var randomCode = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Math.random().toString(10).substring(2, 7);
+        return randomCode.substring(0, 5);
+    }
 }
 
 function deleteById(id) {
@@ -283,8 +281,8 @@ function deleteById(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: 'https://hotel-api-hzf6.onrender.com/api/inventario/producto/' + id,
-                method: "delete",
+                url: 'https://hotel-api-hzf6.onrender.com/api/inventario/producto/eliminar/' + id,
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -342,7 +340,7 @@ function Limpiar() {
 function validarCamposFormulario() {
 
     $.validator.addMethod("letras", function (value, element) {
-        return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+        return this.optional(element) || /^[a-zA-Z\s\-]+$/.test(value);
     }, "Por favor, ingresa solo letras.");
 
     $('#formulario').validate({
@@ -443,9 +441,9 @@ $(document).ready(function () {
                             cell.margin = [0, 5, 0, 5];
                             if (j === 4) {
                                 if (cell.text === 'Activo') {
-                                    cell.color = 'green'; // Texto verde para "Activo"
+                                    cell.color = 'green';
                                 } else if (cell.text === 'Inactivo') {
-                                    cell.color = 'red'; // Texto rojo para "Inactivo"
+                                    cell.color = 'red';
                                 }
                             }
                         });
@@ -458,17 +456,6 @@ $(document).ready(function () {
                         alignment: 'center'
                     };
                     doc.content[1].text = 'categoria.pdf';
-                }
-            },
-            {
-                text: '<i class="fas fa-file-code"></i> JSON',
-                action: function (e, dt, button, config) {
-                    var data = dt.buttons.exportData();
-
-                    $.fn.dataTable.fileSave(
-                        new Blob([JSON.stringify(data)]),
-                        'Producto.json'
-                    );
                 }
             }
         ],

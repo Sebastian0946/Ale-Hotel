@@ -1,4 +1,5 @@
 var dataTableInitialized = false;
+let mensajeMostrado = false;
 
 function mostrarMensaje(icon, message) {
     const Toast = Swal.mixin({
@@ -19,19 +20,11 @@ function mostrarMensaje(icon, message) {
     });
 }
 
-function showLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'flex';
-}
-
-function hideLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'none';
-}
-
 async function loadTable() {
     try {
-        showLoader();
+
+        const loader = $("#loader");
+        loader.show();
 
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/persona', {
             method: 'GET',
@@ -46,7 +39,9 @@ async function loadTable() {
 
             table.clear();
 
-            items.data.forEach((persona) => {
+            const actives = items.data.filter((persona) => persona.Estado === 'Activo');
+
+            actives.forEach((persona) => {
                 const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${persona.id})"><i class="fa-solid fa-user-pen"></i></button>`;
                 const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${persona.id})"><i class="fa-solid fa-trash"></i></button>`;
 
@@ -58,12 +53,12 @@ async function loadTable() {
                     </div>
                 `;
 
-                table.row.add([persona.id, persona.Nombres+" "+persona.Apellidos, persona.TipoDocumento, persona.Documento, persona.Direccion, persona.Telefono, persona.Email, `<span class="${estadoClass} text-center">${persona.Estado}</span>`, actions]);
+                table.row.add([persona.id, persona.Nombres + " " + persona.Apellidos, persona.TipoDocumento, persona.Documento, persona.Direccion, persona.Telefono, persona.Email, `<span class="${estadoClass} text-center">${persona.Estado}</span>`, actions]);
             });
 
             table.draw();
 
-            hideLoader();
+            loader.hide();
 
             if (items.message && !mensajeMostrado) {
                 mensajeMostrado = true;
@@ -85,10 +80,10 @@ async function loadTable() {
                 });
             }
         }
-        hideLoader();
+        loader.hide();
     } catch (error) {
         console.error("Error al realizar la petición Fetch:", error);
-        hideLoader();
+        loader.hide();
     }
 }
 
@@ -256,7 +251,7 @@ function performAction() {
         });
     }
 
-    if ($('#TipoDocumento').valid() && $('#Documento').valid() && $('#Nombres').valid() && $('#Apellidos').valid() && $('#Edad').valid() && $('#DepartamentoSelect').valid() && $('#MunicipioSelect').valid() && $('#Telefono').valid() && $('#Genero').valid() && $('#Email').valid()) {
+    if ($('#TipoDocumento').valid() && $('#Documento').valid() && $('#Nombres').valid() && $('#Apellidos').valid() && $('#DepartamentoSelect').valid() && $('#MunicipioSelect').valid() && $('#Telefono').valid() && $('#Email').valid()) {
         if (type === 'PUT') {
             Swal.fire({
                 title: '¿Está seguro de guardar los cambios?',
@@ -314,8 +309,8 @@ async function deleteById(id) {
 
     if (confirmation.isConfirmed) {
         try {
-            const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/persona/' + id, {
-                method: 'DELETE',
+            const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/persona/eliminar/' + id, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -493,9 +488,6 @@ function validarCamposFormulario() {
                 required: true,
                 letras: true
             },
-            Edad: {
-                required: true
-            },
             DepartamentoSelect: {
                 required: true,
                 valueSelected: true
@@ -507,9 +499,6 @@ function validarCamposFormulario() {
             Telefono: {
                 required: true,
                 digits: true
-            },
-            Genero: {
-                valueSelected: true
             },
             Email: {
                 required: true,
@@ -624,9 +613,9 @@ $(document).ready(function () {
                             cell.margin = [0, 5, 0, 5];
                             if (j === 3) {
                                 if (cell.text === 'Activo') {
-                                    cell.color = 'green'; 
+                                    cell.color = 'green';
                                 } else if (cell.text === 'Inactivo') {
-                                    cell.color = 'red'; 
+                                    cell.color = 'red';
                                 }
                             }
                         });
@@ -639,17 +628,6 @@ $(document).ready(function () {
                         alignment: 'center'
                     };
                     doc.content[1].text = 'Personas.pdf';
-                }
-            },
-            {
-                text: '<i class="fas fa-file-code"></i> JSON',
-                action: function (e, dt, button, config) {
-                    var data = dt.buttons.exportData();
-
-                    $.fn.dataTable.fileSave(
-                        new Blob([JSON.stringify(data)]),
-                        'Personas.json'
-                    );
                 }
             }
         ],

@@ -6,15 +6,15 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Tipo de Habitación</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    
+
     <!-- Librerias CSS -->
     <link rel="stylesheet" href="../../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../../asset/library/node_modules/datatables.net-dt/css/jquery.dataTables.min.css">
- 
+
     <!-- CSS native -->
     <link rel="stylesheet" href="../../../asset/css/client/Table.css">
- 
- 
+
+
     <!-- Librerias js -->
     <script src="../../../asset/library/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../../../asset/library/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
@@ -23,14 +23,14 @@
     <script src="../../../asset/library/node_modules/jszip/dist/jszip.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/pdfmake.min.js"></script>
     <script src="../../../asset/library/node_modules/pdfmake/build/vfs_fonts.js"></script>
-    <script src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
+    <script
+        src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
 </head>
 
 <body>
 
-    <div id="loader">
-        <div class="lds-dual-ring"></div>
-        <div class="text">Cargando...</div>
+    <div id="loader" class="loader">
+        <img src="../../../asset/img/loaderLogin.gif" alt="Loading..." width="100">
     </div>
 
     <div class="container">
@@ -39,7 +39,7 @@
             <h1>Tipo de Habitación</h1>
         </div>
 
-        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal" data-bs-target="#myModal" onclick="Limpiar();" onmouseenter="expandButton();" onmouseleave="resetButton();">
+        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal" data-bs-target="#myModal" onclick="Limpiar();">
             <i class="fa-solid fa-plus"></i>
         </button>
 
@@ -52,16 +52,17 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form name="formData" id="formulario">
+                            <form name="formData" id="formulario" enctype="multipart/form-data">
                                 <input type="text" id="id" name="id" hidden>
+                                <input type="text" name="codigo" id="codigo" hidden>
                                 <table class="table-modal">
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <label class="form-label">Código: </label>
+                                                <label class="form-label">Titulo: </label>
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" name="codigo" id="codigo" placeholder="Codigo">
+                                                <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Nombre habitacion">
                                             </td>
                                         </tr>
                                         <tr>
@@ -69,15 +70,25 @@
                                                 <label class="form-label">Descripción: </label>
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" name="descripcion" id="descripcion" placeholder="Descripción">
+                                                <textarea class="form-control" name="descripcion" id="descripcion" rows="2"></textarea>
                                             </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label">Imagen: </label>
+                                            </td>
+                                            <td>
+                                                <input type="file" class="form-control" id="imagen" name="imagen" accept="image/jpeg, image/png" onchange="previewImage()">
+                                                <img src="" id="imagenPreview" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px; display: none; margin-top: 15px;">
+                                            </td>                                            
                                         </tr>
                                         <tr>
                                             <td>
                                                 <label class="form-label">Cantidad: </label>
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control" name="cantidad" id="cantidad" placeholder="cantidad">
+                                                <input type="number" class="form-control" name="cantidad" id="cantidad"
+                                                    placeholder="cantidad">
                                             </td>
                                         </tr>
                                         <tr>
@@ -95,8 +106,10 @@
                                     </tbody>
                                 </table>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="Limpiar();" title="Cerrar">Cerrar</button>
-                                    <button type="button" class="btn btn-success" onclick="performAction();" title="Guardar">Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                        onclick="Limpiar();" title="Cerrar">Cerrar</button>
+                                    <button type="button" class="btn btn-success" onclick="performAction();"
+                                        title="Guardar">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -104,12 +117,15 @@
                 </div>
             </div>
             <!-- Tabla -->
-            <table id="table" class="display table table-bordered p-2 m-lg-2 animate__animated animate__fadeIn" style="width: 100%;">
+            <table id="table" class="display table table-bordered p-2 m-lg-2 animate__animated animate__fadeIn"
+                style="width: 100%;">
                 <thead>
                     <tr>
                         <th>Id</th>
                         <th>Código</th>
+                        <th>Titulo</th>
                         <th>Descripción</th>
+                        <th>Imagen</th>
                         <th>Valor</th>
                         <th>Estado</th>
                         <th>Acciones</th>
@@ -129,4 +145,5 @@
     <script src="../../../asset/library/icons/icons.js"></script>
     <script src="../../../asset/js/client/Animacion.js"></script>
 </body>
+
 </html>

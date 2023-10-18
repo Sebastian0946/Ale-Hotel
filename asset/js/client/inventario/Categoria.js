@@ -1,18 +1,11 @@
 let mensajeMostrado = false;
 
-function showLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'flex';
-}
-
-function hideLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'none';
-}
 
 async function loadTable() {
     try {
-        showLoader();
+
+        const loader = $("#loader");
+        loader.show();
 
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/inventario/categoria', {
             method: 'GET',
@@ -27,16 +20,18 @@ async function loadTable() {
 
             table.clear();
 
-            items.data.forEach((categoria) => {
+            const actives = items.data.filter((categoria) => categoria.Estado === 'Activo');
+
+            actives.forEach((categoria) => {
                 const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${categoria.id})"><i class="fa-solid fa-user-pen"></i></button>`;
                 const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${categoria.id})"><i class="fa-solid fa-trash"></i></button>`;
 
                 const estadoClass = categoria.Estado === 'Activo' ? 'text-success' : 'text-danger';
 
                 const actions = `
-                    <div class="actions-container">
-                        ${editButton} ${deleteButton}
-                    </div>
+                <div class="actions-container">
+                    ${editButton} ${deleteButton}
+                </div>
                 `;
 
                 table.row.add([categoria.id, categoria.Codigo, categoria.Descripcion, `<span class="${estadoClass}">${categoria.Estado}</span>`, actions]);
@@ -44,7 +39,7 @@ async function loadTable() {
 
             table.draw();
 
-            hideLoader();
+            loader.hide();
 
             if (items.message && !mensajeMostrado) {
                 mensajeMostrado = true;
@@ -65,11 +60,11 @@ async function loadTable() {
                     title: items.message
                 });
             }
-        } 
-        hideLoader();
+        }
+        loader.hide();
     } catch (error) {
         console.error("Error al realizar la petición Fetch:", error);
-        hideLoader();
+        loader.hide();
     }
 }
 
@@ -104,7 +99,7 @@ async function findById(id) {
                     container: 'my-toast-container'
                 }
             });
-            
+
 
             Toast.fire({
                 icon: 'success',
@@ -142,11 +137,11 @@ async function findById(id) {
 }
 
 function performAction() {
-    
+
     var id = $('#id').val();
 
     var formData = {
-        Codigo: $('#codigo').val(),
+        Codigo: id && id !== '0' ? $('#codigo').val() : generateRandomCode(),
         Descripcion: $('#descripcion').val(),
         Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
     };
@@ -246,6 +241,11 @@ function performAction() {
         form.validate().resetForm();
         $('.is-invalid').removeClass('is-invalid');
     });
+
+    function generateRandomCode() {
+        var randomCode = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Math.random().toString(10).substring(2, 7);
+        return randomCode.substring(0, 5);
+    }
 }
 
 function deleteById(id) {
@@ -261,8 +261,8 @@ function deleteById(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: 'https://hotel-api-hzf6.onrender.com/api/inventario/categoria/' + id,
-                method: 'DELETE',
+                url: 'https://hotel-api-hzf6.onrender.com/api/inventario/categoria/eliminar/' + id,
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -391,7 +391,7 @@ $(document).ready(function () {
                     var table = doc.content[1].table;
 
                     table.widths = ['10%', '15%', '30%', '10%', '1%'];
-                    table.padding = [0, 10, 0, 0]; 
+                    table.padding = [0, 10, 0, 0];
                     table.fontSize = 12;
                     table.alignment = 'center';
 
@@ -414,9 +414,9 @@ $(document).ready(function () {
                             cell.margin = [0, 5, 0, 5];
                             if (j === 3) {
                                 if (cell.text === 'Activo') {
-                                    cell.color = 'green'; 
+                                    cell.color = 'green';
                                 } else if (cell.text === 'Inactivo') {
-                                    cell.color = 'red'; 
+                                    cell.color = 'red';
                                 }
                             }
                         });
@@ -429,17 +429,6 @@ $(document).ready(function () {
                         alignment: 'center'
                     };
                     doc.content[1].text = 'categoria.pdf';
-                }
-            },
-            {
-                text: '<i class="fas fa-file-code"></i> JSON',
-                action: function (e, dt, button, config) {
-                    var data = dt.buttons.exportData();
-
-                    $.fn.dataTable.fileSave(
-                        new Blob([JSON.stringify(data)]),
-                        'Producto.json'
-                    );
                 }
             }
         ],

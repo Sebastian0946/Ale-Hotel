@@ -1,49 +1,28 @@
-const Order = [
-    {
-        productName: "Coca-cola",
-        productNumber: '7845',
-        paymentStatus: 'Due',
-        shipping: 'Pending'
-    },
-    {
-        productName: "Doritos",
-        productNumber: '5467',
-        paymentStatus: 'Paid',
-        shipping: 'Declined'
-    },
-    {
-        productName: "iPhone 12",
-        productNumber: '2398',
-        paymentStatus: 'Paid',
-        shipping: 'Pending'
-    },
-    {
-        productName: "Headphones",
-        productNumber: '3125',
-        paymentStatus: 'Due',
-        shipping: 'Pending'
-    },
-    {
-        productName: "Notebook",
-        productNumber: '6789',
-        paymentStatus: 'Paid',
-        shipping: 'Pending'
-    }
-];
+// Realizar una solicitud a la API
+fetch('https://hotel-api-hzf6.onrender.com/api/inventario/inventario')
+    .then(response => response.json())
+    .then(data => {
+        // Datos obtenidos de la API
+        const orders = data;
 
+        // Seleccionar el elemento de la tabla en el HTML
+        const tableBody = document.querySelector('table tbody');
 
-Order.forEach(order => {
-    const tr = document.createElement('tr');
-    const trContent = `
-        <td>${order.productName}</td>
-        <td>${order.productNumber}</td>
-        <td>${order.paymentStatus}</td>
-        <td class="${order.shipping === 'Declined' ? 'danger' : order.shipping === 'pending' ? 'warning' : 'primary'}">${order.shipping}</td>
-        <td class="primary">Detalles</td>
-    `;
-    tr.innerHTML = trContent;
-    document.querySelector('table tbody').appendChild(tr);
-})
+        orders.data.forEach(inventario => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${inventario.ProductoId.Nombre}</td>
+                <td>${inventario.ProductoId.Codigo}</td>
+                <td>${inventario.PrecioVenta}</td>
+                <td class="primary">${inventario.Estado}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    })
+    .catch(error => {
+        console.error('Error al obtener datos de la API:', error);
+    });
+
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -51,13 +30,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const expenses = document.querySelector('.expenses');
     const income = document.querySelector('.income');
 
-    // Configura las propiedades de inicio para la animación de aparición
     anime.set([sales, expenses, income], {
         opacity: 0,
         translateY: '20px',
     });
 
-    // Crea una animación para que los elementos aparezcan gradualmente
     anime({
         targets: [sales, expenses, income],
         opacity: 1,

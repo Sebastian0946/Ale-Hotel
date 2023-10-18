@@ -14,11 +14,25 @@
 
 <body class="collapsed">
 
-    <header>
-        <div class="header">
-            <h1 class="header-title">Dashboard Ale-Hotel</h1>
+    <header class="header">
+        <h1 class="header-title">Dashboard Ale-Hotel</h1>
+        <div class="avatar__wrapper">
+            <div class="notifications">
+                <i id="notification-icon" class="fas fa-bell"></i>
+                <span id="notification-count" class="notification-count">0</span>
+                <div id="notification-list" class="notification-list">
+                    <!-- Contenido de las notificaciones -->
+                </div>
+            </div>
+
+            <img class="avatar" src="../../asset/img/avatar.jpg" alt="Joe Doe Picture">
+            <div class="avatar__name hide">
+                <div class="user-name"></div>
+            </div>
         </div>
     </header>
+
+
 
     <div class="contenedor">
         <nav>
@@ -72,10 +86,14 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown1">
                             <li><a class="dropdown-item" href="Sistema/RegistrarHuesped.html">Registrar huesped</a></li>
-                            <li><a class="dropdown-item" href="Sistema/EstadoFactura.html">Registro estado factura</a></li>
-                            <li><a class="dropdown-item" href="Sistema/RegistrarResevaHabitacion.html">Reserva habitación</a></li>
-                            <li><a class="dropdown-item" href="Sistema/ConsumoHabitaciones.html">Consumo habitaciones</a></li>
-                            <li><a class="dropdown-item" href="Sistema/RegistrarHabitacion.html">Registro habitación</a></li>
+                            <li><a class="dropdown-item" href="Sistema/EstadoFactura.html">Registro estado factura</a>
+                            </li>
+                            <li><a class="dropdown-item" href="Sistema/ResevaHabitacion.html">Reserva habitación</a>
+                            </li>
+                            <li><a class="dropdown-item" href="Sistema/ConsumoHabitaciones.html">Consumo
+                                    habitaciones</a></li>
+                            <li><a class="dropdown-item" href="Sistema/RegistrarHabitacion.html">Registro habitación</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -90,7 +108,8 @@
                             <li><a class="dropdown-item" href="Seguridad/Modulo.html">Registro modulo</a></li>
                             <li><a class="dropdown-item" href="Seguridad/Usuario.html">Registro usuario</a></li>
                             <li><a class="dropdown-item" href="Seguridad/Rol.html">Registro rol</a></li>
-                            <li><a class="dropdown-item" href="Seguridad/RolFormulario.html">Registro formulario rol</a></li>
+                            <li><a class="dropdown-item" href="Seguridad/RolFormulario.html">Registro formulario rol</a>
+                            </li>
                             <li><a class="dropdown-item" href="Seguridad/RolUsuario.html">Registro rol usuario</a></li>
                         </ul>
                     </li>
@@ -104,8 +123,7 @@
                             <li><a class="dropdown-item" href="Inventario/Categoria.html">Registro categoria</a></li>
                             <li><a class="dropdown-item" href="Inventario/Producto.html">Registro producto</a></li>
                             <li><a class="dropdown-item" href="Inventario/Inventario.html">Registro inventario</a></li>
-                            <li><a class="dropdown-item" href="Inventario/Habitaciones.html">Registro inventario habitación</a>
-                            </li>
+                            <li><a class="dropdown-item" href="Inventario/Habitaciones.html">Registro inventario habitación</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -115,11 +133,9 @@
                             <span class="link hide" style="padding-right: 32px;">Parametrización</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown4">
-                            <li><a class="dropdown-item" href="parametrizacion/TipoHabitacion.html">Registro tipo habitación</a>
-                                <li><a class="dropdown-item" href="parametrizacion/ConfiguracionSistema.html">Configuración sistema</a></li>
-                            </li>
+                            <li><a class="dropdown-item" href="Parametrizacion/TipoHabitacion.html">Registro tipo habitación</a></li>
                         </ul>
-                    </li>
+                    </li> 
                 </ul>
             </div>
             <div class="sidebar-links sidebar-bottom">
@@ -141,16 +157,6 @@
                     </li>
                 </ul>
                 <div class="divider"></div>
-                <div class="sidebar__profile">
-                    <div class="avatar__wrapper">
-                        <img class="avatar" src="../../asset/img/user3.jpg" alt="Joe Doe Picture">
-                        <div class="online__status"></div>
-                    </div>
-                    <section class="avatar__name hide">
-                        <div class="user-name">Joe Doe</div>
-                        <div class="email">joe.doe@atheros.ai</div>
-                    </section>
-                </div>
             </div>
         </nav>
         <div id="iframe-container">

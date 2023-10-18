@@ -1,20 +1,11 @@
 var dataTableInitialized = false;
-
 var mensajeMostrado = false
-
-function showLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'flex';
-}
-
-function hideLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'none';
-}
 
 async function loadTable() {
     try {
-        showLoader();
+
+        const loader = $("#loader");
+        loader.show();
 
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/sistema/estadoFactura', {
             method: 'GET',
@@ -29,7 +20,9 @@ async function loadTable() {
 
             table.clear();
 
-            items.data.forEach((estadoFactura) => {
+            const actives = items.data.filter((estadoFactura) => estadoFactura.Estado === 'Activo');
+
+            actives.forEach((estadoFactura) => {
                 const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${estadoFactura.id})"><i class="fa-solid fa-user-pen"></i></button>`;
                 const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${estadoFactura.id})"><i class="fa-solid fa-trash"></i></button>`;
                 const payButton = `<button type="button" class="btn btn-primary mx-3 btn-pay" data-factura-id="${estadoFactura.id}"><i class="fa-solid fa-file-invoice"></i></button>`;
@@ -46,6 +39,8 @@ async function loadTable() {
             });
 
             table.draw();
+
+            loader.hide();
 
             if (items.message && !mensajeMostrado) {
                 mensajeMostrado = true;
@@ -67,10 +62,10 @@ async function loadTable() {
                 });
             }
         }
-        hideLoader();
+        loader.hide();
     } catch (error) {
         console.error("Error al realizar la petición Fetch:", error);
-        hideLoader();
+        loader.hide();
     }
 }
 
@@ -244,8 +239,8 @@ async function deleteById(id) {
         });
 
         if (result.isConfirmed) {
-            const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/sistema/estadoFactura/${id}`, {
-                method: 'DELETE',
+            const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/sistema/estadoFactura/eliminar/${id}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -356,17 +351,6 @@ $(document).ready(function () {
                         alignment: 'center'
                     };
                     doc.content[1].text = 'registroHabitación.pdf';
-                }
-            },
-            {
-                text: '<i class="fas fa-file-code"></i> JSON',
-                action: function (e, dt, button, config) {
-                    var data = dt.buttons.exportData();
-
-                    $.fn.dataTable.fileSave(
-                        new Blob([JSON.stringify(data)]),
-                        'registro de habitaciónes.json'
-                    );
                 }
             }
         ],

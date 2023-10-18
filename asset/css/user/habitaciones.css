@@ -1,0 +1,207 @@
+:root {
+    --text-dark: #333333;
+    --text-light: #767268;
+    --extra-light: #f3f4f6;
+    --max-width: 1200px;
+    --box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.navbar {
+    background-color: #ff6600;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.search-box {
+    margin: 10px 0;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    background-size: 16px;
+}
+
+.custom-width {
+    width: 300px;
+}
+
+.filter-box {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.custom-select {
+    position: relative;
+    display: inline-block;
+}
+
+.select-label {
+    margin-right: 10px;
+}
+
+.select-trigger {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.filter-select {
+    border: none;
+    background: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #17FF00;
+}
+
+.filter-select option {
+    background: white;
+    color: #333;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.filter-select option:checked {
+    color: #0074cc;
+}
+
+.custom-select:hover .filter-select {
+    opacity: 1;
+    transform: scaleY(1);
+}
+
+.custom-select:hover .select-trigger i {
+    transform: rotate(180deg);
+    transition: transform 0.2s;
+}
+
+.room-cards-container {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 15px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 500px;
+}
+
+
+.card:hover {
+    transform: scale(1.03);
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card h2 {
+    font-size: 24px;
+    color: #0074cc;
+    margin: 10px 0;
+}
+
+.card img {
+    max-width: 100%;
+    max-height: 150px; /* Altura máxima para todas las imágenes */
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
+.card p {
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+}
+
+.card .price {
+    color: #ff6600;
+}
+
+.card .btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.card .btn:hover {
+    background-color: #218838;
+}
+
+.btn {
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+
+.btn-volver {
+    background-color: #0074cc;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Estilo al pasar el cursor sobre el botón */
+.btn-volver:hover {
+    background-color: #e65500;
+}
+
+
+
+@media (max-width: 768px) {
+
+    body {
+        font-size: 16px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+}

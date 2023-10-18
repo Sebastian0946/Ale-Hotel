@@ -1,18 +1,11 @@
 var dataTableInitialized = false;
-
-function showLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'flex';
-}
-
-function hideLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'none';
-}
+var mensajeMostrado = false;
 
 async function loadTable() {
     try {
-        showLoader();
+
+        const loader = $("#loader");
+        loader.show();
 
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion', {
             method: 'GET',
@@ -22,16 +15,24 @@ async function loadTable() {
         });
 
         if (response.ok) {
+            
             const items = await response.json();
+            
             const table = $('#table').DataTable();
 
             table.clear();
 
-            items.data.forEach((TipoHabitacion) => {
+            const actives = items.data.filter((TipoHabitacion) => TipoHabitacion.Estado === 'Activo');
+
+            actives.forEach((TipoHabitacion) => {
                 const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${TipoHabitacion.id})"><i class="fa-solid fa-user-pen"></i></button>`;
                 const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${TipoHabitacion.id})"><i class="fa-solid fa-trash"></i></button>`;
 
                 const estadoClass = TipoHabitacion.Estado === 'Activo' ? 'text-success' : 'text-danger';
+
+                const image = `<img src="../../../asset/img/${TipoHabitacion.Imagen}" alt="Imagen" width="150" height="65" style="border-radius: 15%; display: block; margin: 0 auto;">`;
+
+                const valorHabitacion = `<div style="text-align: center;"><p>${TipoHabitacion.Cantidad}</p></div>`;
 
                 const actions = `
                     <div class="actions-container">
@@ -39,12 +40,12 @@ async function loadTable() {
                     </div>
                 `;
 
-                table.row.add([TipoHabitacion.id, TipoHabitacion.Codigo, TipoHabitacion.Descripcion, TipoHabitacion.Cantidad, `<span class="${estadoClass}">${TipoHabitacion.Estado}</span>`, actions]);
+                table.row.add([TipoHabitacion.id, TipoHabitacion.Codigo, TipoHabitacion.Titulo, TipoHabitacion.Descripcion, image, valorHabitacion, `<div style="text-align: center;"><span class="${estadoClass}">${TipoHabitacion.Estado}</span></div>`, actions]);
             });
 
             table.draw();
 
-            hideLoader();
+            loader.hide();
 
             if (items.message && !mensajeMostrado) {
                 mensajeMostrado = true;
@@ -66,31 +67,28 @@ async function loadTable() {
                 });
             }
         }
-        hideLoader();
+        loader.hide();
     } catch (error) {
         console.error("Error al realizar la petición Fetch:", error);
-        hideLoader();
+        loader.hide();
     }
 }
 
 
-async function findById(id) {
-    try {
-        const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion/${id}`);
+function findById(id) {
+    $(document).ready(function () {
+        $.ajax({
+            url: `https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion/${id}`,
+            type: 'GET',
+            dataType: 'json',
+            success: function (TipoHabitacion) {
 
-        if (response.ok) {
-
-            const jsonResult = await response.json();
-
-            if (jsonResult.data) {
-
-                const TipoHabitacion = jsonResult.data;
-
-                $('#id').val(TipoHabitacion.id);
-                $('#codigo').val(TipoHabitacion.Codigo);
-                $('#descripcion').val(TipoHabitacion.Descripcion);
-                $('#cantidad').val(TipoHabitacion.Cantidad);
-                $("#estado").prop("checked", TipoHabitacion.Estado === 'Activo');
+                $('#id').val(TipoHabitacion.data.id);
+                $('#codigo').val(TipoHabitacion.data.Codigo);
+                $('#titulo').val(TipoHabitacion.data.Titulo);
+                $('#descripcion').val(TipoHabitacion.data.Descripcion);
+                $('#cantidad').val(TipoHabitacion.data.Cantidad);
+                $("#estado").prop("checked", TipoHabitacion.data.Estado === 'Activo');
 
                 const Toast = Swal.mixin({
                     toast: true,
@@ -106,41 +104,56 @@ async function findById(id) {
 
                 Toast.fire({
                     icon: 'success',
-                    title: jsonResult.message || 'Estado Factura encontrado',
+                    title: TipoHabitacion.message
                 });
-
                 $("#myModal").data("action", "guardarCambios");
                 $('#myModal').modal('show');
-            } else {
-                console.log("Respuesta del servidor sin propiedad 'data':", jsonResult);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                let errorMessage = "Error al obtener el modulo";
+                const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
+                const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    title: errorMessage,
+                    text: errorDescription,
+                    icon: "error"
+                });
+
+                console.log(`Error al realizar la petición Ajax: ${textStatus}, ${errorThrown}`);
             }
-        } else {
-            const errorResponse = await response.json();
-            let errorMessage = "Error al obtener el módulo";
-            const errorDescription = errorResponse.message || "Detalles del error desconocido";
+        });
+    });
+}
 
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
+function previewImage() {
+    const imagenInput = document.getElementById('imagen');
+    const imagenPreview = document.getElementById('imagenPreview');
 
-            Toast.fire({
-                title: errorMessage,
-                text: errorDescription,
-                icon: "error"
-            });
+    if (imagenInput.files && imagenInput.files[0]) {
+        const reader = new FileReader();
 
-            console.log(`Error al realizar la petición Fetch: ${response.status}, ${response.statusText}`);
-        }
-    } catch (error) {
-        console.error("Error al realizar la petición Fetch:", error);
+        reader.onload = function (e) {
+            imagenPreview.src = e.target.result;
+            imagenPreview.style.display = 'block';
+        };
+
+        reader.readAsDataURL(imagenInput.files[0]);
+    } else {
+        imagenPreview.src = '';
+        imagenPreview.style.display = 'none';
     }
 }
 
@@ -148,12 +161,19 @@ function performAction() {
 
     const id = $('#id').val();
 
-    const formData = {
-        Codigo: $('#codigo').val(),
+    var formData = {
+        Codigo: id && id !== '0' ? $('#codigo').val() : generateRandomCode(),
+        Titulo: $('#titulo').val(),
         Descripcion: $('#descripcion').val(),
         Cantidad: $('#cantidad').val(),
         Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
     };
+
+    var imagenInput = $('#imagen')[0].files[0];
+
+    if (imagenInput) {
+        formData.Imagen = imagenInput.name;
+    }
 
     var url = id && id !== '0' ? 'https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion/' + id : 'https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion';
 
@@ -161,11 +181,13 @@ function performAction() {
 
     validarCamposFormulario();
 
-    if ($('#codigo').valid() && $('#descripcion').valid() && $('#cantidad').valid()) {
+    if ($('#codigo').valid() && $('#cantidad').valid() && $('#descripcion').valid()) {
         $.ajax({
             url: url,
             type: type,
             data: JSON.stringify(formData),
+            contentType: false,
+            processData: false,
             contentType: 'application/json',
             success: function (result) {
                 const Toast = Swal.mixin({
@@ -251,6 +273,11 @@ function performAction() {
         form.validate().resetForm();
         $('.is-invalid').removeClass('is-invalid');
     });
+
+    function generateRandomCode() {
+        var randomCode = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Math.random().toString(10).substring(2, 7);
+        return randomCode.substring(0, 5);
+    }
 }
 
 async function deleteById(id) {
@@ -268,8 +295,8 @@ async function deleteById(id) {
 
     if (result.isConfirmed) {
         try {
-            const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion/${id}`, {
-                method: 'DELETE',
+            const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/parametrizacion/TipoHabitacion/eliminar/${id}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -321,20 +348,22 @@ async function deleteById(id) {
     }
 }
 
-
 function Limpiar() {
     $('#id').val('');
     $('#codigo').val('');
+    $('#titulo').val('');
     $('#descripcion').val('');
     $('#cantidad').val('');
+    $('#imagen').val('');
     $("#estado").prop('checked', false);
 }
 
 function validarCamposFormulario() {
 
     $.validator.addMethod("letras", function (value, element) {
-        return this.optional(element) || /^[a-zA-Z\s.]+$/.test(value);
-    }, "Por favor, ingresa solo letras y puntos.");
+        return this.optional(element) || /^[a-zA-Z0-9\s.,]*$/.test(value);
+    }, "Por favor, ingresa solo letras, números, espacios, puntos y comas.");
+
 
     $('#formulario').validate({
         rules: {
@@ -344,8 +373,8 @@ function validarCamposFormulario() {
             },
             descripcion: {
                 required: true,
-                minlength: 3,
-                letras: true
+                maxlength: 220,
+                minlength: 15
             },
             cantidad: {
                 required: true
@@ -357,8 +386,9 @@ function validarCamposFormulario() {
                 minlength: 'El código debe tener al menos {0} caracteres'
             },
             descripcion: {
-                required: 'Por favor, ingresa una descripción',
-                minlength: 'La Descripcion debe tener al menos {0} caracteres'
+                required: 'Por favor, ingresa una descripción para la habitación',
+                maxlength: 'La descripción es muy larga',
+                minlength: 'La descripción es muy corta'
             },
             cantidad: {
                 required: 'Por favor, ingrese una cantidad'
@@ -448,17 +478,6 @@ $(document).ready(function () {
                         alignment: 'center'
                     };
                     doc.content[1].text = 'categoria.pdf';
-                }
-            },
-            {
-                text: '<i class="fas fa-file-code"></i> JSON',
-                action: function (e, dt, button, config) {
-                    var data = dt.buttons.exportData();
-
-                    $.fn.dataTable.fileSave(
-                        new Blob([JSON.stringify(data)]),
-                        'Tipo habitación.json'
-                    );
                 }
             }
         ],

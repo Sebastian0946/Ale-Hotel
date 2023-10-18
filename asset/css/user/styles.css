@@ -312,7 +312,27 @@ nav {
     background-color: #0056b3;
 }
 
-/* Estilos para el icono (inicialmente oculto) */
+.btn-more-rooms {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 50px;
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: bold;
+    border: 2px solid #0074cc;
+    border-radius: 15px;
+    padding: 10px 20px;
+    color: #0074cc;
+    background-color: white;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-more-rooms:hover {
+    background-color: #0074cc;
+    color: white;
+}
+
 .popular-content .thanks-icon {
     display: none;
     justify-content: center;
@@ -322,7 +342,6 @@ nav {
     transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-/* Estilos para mostrar el icono cuando se hace clic en el botón */
 .popular-content.reserve-active .thanks-icon {
     display: flex;
     opacity: 1;
@@ -565,4 +584,23 @@ iframe {
     .footer__container {
         gap: 2rem;
     }
+}
+
+.flex-container {
+    display: flex;
+}
+
+.left-div,
+.right-div {
+    flex: 1;
+}
+
+.right-div {
+    position: relative;
+    top: 5px;
+    left: 100px;
+}
+
+.cont {
+    text-align: center;
 }

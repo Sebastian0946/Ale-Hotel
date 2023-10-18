@@ -1,18 +1,11 @@
 var dataTableInitialized = false;
-
-function showLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'flex';
-}
-
-function hideLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'none';
-}
+var mensajeMostrado = false;
 
 async function loadTable() {
     try {
-        showLoader();
+
+        const loader = $("#loader");
+        loader.show();
 
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/inventario/inventario', {
             method: 'GET',
@@ -27,7 +20,9 @@ async function loadTable() {
 
             table.clear();
 
-            items.data.forEach((inventario) => {
+            const actives = items.data.filter((inventario) => inventario.Estado === 'Activo');
+
+            actives.forEach((inventario) => {
                 const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${inventario.id})"><i class="fa-solid fa-user-pen"></i></button>`;
                 const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${inventario.id})"><i class="fa-solid fa-trash"></i></button>`;
 
@@ -44,7 +39,7 @@ async function loadTable() {
 
             table.draw();
 
-            hideLoader();
+            loader.hide();
 
             if (items.message && !mensajeMostrado) {
                 mensajeMostrado = true;
@@ -66,10 +61,10 @@ async function loadTable() {
                 });
             }
         }
-        hideLoader();
+        loader.hide();
     } catch (error) {
         console.error("Error al realizar la petición Fetch:", error);
-        hideLoader();
+        loader.hide();
     }
 }
 
@@ -142,7 +137,7 @@ function performAction() {
     var id = $('#id').val();
 
     var formData = {
-        Codigo: $('#codigo').val(),
+        Codigo: id && id !== '0' ? $('#codigo').val() : generateRandomCode(),
         ProductoId: {
             id: $('#productoId').val()
         },
@@ -157,7 +152,7 @@ function performAction() {
 
     validarCamposInventario();
 
-    if ($('#codigo').valid() && $('#productoId').valid() && $('#precioVenta').valid() && $('#precioProveedor').valid() && $('#cantidad').valid()) {
+    if ($('#productoId').valid() && $('#precioVenta').valid() && $('#precioProveedor').valid() && $('#cantidad').valid()) {
         $.ajax({
             url: url,
             type: type,
@@ -246,6 +241,11 @@ function performAction() {
         form.validate().resetForm();
         $('.is-invalid').removeClass('is-invalid');
     });
+
+    function generateRandomCode() {
+        var randomCode = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Math.random().toString(10).substring(2, 7);
+        return randomCode.substring(0, 5);
+    }
 }
 
 function deleteById(id) {
@@ -261,8 +261,8 @@ function deleteById(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: 'https://hotel-api-hzf6.onrender.com/api/inventario/inventario/' + id,
-                method: "delete",
+                url: 'https://hotel-api-hzf6.onrender.com/api/inventario/inventario/eliminar/' + id,
+                method: "PUt",
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -320,10 +320,6 @@ function validarCamposInventario() {
 
     $('#formulario').validate({
         rules: {
-            codigo: {
-                required: true,
-                minlength: 3
-            },
             productoId: {
                 required: true
             },
@@ -334,11 +330,7 @@ function validarCamposInventario() {
                 required: true
             }
         },
-        messages: {
-            codigo: {
-                required: 'Por favor, ingresa un código',
-                minlength: 'El código debe tener al menos {0} caracteres'
-            },
+        messages: { 
             nombre: {
                 required: 'Por favor, ingresa un nombre',
                 letras: 'Por favor, ingresa solo letras en la ruta'
@@ -437,17 +429,6 @@ $(document).ready(function () {
                         alignment: 'center'
                     };
                     doc.content[1].text = 'categoria.pdf';
-                }
-            },
-            {
-                text: '<i class="fas fa-file-code"></i> JSON',
-                action: function (e, dt, button, config) {
-                    var data = dt.buttons.exportData();
-
-                    $.fn.dataTable.fileSave(
-                        new Blob([JSON.stringify(data)]),
-                        'Producto.json'
-                    );
                 }
             }
         ],

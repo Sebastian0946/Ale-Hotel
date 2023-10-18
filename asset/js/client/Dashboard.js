@@ -1,6 +1,14 @@
 const usuario = sessionStorage.getItem("usuario");
 const contrasena = sessionStorage.getItem("contrasena");
 
+const userNombreElement = document.querySelector(".user-name");
+
+if (usuario) {
+    userNombreElement.textContent = usuario;
+} else {
+    userNombreElement.textContent = "Invitado";
+}
+
 if (usuario && contrasena) {
     // Las credenciales existen, muestra una alerta de bienvenida
     Swal.fire({
@@ -15,13 +23,11 @@ if (usuario && contrasena) {
         title: 'Advertencia',
         text: 'Por favor, inicie sesión.',
     }).then(() => {
-        // Redirige al usuario a la página de inicio de sesión (puedes ajustar la URL)
         window.location.href = '../login.html'; // Cambia 'login.html' por la URL de tu página de inicio de sesión
     });
 }
 
 function outSin() {
-    // Muestra una alerta de despedida que se cierra automáticamente después de 3 segundos (3000 ms)
     Swal.fire({
         icon: 'info',
         title: '¡Hasta la próxima!',
@@ -31,10 +37,9 @@ function outSin() {
         showConfirmButton: false
     }).then(() => {
         sessionStorage.clear();
-        window.location.href = '../login.html'; // Cambia 'login.html' por la URL de tu página de inicio de sesión
+        window.location.href = '../login.html';
     });
 }
-
 
 const expand_btn = document.querySelector(".expand-btn");
 
@@ -85,3 +90,93 @@ $(document).ready(function () {
         $("body").removeClass("collapsed");
     });
 });
+
+let notificationsVisible = false;
+
+function toggleNotifications() {
+    const notificationList = document.getElementById("notification-list");
+    notificationsVisible = !notificationsVisible;
+
+    if (notificationsVisible) {
+        notificationList.style.display = "block";
+    } else {
+        notificationList.style.display = "none";
+        const notificationCount = document.getElementById("notification-count");
+        notificationCount.innerText = "0";
+    }
+}
+
+const notificationIcon = document.getElementById("notification-icon");
+notificationIcon.addEventListener("click", toggleNotifications);
+
+// Función para cargar los datos de reserva desde la API
+async function cargarReservasDesdeAPI() {
+    try {
+        const response = await fetch("https://hotel-api-hzf6.onrender.com/api/sistema/reservaHabitacion");
+        if (!response.ok) {
+            throw new Error("Error al cargar los datos de reserva desde la API.");
+        }
+
+        const data = await response.json();
+
+        return data;
+
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+// Función para agregar notificaciones
+function addNotification(message, iconClass) {
+    const notificationList = document.getElementById("notification-list");
+
+    // Crea un elemento de notificación
+    const notification = document.createElement("div");
+    notification.classList.add("notification-item");
+
+    // Agrega el ícono
+    const icon = document.createElement("i");
+    icon.classList.add("fa", iconClass);
+
+    // Agrega el mensaje
+    const text = document.createElement("span");
+    text.textContent = message;
+
+    // Agrega el ícono y el mensaje a la notificación
+    notification.appendChild(icon);
+    notification.appendChild(text);
+
+    // Agrega la notificación a la lista
+    notificationList.appendChild(notification);
+
+    // Actualiza el contador de notificaciones
+    const notificationCount = document.getElementById("notification-count");
+    notificationCount.innerText = (parseInt(notificationCount.innerText) + 1).toString();
+}
+
+async function procesarReservas() {
+    const data = await cargarReservasDesdeAPI();
+
+    if (data && data.length > 0) {
+        const ahora = new Date();
+
+        data.forEach((reserva) => {
+            const fechaSalida = new Date(reserva.FechaSalida);
+
+            // Calcula el tiempo restante en milisegundos
+            const tiempoRestante = fechaSalida - ahora;
+
+            // Define un umbral de tiempo (30 minutos antes del checkout)
+            const umbralTiempo = 30 * 60 * 1000;
+
+            if (tiempoRestante <= umbralTiempo && tiempoRestante >= 0) {
+                const minutosRestantes = Math.floor(tiempoRestante / (1000 * 60));
+                const mensaje = `Tu reserva de habitación vence en ${minutosRestantes} minuto(s). ¡No olvides hacer los arreglos necesarios!`;
+                addNotification(mensaje, "fa-message");
+            }
+        });
+    }
+}
+
+addNotification("¡Bienvenido a nuestro servicio de notificaciones de reserva de habitaciones!", "fa-star");
+procesarReservas();

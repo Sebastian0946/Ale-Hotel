@@ -28,17 +28,17 @@
 
 <body>
 
-    <div id="loader">
-        <div class="lds-dual-ring"></div>
-        <div class="text">Cargando...</div>
+    <div id="loader" class="loader">
+        <img src="../../../asset/img/loaderLogin.gif" alt="Loading..." width="100">
     </div>
+
 
     <div class="container">
 
         <div class="title">
             <h1>Registro Huesped</h1>
         </div>
-        
+
         <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal"
             data-bs-target="#myModal" onclick="Limpiar();">
             <i class="fa-solid fa-plus"></i>
@@ -70,21 +70,12 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <label for="descuentoId" class="form-label">Descuento: </label>
-                                            </td>
-                                            <td>
-                                                <select class="form-select" id="descuentoId" name="descuentoId">
-                                                    <!-- Se crea dinamicaente -->
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
                                                 <label for="estado" class="form-label">Estado: </label>
                                             </td>
                                             <td>
                                                 <div class="switch">
-                                                    <input type="checkbox" id="estado" name="estado" value="1" class="toggle-switch-checkbox">
+                                                    <input type="checkbox" id="estado" name="estado" value="1"
+                                                        class="toggle-switch-checkbox">
                                                     <label for="estado" class="toggle-switch-label"></label>
                                                 </div>
                                             </td>
@@ -92,8 +83,10 @@
                                     </tbody>
                                 </table>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="Limpiar();" title="Cerrar">Cerrar</button>
-                                    <button type="button" class="btn btn-success" onclick="performAction();" title="Guardar">Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                        onclick="Limpiar();" title="Cerrar">Cerrar</button>
+                                    <button type="button" class="btn btn-success" onclick="performAction();"
+                                        title="Guardar">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -108,7 +101,6 @@
                         <th>Id</th>
                         <th>Código</th>
                         <th>Nombre huesped</th>
-                        <th>Descuento</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>

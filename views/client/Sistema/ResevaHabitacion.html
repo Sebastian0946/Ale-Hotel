@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Registro habitacion</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <!-- Librerias CSS -->
+    <link rel="stylesheet" href="../../../asset/library/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="../../../asset/library/node_modules/datatables.net-dt/css/jquery.dataTables.min.css">
+    
+    <!-- CSS native -->
+    <link rel="stylesheet" href="../../../asset/css/client/Table.css">
+
+    <!-- Librerias js -->
+    <script src="../../../asset/library/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../../../asset/library/node_modules/moment/min/moment.min.js"></script>
+    <script src="../../../asset/library/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="../../../asset/library/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="../../../asset/library/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../../../asset/library/node_modules/jszip/dist/jszip.min.js"></script>
+    <script src="../../../asset/library/node_modules/pdfmake/build/pdfmake.min.js"></script>
+    <script src="../../../asset/library/node_modules/pdfmake/build/vfs_fonts.js"></script>
+    <script src="../../../asset/library/node_modules/ouanalyse-datatables.net-buttons-html5/js/buttons.html5.min.js"></script>
+</head>
+
+<body>
+
+    <div id="loader" class="loader">
+        <img src="../../../asset/img/loaderLogin.gif" alt="Loading..." width="100">
+    </div>
+
+    <div class="container">
+
+        <div class="title">
+            <h1>Registro de reserva habitación</h1>
+        </div>
+        <button type="button" class="btn btn-dark btn-floating animated-button" data-bs-toggle="modal"
+            data-bs-target="#myModal" onclick="Limpiar();">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+
+        <div class="marcador">
+            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Reserva habitación</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formulario">
+                                <input type="text" id="id" name="id" hidden>
+                                <input type="text" id="codigo" name="codigo" hidden>
+                                <table class="table-modal">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label">Habitación: </label>
+                                            </td>
+                                            <td>
+                                                <select class="form-select" name="habitacionSistemaId" id="habitacionSistemaId">
+
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label">Descuento: </label>
+                                            </td>
+                                            <td>
+                                                <select class="form-select" name="descuentoId" id="descuentoId">
+
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label">Fecha entrada:</label>
+                                            </td>
+                                            <td>
+                                                <div class="input-group date">
+                                                    <input type="text" class="form-control-sm fecha-input" name="fechaEntrada" id="fechaEntrada">
+                                                    <span class="input-group-addon" style="margin-left: 15px;">
+                                                        <i class="fa-solid fa-calendar-days"></i>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="form-label">Fecha salida:</label>
+                                            </td>
+                                            <td>
+                                                <div class="input-group date">
+                                                    <input type="text" class="form-control-sm fecha-input" name="fechaSalida" id="fechaSalida">
+                                                    <span class="input-group-addon" style="margin-left: 15px;">
+                                                        <i class="fa-solid fa-calendar-days"></i>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>                                        
+                                        <tr>
+                                            <td>
+                                                <label class="form-label">Estado: </label>
+                                            </td>
+                                            <td>
+                                                <div class="switch">
+                                                    <input type="checkbox" id="estado" name="estado" value="1"
+                                                        class="toggle-switch-checkbox">
+                                                    <label for="estado" class="toggle-switch-label"></label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                        onclick="Limpiar();" title="Cerrar">Cerrar</button>
+                                    <button type="button" class="btn btn-success" onclick="performAction();"
+                                        title="Guardar">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tabla -->
+            <table id="table" class="display table table-bordered p-2 m-lg-2 animate__animated animate__fadeIn"
+                style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Código reserva</th>
+                        <th>Nombre huesped</th>
+                        <th>Tipo habitación</th>
+                        <th>Descuento</th>
+                        <th>Fecha entrada</th>
+                        <th>Fecha Salida</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="dataResult">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="../../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../asset/library/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="../../../asset/library/node_modules/animejs/lib/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+    <script src="../../../asset/js/client/sistema/reservaHabitacion.js"></script>
+    <script src="../../../asset/js/client/GetList.js"></script>
+    <script src="../../../asset/library/icons/icons.js"></script>
+    <script src="../../../asset/js/client/Animacion.js"></script>
+</body>
+
+</html>
+<script>
+    loadTable();
+    loadSistema();
+</script>

@@ -26,14 +26,13 @@
 </head>
 <body>
 
-    <div id="loader">
-        <div class="lds-dual-ring"></div>
-        <div class="text">Cargando...</div>
+    <div id="loader" class="loader">
+        <img src="../../../asset/img/loaderLogin.gif" alt="Loading..." width="100">
     </div>
 
     <div class="container">
         <div class="title">
-            <h1>Registro Habitaciones</h1>
+            <h1>Registro inventario habitaciones</h1>
         </div>
 
 
@@ -53,20 +52,12 @@
                         <div class="modal-body">
                             <form id="formulario">
                                 <input type="text" id="id" name="id" hidden>
+                                <input class="form-control" name="codigo" id="codigo" hidden>
                                 <table class="table-modal">
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <label for="codigo" class="form-label">Codigo </label>
-                                            </td>
-                                            <td>
-                                                <input class="form-control" name="codigo" id="codigo">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label for="categoriaId" class="form-label">Registrar Habitacion
-                                                </label>
+                                                <label class="form-label">Registrar Habitacion </label>
                                             </td>
                                             <td>
                                                 <select class="form-select" name="habitacionId" id="habitacionId">
@@ -75,7 +66,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <label for="categoriaId" class="form-label">Registrar Inventario:
+                                                <label class="form-label">Registrar Inventario:
                                                 </label>
                                             </td>
                                             <td>
@@ -123,6 +114,7 @@
                         <th>Codigo Inventario</th>
                         <th>Nombre Inventario</th>
                         <th>Cantidad</th>
+                        <th>Precio pagar</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -146,5 +138,5 @@
 <script>
     loadTable();
     loadInventario();
-    loadSistema()
+    loadSistema();
 </script>

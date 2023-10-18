@@ -52,7 +52,6 @@ async function loadTable() {
             <tr class="table-light fadeIn">
                 <td class="table-cell-width">${descuento.id}</td>
                 <td class="table-cell-width">${descuento.Codigo}</td>
-                <td class="table-cell-width">${descuento.ValorNeto}</td>
                 <td class="table-cell-width">${descuento.PorcentajeDescuento}</td>
                 <td class="table-cell-width ${descuento.Estado === 'Activo' ? 'text-success' : 'text-danger'}">${descuento.Estado}</td>
                 <td class="table-cell-width">
@@ -179,7 +178,6 @@ async function findById(id) {
 
         $('#id').val(data.id);
         $('#codigo').val(data.Codigo);
-        $('#valorNeto').val(data.ValorNeto);
         $('#porcentajeDescuento').val(data.PorcentajeDescuento);
         $("#estado").prop("checked", data.Estado === 'Activo');
 
@@ -283,7 +281,6 @@ async function guardarCambios() {
 
         const formData = {
             Codigo: $('#codigo').val(),
-            ValorNeto: $('#valorNeto').val(),
             PorcentajeDescuento: $('#porcentajeDescuento').val(),
             Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
         };
@@ -362,8 +359,8 @@ async function deleteById(id) {
             return;
         }
 
-        const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/sistema/descuento/${id}`, {
-            method: 'DELETE',
+        const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/sistema/descuento/eliminar/${id}`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -420,7 +417,6 @@ async function deleteById(id) {
 function Limpiar() {
     $('#id').val('');
     $('#codigo').val('');
-    $('#valorNeto').val('');
     $('#porcentajeDescuento').val('');
     $("#estado").prop('checked', false);
 }

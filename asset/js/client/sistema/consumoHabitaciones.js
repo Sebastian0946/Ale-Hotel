@@ -1,19 +1,12 @@
 var dataTableInitialized = false;
 var mensajeMostrado = false;
 
-function showLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'flex';
-}
-
-function hideLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'none';
-}
 
 async function loadTable() {
     try {
-        showLoader();
+
+        const loader = $("#loader");
+        loader.show();
 
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/sistema/consumoHabitacion', {
             method: 'GET',
@@ -28,24 +21,34 @@ async function loadTable() {
 
             table.clear();
 
-            items.data.forEach((consumoHabitacion) => {
+            const actives = items.data.filter((consumoHabitacion) => consumoHabitacion.Estado === 'Activo');
+
+            actives.forEach((consumoHabitacion) => {
                 const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${consumoHabitacion.id})"><i class="fa-solid fa-user-pen"></i></button>`;
-                const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${consumoHabitacion.id})"><i class="fa-solid fa-trash"></i></button>`;
+                const payButton = `<button type="button" class="btn btn-primary mx-3" onclick="payById(${consumoHabitacion.id})"><i class="fa-solid fa-money-bill"></i></button>`;
+
 
                 const estadoClass = consumoHabitacion.Estado === 'Activo' ? 'text-success' : 'text-danger';
 
+                let porcentajeDescuento = '0%';
+
+                if (consumoHabitacion.ReservaHabitacionesId.DescuentoId) {
+                    // Verifica si DescuentoId es diferente de null antes de acceder a PorcentajeDescuento
+                    porcentajeDescuento = consumoHabitacion.ReservaHabitacionesId.DescuentoId.PorcentajeDescuento + "%";
+                }
+
                 const actions = `
                     <div class="actions-container">
-                        ${editButton} ${deleteButton}
+                        ${editButton} ${payButton}
                     </div>
                 `;
 
-                table.row.add([consumoHabitacion.id, consumoHabitacion.Codigo, ConfiguracionSistema.UsuarioId.Usuario, ConfiguracionSistema.Nombre, ConfiguracionSistema.Descripcion, `<span class="${estadoClass}">${ConfiguracionSistema.Estado}</span>`, actions]);
+                table.row.add([consumoHabitacion.id, consumoHabitacion.Codigo, consumoHabitacion.ReservaHabitacionesId.HabitacionId.HuespedId.PersonaId.Nombres + " " + consumoHabitacion.ReservaHabitacionesId.HabitacionId.HuespedId.PersonaId.Apellidos, consumoHabitacion.ReservaHabitacionesId.FechaEntrada, consumoHabitacion.ReservaHabitacionesId.FechaSalida, porcentajeDescuento, `<span class="${estadoClass}">${consumoHabitacion.Estado}</span>`, actions]);
             });
 
             table.draw();
 
-            hideLoader();
+            loader.hide();
 
             if (items.message && !mensajeMostrado) {
                 mensajeMostrado = true;
@@ -67,10 +70,10 @@ async function loadTable() {
                 });
             }
         }
-        hideLoader();
+        loader.hide();
     } catch (error) {
         console.error("Error al realizar la petición Fetch:", error);
-        hideLoader();
+        loader.hide();
     }
 }
 
@@ -137,6 +140,291 @@ async function findById(id) {
     } catch (error) {
         console.error("Error al realizar la petición Fetch:", error);
     }
+}
+
+function performAction() {
+
+    var id = $('#id').val();
+
+    var selectedValue = $('#reservaHabitacionId').val();
+
+    var [reservaHabitacionId, habitacionId] = selectedValue.split('-');
+
+    var formData = {
+        Codigo: id && id !== '0' ? $('#codigo').val() : generateRandomCode(),
+        ReservaHabitacionesId: {
+            id: reservaHabitacionId,
+        }
+    };
+
+    var url = id && id !== '0' ? 'https://hotel-api-hzf6.onrender.com/api/sistema/consumoHabitacion/' + id : 'https://hotel-api-hzf6.onrender.com/api/sistema/consumoHabitacion';
+    var type = id && id !== '0' ? 'PUT' : 'POST';
+
+    validarCamposFormulario();
+
+    if ($('#reservaHabitacionId').valid()) {
+        $.ajax({
+            url: url,
+            type: type,
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function (result) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                $.ajax({
+                    url: 'https://hotel-api-hzf6.onrender.com/api/sistema/habitacion/' + habitacionId,
+                    method: 'PUT',
+                    data: JSON.stringify({ Ocupado: true }),
+                    contentType: 'application/json',
+                    success: function () {
+                        console.log('La habitación se actualizó correctamente.');
+                    },
+                    error: function (habXhr, habStatus, habError) {
+                        console.error('Error al actualizar la habitación:', habError);
+                    }
+                });
+
+                Toast.fire({
+                    icon: id && id !== '0' ? 'warning' : 'success',
+                    title: result.message || 'Cambios guardados con éxito'
+                });
+
+                loadTable();
+                Limpiar();
+                $("#myModal").data("action", "");
+                $('#myModal').modal('hide');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                let errorMessage = "Ha ocurrido un error al ";
+
+                if (id && id !== '0') {
+                    errorMessage += "actualizar el inventario de habitación";
+                } else {
+                    errorMessage += "registrar el rol";
+                }
+
+                if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                    errorMessage += ": " + jqXHR.responseJSON.message;
+                }
+
+                const errorDetails = jqXHR.responseText.match(/Error: (.+?)<br>/);
+                const errorDescription = errorDetails ? errorDetails[1] : "Detalles del error desconocido";
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+
+                Toast.fire({
+                    title: errorMessage,
+                    text: errorDescription,
+                    icon: "error"
+                });
+            }
+        });
+    } else {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+
+        Toast.fire({
+            title: 'Campos incompletos o inválidos',
+            text: 'Por favor, verifica todos los campos antes de continuar.',
+            icon: "error"
+        });
+    }
+
+    $('#myModal').on('hidden.bs.modal', function () {
+        var form = $("#formulario");
+        form.validate().resetForm();
+        $('.is-invalid').removeClass('is-invalid');
+    });
+
+    function generateRandomCode() {
+        var randomCode = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Math.random().toString(10).substring(2, 7);
+        return randomCode.substring(0, 5);
+    }
+}
+
+function payById(id) {
+    const url = `https://hotel-api-hzf6.onrender.com/api/sistema/consumoHabitacion/checkOut/${id}`;
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        contentType: "application/json",
+        success: function (result) {
+
+            const modalContent = generateInvoice(result);
+
+            $('body').append(modalContent);
+            $('#checkoutModal').modal('show');
+        },
+        error: function (error) {
+            console.error("Error en la solicitud:", error);
+        }
+    });
+}
+
+function generateInvoice(result) {
+
+    const cantidadPorProducto = {};
+    let totalAPagar = 0;  // Inicializamos en 0
+
+    for (let i = 0; i < result.data.inventariosHabitacionId.length; i++) {
+        const producto = result.data.inventariosHabitacionId[i];
+        const codigoProducto = producto.Codigo;
+        const cantidad = parseInt(producto.Cantidad, 10);
+        const precioVenta = parseFloat(producto.InventarioId.PrecioVenta);
+
+        if (cantidadPorProducto[codigoProducto]) {
+            cantidadPorProducto[codigoProducto].cantidad += cantidad;
+        } else {
+            cantidadPorProducto[codigoProducto] = {
+                cantidad,
+                precioVenta,
+                nombre: producto.InventarioId.ProductoId.Nombre,
+            };
+        }
+        totalAPagar += cantidadPorProducto[codigoProducto].cantidad * precioVenta;
+    }
+
+    totalAPagar += parseFloat(result.data.ReservaHabitacionesId.HabitacionId.TipoHabitacionesId.Cantidad);
+
+    const invoiceContent = `
+        <div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Factura de CheckOut</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-4">
+                            <p><strong>Codigo reserva:</strong> ${result.data.Codigo}</p>
+                            <p><strong>Habitación:</strong> ${result.data.ReservaHabitacionesId.HabitacionId.TipoHabitacionesId.Titulo}</p>
+                            <p><strong>Precio por habitación:</strong> $${result.data.ReservaHabitacionesId.HabitacionId.TipoHabitacionesId.Cantidad}</p>
+                        </div>
+                        <div class="mb-4">
+                            <p><strong>Productos:</strong></p>
+                            ${Object.keys(cantidadPorProducto).map(codigoProducto => `
+                                <p>${codigoProducto} - (${cantidadPorProducto[codigoProducto].nombre}): $${(cantidadPorProducto[codigoProducto].cantidad * cantidadPorProducto[codigoProducto].precioVenta).toFixed(2)}</p>
+                            `).join('')}
+                        </div>
+                        <p class="h4"><strong>Total a pagar:</strong> $${totalAPagar.toFixed(2)}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="realizarPago(${result.data.id})">Pagar</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    `;
+    return invoiceContent;
+}
+
+function realizarPago(id) {
+    $.ajax({
+        url: 'https://hotel-api-hzf6.onrender.com/api/sistema/consumoHabitacion/eliminar/' + id,
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        success: function (result) {
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+            Toast.fire({
+                icon: 'success',
+                title: 'Se ha realizado el pago'
+            });
+            loadTable();
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+            Toast.fire({
+                icon: 'error',
+                title: 'Error al realizar la petición Ajax: ' + textStatus + ', ' + errorThrown
+            });
+        }
+    });
+}
+
+function validarCamposFormulario() {
+
+    $('#formulario').validate({
+        rules: {
+            reservaHabitacionId: {
+                required: true,
+            }
+        },
+        messages: {
+            reservaHabitacionId: {
+                required: 'Por favor, seleccione una reserva para consumir.',
+            }
+        },
+        errorClass: 'is-invalid',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass(errorClass).removeClass(validClass);
+            $(element.form).find("label[for=" + element.id + "]")
+                .addClass(errorClass);
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass(errorClass).addClass(validClass);
+            $(element.form).find("label[for=" + element.id + "]")
+                .removeClass(errorClass);
+        },
+    });
+}
+
+function Limpiar() {
+    $('#reservaHabitacionId').val('0');
 }
 
 $(document).ready(function () {
@@ -208,17 +496,6 @@ $(document).ready(function () {
                         alignment: 'center'
                     };
                     doc.content[1].text = 'Registro huespedes.pdf';
-                }
-            },
-            {
-                text: '<i class="fas fa-file-code"></i> JSON',
-                action: function (e, dt, button, config) {
-                    var data = dt.buttons.exportData();
-
-                    $.fn.dataTable.fileSave(
-                        new Blob([JSON.stringify(data)]),
-                        'Huespedes.json'
-                    );
                 }
             }
         ],

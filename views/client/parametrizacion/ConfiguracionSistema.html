@@ -27,9 +27,8 @@
 
 <body>
 
-    <div id="loader">
-        <div class="lds-dual-ring"></div>
-        <div class="text">Cargando...</div>
+    <div id="loader" class="loader">
+        <img src="../../../asset/img/loaderLogin.gif" alt="Loading..." width="100">
     </div>
 
     <div class="container">
@@ -53,16 +52,9 @@
                         <div class="modal-body">
                             <form id="formulario">
                                 <input type="text" id="id" name="id" hidden>
+                                <input type="text" id="Codigo" name="Codigo" class="form-control">
                                 <table class="table-modal">
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <label class="form-label">Codigo: </label>
-                                            </td>
-                                            <td>
-                                                <input type="text" id="Codigo" name="Codigo" class="form-control">
-                                            </td>
-                                        </tr>
                                         <tr>
                                             <td>
                                                 <label class="form-label">Id Usuario: </label>

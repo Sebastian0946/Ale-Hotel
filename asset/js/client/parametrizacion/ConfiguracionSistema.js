@@ -1,18 +1,12 @@
 var dataTableInitialized = false;
-
-function showLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'flex';
-}
-
-function hideLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'none';
-}
+let mensajeMostrado = false;
 
 async function loadTable() {
     try {
-        showLoader();
+
+        const loader = $("#loader");
+        loader.show();
+
 
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/parametrizacion/ConfiguracionSistema', {
             method: 'GET',
@@ -27,7 +21,9 @@ async function loadTable() {
 
             table.clear();
 
-            items.data.forEach((ConfiguracionSistema) => {
+            const actives = items.data.filter((configuracionSistema) => configuracionSistema.Estado === 'Activo');
+
+            actives.forEach((ConfiguracionSistema) => {
                 const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${ConfiguracionSistema.id})"><i class="fa-solid fa-user-pen"></i></button>`;
                 const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${ConfiguracionSistema.id})"><i class="fa-solid fa-trash"></i></button>`;
 
@@ -39,12 +35,12 @@ async function loadTable() {
                     </div>
                 `;
 
-                table.row.add([ConfiguracionSistema.id, ConfiguracionSistema.Codigo ,ConfiguracionSistema.UsuarioId.Usuario, ConfiguracionSistema.Nombre, ConfiguracionSistema.Descripcion, `<span class="${estadoClass}">${ConfiguracionSistema.Estado}</span>`, actions]);
+                table.row.add([ConfiguracionSistema.id, ConfiguracionSistema.Codigo, ConfiguracionSistema.UsuarioId.Usuario, ConfiguracionSistema.Nombre, ConfiguracionSistema.Descripcion, `<span class="${estadoClass}">${ConfiguracionSistema.Estado}</span>`, actions]);
             });
 
             table.draw();
 
-            hideLoader();
+            loader.hide();
 
             if (items.message && !mensajeMostrado) {
                 mensajeMostrado = true;
@@ -66,10 +62,10 @@ async function loadTable() {
                 });
             }
         }
-        hideLoader();
+        loader.hide();
     } catch (error) {
         console.error("Error al realizar la petición Fetch:", error);
-        hideLoader();
+        loader.hide();
     }
 }
 
@@ -146,7 +142,7 @@ function performAction() {
     var id = $('#id').val();
 
     var formData = {
-        Codigo: $('#Codigo').val(),
+        Codigo: id && id !== '0' ? $('#Codigo').val() : generateRandomCode(),
         UsuarioId: {
             id: $('#usuarioId').val()
         },
@@ -251,6 +247,11 @@ function performAction() {
         form.validate().resetForm();
         $('.is-invalid').removeClass('is-invalid');
     });
+
+    function generateRandomCode() {
+        var randomCode = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Math.random().toString(10).substring(2, 7);
+        return randomCode.substring(0, 5);
+    }
 }
 
 async function deleteById(id) {
@@ -267,8 +268,8 @@ async function deleteById(id) {
         });
 
         if (result.isConfirmed) {
-            const response = await fetch('https://hotel-api-hzf6.onrender.com/api/parametrizacion/ConfiguracionSistema/' + id, {
-                method: 'DELETE',
+            const response = await fetch('https://hotel-api-hzf6.onrender.com/api/parametrizacion/ConfiguracionSistema/eliminar/' + id, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 }

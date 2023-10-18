@@ -1,18 +1,11 @@
 var dataTableInitialized = false;
-
-function showLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'flex';
-}
-
-function hideLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'none';
-}
+let mensajeMostrado = false;
 
 async function loadTable() {
     try {
-        showLoader();
+
+        const loader = $("#loader");
+        loader.show();
 
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/sistema/huesped', {
             method: 'GET',
@@ -27,16 +20,13 @@ async function loadTable() {
 
             table.clear();
 
-            items.data.forEach((huesped) => {
+            const actives = items.data.filter((huesped) => huesped.Estado === 'Activo');
+
+            actives.forEach((huesped) => {
                 const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${huesped.id})"><i class="fa-solid fa-user-pen"></i></button>`;
                 const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${huesped.id})"><i class="fa-solid fa-trash"></i></button>`;
 
                 const estadoClass = huesped.Estado === 'Activo' ? 'text-success' : 'text-danger';
-                let porcentajeDescuento = '0%';
-
-                if (huesped.DescuentoId && huesped.DescuentoId.PorcentajeDescuento) {
-                    porcentajeDescuento = huesped.DescuentoId.PorcentajeDescuento + "%";
-                }
 
                 const actions = `
                     <div class="actions-container">
@@ -48,7 +38,6 @@ async function loadTable() {
                     huesped.id,
                     huesped.Codigo,
                     huesped.PersonaId.Nombres + " " + huesped.PersonaId.Apellidos,
-                    porcentajeDescuento,
                     `<span class="${estadoClass} text-center">${huesped.Estado}</span>`,
                     actions
                 ]);
@@ -56,7 +45,7 @@ async function loadTable() {
 
             table.draw();
 
-            hideLoader();
+            loader.hide();
 
             if (items.message && !mensajeMostrado) {
                 mensajeMostrado = true;
@@ -78,10 +67,10 @@ async function loadTable() {
                 });
             }
         }
-        hideLoader();
+        loader.hide();
     } catch (error) {
         console.error("Error al realizar la petición Fetch:", error);
-        hideLoader();
+        loader.hide();
     }
 }
 
@@ -100,7 +89,6 @@ async function findById(id) {
             $('#id').val(huesped.data.id);
             $('#codigo').val(huesped.data.Codigo);
             $('#personaId').val(huesped.data.PersonaId.id);
-            $('#descuentoId').val(huesped.data.DescuentoId.id);
             $("#estado").prop("checked", huesped.data.Estado === 'Activo');
 
             const Toast = Swal.mixin({
@@ -153,10 +141,9 @@ async function findById(id) {
 function performAction() {
 
     var id = $('#id').val();
-    
+
     var personaId = $('#personaId').val();
     var codigo = id && id !== '0' ? $('#codigo').val() : generateRandomCode();
-    var descuentoId = $('#descuentoId').val();
     var estado = $("#estado").is(':checked') ? 'Activo' : 'Inactivo';
 
     $.ajax({
@@ -193,9 +180,6 @@ function performAction() {
                     Codigo: codigo,
                     PersonaId: {
                         id: personaId
-                    },
-                    DescuentoId: {
-                        id: descuentoId
                     },
                     Estado: estado
                 };
@@ -356,8 +340,8 @@ function deleteById(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: 'https://hotel-api-hzf6.onrender.com/api/sistema/huesped/' + id,
-                method: "delete",
+                url: 'https://hotel-api-hzf6.onrender.com/api/sistema/huesped/eliminar/' + id,
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -513,17 +497,6 @@ $(document).ready(function () {
                         alignment: 'center'
                     };
                     doc.content[1].text = 'Registro huespedes.pdf';
-                }
-            },
-            {
-                text: '<i class="fas fa-file-code"></i> JSON',
-                action: function (e, dt, button, config) {
-                    var data = dt.buttons.exportData();
-
-                    $.fn.dataTable.fileSave(
-                        new Blob([JSON.stringify(data)]),
-                        'Huespedes.json'
-                    );
                 }
             }
         ],

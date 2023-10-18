@@ -13,31 +13,41 @@ function signIn(e) {
             "Content-Type": "application/json"
         },
         success: function (response) {
-
-            // Resto de tu código de éxito
             const usuarios = response.data;
 
-            const userExists = usuarios.some(function (usuarioData) {
+            const user = usuarios.find(function (usuarioData) {
                 return usuarioData.Usuario === usuario && usuarioData.Contraseña === contrasena;
             });
 
-            if (userExists) {
-                sessionStorage.setItem("usuario", usuario);
-                sessionStorage.setItem("contrasena", contrasena);
+            if (user) {
+                if (user.Estado === "Activo") {
+                    // El usuario está activo, puedes permitir el inicio de sesión
+                    sessionStorage.setItem("usuario", usuario);
+                    sessionStorage.setItem("contrasena", contrasena);
 
-                $("#loader").hide();
+                    $("#loader").hide();
 
-                Swal.fire({
-                    icon: "success",
-                    title: "¡Inicio de sesión exitoso!",
-                    text: "Has iniciado sesión correctamente.",
-                    timer: 2000,
-                    showConfirmButton: false
-                }).then(function () {
-                    window.location.href = "client/DashBoard.html";
-                });
+                    Swal.fire({
+                        icon: "success",
+                        title: "¡Inicio de sesión exitoso!",
+                        text: "Has iniciado sesión correctamente.",
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(function () {
+                        window.location.href = "client/DashBoard.html";
+                    });
+                } else {
+                    // El usuario está inactivo, muestra un mensaje de error
+                    $("#loader").hide();
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Usuario inactivo",
+                        text: "Tu usuario ha sido inactivado del sistema.",
+                        showConfirmButton: false
+                    });
+                }
             } else {
-                // Oculta el loader en caso de error
                 $("#loader").hide();
 
                 Swal.fire({
@@ -45,7 +55,7 @@ function signIn(e) {
                     title: "Error al autenticar",
                     text: "El usuario o la contraseña son incorrectos.",
                     showConfirmButton: false
-                })
+                });
             }
         },
         error: function (xhr, status, error) {
@@ -71,4 +81,3 @@ function togglePasswordVisibility() {
         toggleIcon.classList.add("fa-eye");
     }
 }
-

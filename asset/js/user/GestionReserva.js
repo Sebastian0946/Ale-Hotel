@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 $(document).ready(function () {
 
-    cargarDepartamento(); 
+    cargarDepartamento();
 
     $('#departamento').change(function () {
         var selectedDepartamento = $(this).val();
@@ -41,18 +41,20 @@ $(document).ready(function () {
                     const direccion = persona.data.Direccion;
                     const [departamento, municipio] = direccion.split('-');
 
+                    console.log('id persona: '+persona.data.id)
+
+                    $('#id').val(persona.data.id)
                     $('#tipoDocumento').val(persona.data.TipoDocumento);
                     $('#nombres').val(persona.data.Nombres);
                     $('#apellidos').val(persona.data.Apellidos);
                     $('#telefono').val(persona.data.Telefono);
                     $('#departamento').val(departamento);
-
                     $('#departamento').val(departamento);
                     cargarMunicipios(departamento);
 
                     setTimeout(function () {
                         $('#municipio').val(municipio);
-                    }, 100); 
+                    }, 100);
 
                     $('#correo').val(persona.data.Email);
                 }
@@ -155,6 +157,26 @@ function registrarPersona() {
 
     $.ajax({
         url: 'https://hotel-api-hzf6.onrender.com/api/seguridad/persona',
+        method: 'GET',
+        data: { Documento: $('#documento').val() },
+        success: function (response) {
+            if (response.data.length > 0) {
+                const personaId = $('#id').val();
+                actualizarEstadoActivo(personaId, formData);
+            } else {
+                crearNuevaPersona(formData);
+            }
+        },
+        error: function (error) {
+            console.error("Error al verificar la existencia de la persona:", error);
+            hideLoader();
+        }
+    });
+}
+
+function crearNuevaPersona(formData) {
+    $.ajax({
+        url: 'https://hotel-api-hzf6.onrender.com/api/seguridad/persona',
         method: "POST",
         data: JSON.stringify(formData),
         contentType: 'application/json',
@@ -164,6 +186,26 @@ function registrarPersona() {
         },
         error: function (error) {
             console.error("Error al registrar la persona:", error);
+            hideLoader();
+        }
+    });
+}
+
+function actualizarEstadoActivo(personaId, formData) {
+
+    formData.Estado = 'Activo';
+
+    $.ajax({
+        url: `https://hotel-api-hzf6.onrender.com/api/seguridad/persona/${personaId}`,
+        method: "PUT",
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        success: function (response) {
+            const personaId = response.data.id;
+            registrarHuesped(personaId);
+        },
+        error: function (error) {
+            console.error("Error al actualizar el estado de la persona:", error);
             hideLoader();
         }
     });
@@ -198,19 +240,20 @@ function registrarHuesped(personaId) {
 }
 
 function registrarHabitacion(huespedId) {
-    var selectedOption = $('#tipohabitacionUsuario').val();
-    var selectedId = selectedOption.split(' - ')[0];
 
     var formDataHabitacion = {
+
         Codigo: generateRandomCode(),
         TipoHabitacionesId: {
-            id: selectedId,
+            id: $('#tipohabitacionUsuario').val(),
         },
         HuespedId: {
             id: huespedId
         },
         Descripcion: $('#adultos').val() + " y " + $('#ninos').val(),
+        Ocupado: false,
         Estado: 'Activo'
+
     };
 
     $.ajax({
@@ -218,15 +261,66 @@ function registrarHabitacion(huespedId) {
         method: 'POST',
         data: JSON.stringify(formDataHabitacion),
         contentType: 'application/json',
-        success: function () {
-            hideLoader();
-            enviarCorreo();
+        success: function (response) {
+            const habitacionId = response.data.id;
+            registroReservaHabitacion(habitacionId);
         },
         error: function (error) {
             console.error('Error al registrar la habitación:', error);
         }
     });
 }
+
+function registroReservaHabitacion(habitacionId) {
+    const fechaEntrada = $('#fechaEntrada').val();
+    const fechaSalida = $('#fechaSalida').val();
+
+    $.get('https://hotel-api-hzf6.onrender.com/api/sistema/reservaHabitacion', {
+        fechaEntrada: fechaEntrada,
+        fechaSalida: fechaSalida,
+    })
+        .done(function (reservas) {
+            if (reservas.length > 0) {
+                const errorMessage = 'Las fechas de entrada y salida se superponen con otras reservas.';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMessage
+                });
+            } else {
+                const formDataReservaHabitacion = {
+                    Codigo: generateRandomCode(),
+                    HabitacionId: {
+                        id: habitacionId,
+                    },
+                    DescuentoId: {
+                        id: null
+                    },
+                    FechaEntrada: fechaEntrada,
+                    FechaSalida: fechaSalida,
+                    Estado: 'Activo'
+                };
+
+                $.ajax({
+                    url: 'https://hotel-api-hzf6.onrender.com/api/sistema/reservaHabitacion',
+                    method: 'POST',
+                    data: JSON.stringify(formDataReservaHabitacion),
+                    contentType: 'application/json',
+                    success: function (resultado) {
+                        hideLoader();
+                        enviarCorreo();
+                    },
+                    error: function (error) {
+                        console.error('Error al registrar la habitación:', error);
+                    }
+                });
+            }
+        })
+        .fail(function (error) {
+            console.error('Error al verificar las fechas:', error);
+        });
+}
+
 
 function generateRandomCode() {
     var randomCode = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Math.random().toString(10).substring(2, 7);

@@ -28,13 +28,13 @@
             <div class="col-md-10">
                 <form id="formRegistro">
                     <input type="text" id="reply-to" name="reply-to" value="alehotelservices@gmail.com" hidden disabled>
+                    <input type="text" id="id" name="id" hidden>
                     <div class="card" id="formularioRegistroPersona">
                         <h2 class="text-center">Registro de Persona</h2>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="tipoDocumento" class="form-label">Tipo de
-                                        Documento<span>*</span>:</label>
+                                    <label for="tipoDocumento" class="form-label">Tipo de Documento<span>*</span>:</label>
                                     <select class="form-select" id="tipoDocumento" name="tipoDocumento" required>
                                         <option value="">Seleccionar</option>
                                         <option value="CC">Cédula de Ciudadanía</option>
@@ -124,6 +124,7 @@
                                 <select class="form-select" id="tipohabitacionUsuario" name="tipohabitacionId" required>
                                     <!-- Opciones de habitaciones generadas dinámicamente -->
                                 </select>
+                                <input type="text" name="tipoHabitacionTitulo" id="tipoHabitacionTitulo" hidden>
                             </div>
                             <div id="habitacionCard" style="display: none; margin-bottom: 15px;">
                                 <!-- La tarjeta se generará aquí -->
@@ -138,6 +139,7 @@
             </div>
         </div>
     </div>
+
     <script type="text/javascript" src="../../asset/library/node_modules/@emailjs/browser/dist/email.min.js"></script>
     <script src="../../asset/library/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../asset/library/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>

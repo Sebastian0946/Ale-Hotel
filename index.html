@@ -22,7 +22,7 @@
             <ul class="nav_links">
                 <li class="link"><a href="#Inicio">Inicio</a></li>
                 <li class="link"><a href="#Ubicacion">Ubicación</a></li>
-                <li class="link"><a href="#Blog">Blog</a></li>
+                <li class="link"><a href="views/user/habitaciones.html">Habitaciones</a></li>
                 <li class="link"><a href="#Footer">Contáctanos</a></li>
                 <li class="link"><a href="views/user/GestionReserva.html"><button class="btn btn-reservation">Reservar</button></a></li>
                 <li class="link"><button class="btn btn-login" onclick="redirigirALogin()">Iniciar Sesión</button></li>
@@ -36,43 +36,20 @@
                 <h1>Disfruta de las vacaciones de tus sueños</h1>
                 <p>Reserva tu habitación y disfruta</p>
             </div>
-            <!-- <div class="booking-container">
-                <form action="">
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input type="number">
-                            <label>Personas</label>
-                        </div>
-                        <p>¿Dónde quieres quedarte?</p>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input type="text">
-                            <label>Check In</label>
-                        </div>
-                        <p>Añade fecha</p>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input type="text">
-                            <label>Check Out</label>
-                        </div>
-                        <p>Añade fecha</p>
-                    </div>
-                </form>
-                <button class="btn"><i class="ri-search-line"></i></button>
-            </div> -->
         </div>
     </header>
 
     <section class="section__container popular-container" id="Blog">
-        <h2 class="section__header">Habitaciones populares</h2>
+        <h2 class="section__header">Tipo habitaciones</h2>
         <div class="swiper-container">
             <div class="swiper-wrapper" id="swiper-wrapper">
                 <!-- se crea dinamico -->
             </div>
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
+        </div>
+        <div style="margin: 0 auto; text-align: center; margin-top: 50px;">
+            <a href="views/user/habitaciones.html" class="btn btn-more-rooms">Más habitaciones</a>
         </div>
     </section>
 
@@ -82,80 +59,54 @@
             <div class="client-grid">
                 <div class="client-card">
                     <img src="asset/img/user1.jpg" alt="cliente" />
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel aliquid eum sequi iste dignissimos
-                        excepturi?</p>
+                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel aliquid eum sequi iste dignissimos excepturi?</p>
                 </div>
                 <div class="client-card">
                     <img src="asset/img/user2.jpg" alt="cliente" />
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel aliquid eum sequi iste dignissimos
-                        excepturi?</p>
+                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel aliquid eum sequi iste dignissimos excepturi?</p>
                 </div>
                 <div class="client-card">
                     <img src="asset/img/user3.jpg" alt="cliente" />
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel aliquid eum sequi iste dignissimos
-                        excepturi?</p>
+                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel aliquid eum sequi iste dignissimos excepturi?</p>
                 </div>
             </div>
         </div>
     </section>
-
-    <section class="section__container">
-        <div class="reward-container">
-            <p>+100 Codigos de descuentos</p>
-            <h4>Únase a las recompensas y descubra increíbles descuentos en su reserva</h4>
-            <button class="reward-btn">Ver descuentos!!</button>
-        </div>
-    </section>
-
     <section class="section__container faqs" id="faqs">
 
         <h1 class="heading">¿Preguntas frecuentes?</h1>
 
         <div class="row">
-
             <div class="image">
                 <img src="asset/img/FAQs.gif" alt="">
             </div>
-
             <div class="content">
-
                 <div class="box active">
                     <h3>¿Cuáles son los métodos de pagos?</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores iure nam sit magni velit.</p>
+                    <p>Por el momento manejamos unicamente pagos por efectivo.</p>
                 </div>
-
                 <div class="box">
                     <h3>¿Cuáles son nuestros servicios?</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores iure nam sit magni velit.</p>
+                    <p>Los servicios que ofrece nuesro Hotel es servicio a un bar, juegos, restaurante y habitaciones
+                    </p>
                 </div>
-
                 <div class="box">
                     <h3>¿Donde nos ubicamos?</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores iure nam sit magni velit.</p>
+                    <p>Nos ubicamos en el mun</p>
                 </div>
-
                 <div class="box">
                     <h3>¿Que habitaciones ofrecemos?</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores iure nam sit magni velit.</p>
-                </div>
-
-                <div class="box">
-                    <h3>¿Tipo de licores?</h3>
                     <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores iure nam sit magni velit.</p>
                 </div>
             </div>
         </div>
     </section>
-
     <section class="section__container section__map" id="Ubicacion">
 
         <h1 class="heading">Donde nos ubicamos</h1>
 
         <div class="map-container">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7970.88119434!2d-75.31564800642096!3d2.684262200000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3b4173f5860707%3A0xf72e7153b9690b1f!2sPalmares%20de%20Alejandria!5e0!3m2!1ses!2sco!4v1695838669960!5m2!1ses!2sco"
-                width="1500" height="500" style="border:0; text-align: center;" allowfullscreen="" loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7970.88119434!2d-75.31564800642096!3d2.684262200000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3b4173f5860707%3A0xf72e7153b9690b1f!2sPalmares%20de%20Alejandria!5e0!3m2!1ses!2sco!4v1695838669960!5m2!1ses!2sco" width="1500" height="500" style="border:0; text-align: center;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
     </section>
 
@@ -193,4 +144,5 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="asset/js/user/main.js"></script>
 </body>
+
 </html>

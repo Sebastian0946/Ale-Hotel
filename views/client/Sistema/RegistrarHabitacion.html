@@ -28,9 +28,8 @@
 
 <body>
 
-    <div id="loader">
-        <div class="lds-dual-ring"></div>
-        <div class="text">Cargando...</div>
+    <div id="loader" class="loader">
+        <img src="../../../asset/img/loaderLogin.gif" alt="Loading..." width="100">
     </div>
 
     <div class="container">
@@ -53,8 +52,19 @@
                         <div class="modal-body">
                             <form  id="formulario">
                                 <input type="text" id="id" name="id" hidden>
+                                <input type="text" class="form-control" name="codigo" id="codigo" hidden>
                                 <table class="table-modal">
                                     <tbody>
+                                        <tr>
+                                            <td>
+                                                <label for="producto" class="form-label">Registrar huesped: </label>
+                                            </td>
+                                            <td>
+                                                <select class="form-select" name="huespedId" id="huespedId">
+            
+                                                </select>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td>
                                                 <label for="producto" class="form-label">Registrar Tipo de habitacion: </label>
@@ -63,15 +73,6 @@
                                                 <select class="form-select" name="tipohabitacionId" id="tipohabitacionId">
             
                                                 </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <label class="form-label">Código: </label>
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" name="codigo" id="codigo"
-                                                   >
                                             </td>
                                         </tr>
                                         <tr>
@@ -110,10 +111,11 @@
                 <thead>
                     <tr>
                         <th>Id</th>
+                        <th>Código</th>
                         <th>Huesped</th>
                         <th>Tipo de habitacion</th>
-                        <th>Código</th>
                         <th>Descripción</th>
+                        <th>Ocupación</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>

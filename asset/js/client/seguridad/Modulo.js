@@ -19,19 +19,11 @@ function mostrarMensaje(icon, message) {
     });
 }
 
-function showLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'flex';
-}
-
-function hideLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'none';
-}
-
 async function loadTable() {
     try {
-        showLoader();
+
+        const loader = $("#loader");
+        loader.show();
 
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/seguridad/modulo', {
             method: 'GET',
@@ -46,7 +38,9 @@ async function loadTable() {
 
             table.clear();
 
-            items.data.forEach((modulo) => {
+            const actives = items.data.filter((modulo) => modulo.Estado === 'Activo');
+
+            actives.forEach((modulo) => {
                 const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${modulo.id})"><i class="fa-solid fa-user-pen"></i></button>`;
                 const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${modulo.id})"><i class="fa-solid fa-trash"></i></button>`;
 
@@ -63,7 +57,7 @@ async function loadTable() {
 
             table.draw();
 
-            hideLoader();
+            loader.hide();
 
             if (items.message && !mensajeMostrado) {
                 mensajeMostrado = true;
@@ -85,10 +79,10 @@ async function loadTable() {
                 });
             }
         }
-        hideLoader();
+        loader.hide();
     } catch (error) {
         console.error("Error al realizar la petición Fetch:", error);
-        hideLoader();
+        loader.hide();
     }
 }
 
@@ -160,7 +154,7 @@ async function findById(id) {
 function performAction() {
     const id = $('#id').val();
     const formData = {
-        Codigo: $('#codigo').val(),
+        Codigo: id && id !== '0' ? $('#codigo').val() : generateRandomCode(),
         Ruta: $('#ruta').val(),
         Etiqueta: $('#etiqueta').val(),
         Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
@@ -253,7 +247,7 @@ function performAction() {
                 }
             });
         } else {
-            sendRequest(); 
+            sendRequest();
         }
     } else {
         const Toast = Swal.mixin({
@@ -280,6 +274,11 @@ function performAction() {
         form.validate().resetForm();
         $('. is-invalid').removeClass(' is-invalid');
     });
+
+    function generateRandomCode() {
+        var randomCode = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Math.random().toString(10).substring(2, 7);
+        return randomCode.substring(0, 5);
+    }
 }
 
 async function deleteById(id) {
@@ -296,8 +295,8 @@ async function deleteById(id) {
 
     if (confirmed.isConfirmed) {
         try {
-            const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/seguridad/modulo/${id}`, {
-                method: "DELETE",
+            const response = await fetch(`https://hotel-api-hzf6.onrender.com/api/seguridad/modulo/eliminar/${id}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -359,23 +358,22 @@ function Limpiar() {
 function validarCamposFormulario() {
 
     $.validator.addMethod("letras", function (value, element) {
-        return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+        return this.optional(element) || /^[a-zA-ZÀ-ÖØ-öø-ÿ\s]+$/.test(value);
     }, "Por favor, ingresa solo letras.");
 
     $('#formulario').validate({
         rules: {
             codigo: {
                 required: true,
-                minlength: 3
             },
             ruta: {
                 required: true,
-                maxlength: 15,
+                maxlength: 25,
                 letras: true
             },
             etiqueta: {
                 required: true,
-                maxlength: 15,
+                maxlength: 25,
                 letras: true
             }
         },
@@ -386,7 +384,8 @@ function validarCamposFormulario() {
             },
             ruta: {
                 required: 'Por favor, ingresa una ruta',
-                letras: 'Por favor, ingresa solo letras en la ruta'
+                letras: 'Por favor, ingresa solo letras en la ruta',
+                maxlength: 'Por favor, maximo 25 caracteres'
             },
             etiqueta: {
                 required: 'Por favor, ingresa una etiqueta',
@@ -483,17 +482,6 @@ $(document).ready(function () {
                         alignment: 'center'
                     };
                     doc.content[1].text = 'Formulario.pdf';
-                }
-            },
-            {
-                text: '<i class="fas fa-file-code"></i> JSON',
-                action: function (e, dt, button, config) {
-                    var data = dt.buttons.exportData();
-
-                    $.fn.dataTable.fileSave(
-                        new Blob([JSON.stringify(data)]),
-                        'Producto.json'
-                    );
                 }
             }
         ],

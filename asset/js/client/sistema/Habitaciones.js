@@ -1,19 +1,11 @@
 var dataTableInitialized = false;
 var mensajeMostrado = false
 
-function showLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'flex';
-}
-
-function hideLoader() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'none';
-}
-
 async function loadTable() {
     try {
-        showLoader();
+
+        const loader = $("#loader");
+        loader.show();
 
         const response = await fetch('https://hotel-api-hzf6.onrender.com/api/sistema/habitacion', {
             method: 'GET',
@@ -28,19 +20,20 @@ async function loadTable() {
 
             table.clear();
 
-            items.data.forEach((habitacion) => {
+            const actives = items.data.filter((habitaciones) => habitaciones.Estado === 'Activo');
+
+            actives.forEach((habitacion) => {
                 const editButton = `<button type="button" class="btn btn-warning mx-3" onclick="findById(${habitacion.id})"><i class="fa-solid fa-user-pen"></i></button>`;
                 const deleteButton = `<button type="button" class="btn btn-danger mx-3" onclick="deleteById(${habitacion.id})"><i class="fa-solid fa-trash"></i></button>`;
-
                 const estadoClass = habitacion.Estado === 'Activo' ? 'text-success' : 'text-danger';
-
+                const ocupadoText = habitacion.Ocupado ? 'Ocupado' : 'Desocupado'; 
                 const actions = `
                     <div class="actions-container">
                         ${editButton} ${deleteButton}
                     </div>
                 `;
 
-                table.row.add([habitacion.id, habitacion.HuespedId.PersonaId.Nombres+" "+habitacion.HuespedId.PersonaId.Apellidos , habitacion.TipoHabitacionesId.Descripcion, habitacion.Codigo, habitacion.Descripcion, `<span class="${estadoClass}">${habitacion.Estado}</span>`, actions]);
+                table.row.add([habitacion.id, habitacion.Codigo, habitacion.HuespedId.PersonaId.Nombres + " " + habitacion.HuespedId.PersonaId.Apellidos, habitacion.TipoHabitacionesId.Titulo, habitacion.Descripcion, ocupadoText, `<span class="${estadoClass}">${habitacion.Estado}</span>`, actions]);
             });
 
             table.draw();
@@ -65,10 +58,10 @@ async function loadTable() {
                 });
             }
         }
-        hideLoader();
+        loader.hide();
     } catch (error) {
         console.error("Error al realizar la petición Fetch:", error);
-        hideLoader();
+        loader.hide();
     }
 }
 
@@ -81,6 +74,7 @@ function findById(id) {
             success: function (habitacion) {
                 $('#id').val(habitacion.data.id);
                 $('#tipohabitacionId').val(habitacion.data.TipoHabitacionesId.id);
+                $('#huespedId').val(habitacion.data.HuespedId.id);
                 $('#codigo').val(habitacion.data.Codigo);
                 $('#descripcion').val(habitacion.data.Descripcion);
                 $("#estado").prop("checked", habitacion.data.Estado === 'Activo');
@@ -139,16 +133,20 @@ function performAction() {
         TipoHabitacionesId: {
             id: $('#tipohabitacionId').val()
         },
-        Codigo: $('#codigo').val(),
+        HuespedId: {
+            id: $('#huespedId').val()
+        },
+        Codigo: id && id !== '0' ? $('#codigo').val() : generateRandomCode(),
         Descripcion: $('#descripcion').val(),
-        Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo'
+        Estado: $("#estado").is(':checked') ? 'Activo' : 'Inactivo',
+        Ocupado: false
     };
 
     var url = id && id !== '0' ? 'https://hotel-api-hzf6.onrender.com/api/sistema/habitacion/' + id : 'https://hotel-api-hzf6.onrender.com/api/sistema/habitacion';
     var type = id && id !== '0' ? 'PUT' : 'POST';
 
     validarCamposHabitacion();
-    // Función para enviar la solicitud PUT o POST
+
     function sendRequest() {
         $.ajax({
             url: url,
@@ -258,6 +256,11 @@ function performAction() {
         form.validate().resetForm();
         $('is-invalid').removeClass('is-invalid');
     });
+
+    function generateRandomCode() {
+        var randomCode = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Math.random().toString(10).substring(2, 7);
+        return randomCode.substring(0, 5);
+    }
 }
 
 function deleteById(id) {
@@ -273,8 +276,8 @@ function deleteById(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: 'https://hotel-api-hzf6.onrender.com/api/sistema/habitacion/' + id,
-                method: "delete",
+                url: 'https://hotel-api-hzf6.onrender.com/api/sistema/habitacion/eliminar/' + id,
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -327,9 +330,9 @@ function Limpiar() {
 
 function validarCamposHabitacion() {
 
-    $.validator.addMethod("letras", function (value, element) {
-        return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
-    }, "Por favor, ingresa solo letras.");
+    // $.validator.addMethod("letras", function (value, element) {
+    //     return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+    // }, "Por favor, ingresa solo letras.");
 
     $('#formulario').validate({
         rules: {
@@ -343,7 +346,6 @@ function validarCamposHabitacion() {
             },
             descripcion: {
                 required: true,
-                letras: true
             }
 
         },
@@ -357,7 +359,7 @@ function validarCamposHabitacion() {
             },
             descripcion: {
                 required: 'Por favor, ingresa una descripción',
-                letras: 'Por favor, ingresa solo letras en la ruta'
+                letras: 'Por favor, ingresa solo letras en la descripción'
             }
 
         },
@@ -446,17 +448,6 @@ $(document).ready(function () {
                         alignment: 'center'
                     };
                     doc.content[1].text = 'registroHabitación.pdf';
-                }
-            },
-            {
-                text: '<i class="fas fa-file-code"></i> JSON',
-                action: function (e, dt, button, config) {
-                    var data = dt.buttons.exportData();
-
-                    $.fn.dataTable.fileSave(
-                        new Blob([JSON.stringify(data)]),
-                        'registro de habitaciónes.json'
-                    );
                 }
             }
         ],
